@@ -1,7 +1,7 @@
 import { HcsUpgradeService, IHcsClusterTask, IHcsCluster, INodeTaskStatus, IClusterStatusGridRow, INodeTaskGridRow } from 'modules/hcs/hcs-shared';
 import { Notification } from 'modules/core/notifications';
 import { GridService } from 'modules/core/csgrid';
-import { Duration } from '../../../../../node_modules/moment';
+import { Duration } from 'moment-timezone';
 
 export class UpgradeClusterStatusComponent implements ng.IComponentOptions {
   public controller = UpgradeClusterStatusCtrl;
