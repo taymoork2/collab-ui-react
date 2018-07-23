@@ -11978,8 +11978,8 @@
       "title": "Jabber Service",
       "description": "Jabber can discover UC Manager infrastructure using service discovery.  Please confirm how your environment is set up.",
       "voiceServiceDomainPrereqLabel": "Webex teams domain is the same as the voice service domain.",
-      "dnsSrvRecordsPrereqLabel": "DNS SRV records are deployed for Cisco UC services",
-      "savePrereqsSuccess": "Jabber with Webex Teams set up is complete.",
+      "dnsSrvRecordsPrereqLabel": "DNS SRV records are deployed for Cisco UC services.",
+      "savePrereqsSuccess": "Jabber with Webex Teams setup is complete.",
       "savePrereqsError": "Jabber with Webex Teams settings failed to save."
     }
   }
