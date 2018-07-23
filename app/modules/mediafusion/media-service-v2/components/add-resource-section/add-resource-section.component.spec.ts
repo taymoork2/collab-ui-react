@@ -69,4 +69,35 @@ describe('Component: addResourceSection', function () {
     expect(controller.offlinenode).toBeTruthy();
   });
 
+  it('sshould be **true** if FQDN is not per standards', function () {
+    const fqdn1 = 'foo.bar.abc.com';
+    const fqdn2 = 'foo.bar.com';
+    initController();
+    expect(controller.validateNode(fqdn1)).toBeTruthy();
+    expect(controller.validateNode(fqdn2)).toBeTruthy();
+  });
+
+  it('should be **true** if IP is not per standardss', function () {
+    const ip = '10.196.23.32';
+    initController();
+    expect(controller.validateNode(ip)).toBeTruthy();
+
+  });
+
+  it('should be **false** if FQDN is not per standards', function () {
+    const fqdn1 = 'foo.bar..abc.com';
+    const fqdn2 = 'foo.ba-.r.com';
+    initController();
+    expect(controller.validateNode(fqdn1)).toBeFalsy();
+    expect(controller.validateNode(fqdn2)).toBeFalsy();
+
+  });
+
+  it('should be **false** if IP is not per standards', function () {
+    const ip = '10.196.23.32.43';
+    initController();
+    expect(controller.validateNode(ip)).toBeFalsy();
+
+  });
+
 });
