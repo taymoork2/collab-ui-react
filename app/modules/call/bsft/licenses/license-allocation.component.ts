@@ -1,15 +1,9 @@
-import { FtswConfigService } from 'modules/call/bsft/shared/ftsw-config.service';
-import { Site } from 'modules/call/bsft/shared/bsft-site';
+import { Site, FtswConfigService, ILicenseInfo } from 'modules/call/bsft/shared';
 
 class LicenseAllocationCtrl implements ng.IComponentController {
   public ftsw: boolean;
-  public uuid: string;
-  public loading: boolean = false;
   public form: ng.IFormController;
   public site: Site;
-  public editing = false;
-  public timeZoneOptions;
-  public makeDefault: boolean;
   public licenses = {};
 
   /* @ngInject */
@@ -29,13 +23,35 @@ class LicenseAllocationCtrl implements ng.IComponentController {
       });
     }
 
+    this.licenses['standard'] = _.find(this.getLicensesInfo('standard'), licenses => licenses.name === 'standard');
+    this.licenses['places'] = _.find(this.getLicensesInfo('places'), licenses => licenses.name === 'places');
+
     const currentSite = this.FtswConfigService.getCurentSite();
     if (currentSite !== undefined) {
       this.site = currentSite;
-    }
 
-    this.licenses['standard'] = _.find(this.FtswConfigService.getLicensesInfo(), licenses => licenses.name === 'standard');
-    this.licenses['places'] = _.find(this.FtswConfigService.getLicensesInfo(), licenses => licenses.name === 'places');
+      if (this.site.licenses['standard']) {
+        this.licenses['standard'].available = this.site.licenses['standard'] + this.licenses['standard'].available;
+      }
+
+      if (this.site.licenses['places']) {
+        this.licenses['places'].available = this.site.licenses['places'] + this.licenses['places'].available;
+      }
+    }
+  }
+
+  public getLicensesInfo(name): ILicenseInfo[] {
+    const licenses = this.FtswConfigService.getLicensesInfo();
+    let licUsed = 0;
+    _.forEach(this.FtswConfigService.getSites(), (site) => {
+      if (!_.isUndefined(site.licenses[name])) {
+        licUsed = licUsed + site.licenses[name];
+      }
+    });
+    if (_.find(licenses, { name: name })) {
+      _.set(_.find(licenses, { name: name }), 'available', _.find(licenses, { name: name }).total - licUsed);
+    }
+    return licenses;
   }
 
   public onStandardLicenseChanged(standard) {
@@ -61,6 +77,5 @@ export class LicenseAllocationComponent implements ng.IComponentOptions {
   public template = require('modules/call/bsft/licenses/license-allocation.component.html');
   public bindings = {
     ftsw: '<',
-    uuid: '<',
   };
 }
