@@ -26,6 +26,10 @@ interface IRoleStates {
   User_Admin: string[];
 }
 
+interface IReadOnlyViewStates {
+  Provision_Admin: string[];
+}
+
 type EnvType = 'dev' | 'cfe' | 'integration' | 'prod';
 
 export class Config {
@@ -680,6 +684,13 @@ export class Config {
       'site-csv-results',
       'site-settings',
       'site-setting',
+      'settings',
+    ],
+  };
+
+  public readonlyViewStates: IReadOnlyViewStates = {
+    Provision_Admin: [
+      'settings',
     ],
   };
 
