@@ -12,10 +12,11 @@ describe('Component: jabberToWebexTeamsActiveCard:', () => {
     this.injectDependencies(
       '$state',
     );
+    spyOn(this.$state, 'go');
   });
 
   beforeEach(function (this: Test) {
-    // this.compileComponent('jabberToWebexTeamsActiveCard', {});
+    this.compileComponent('jabberToWebexTeamsActiveCard', {});
   });
 
   describe('primary behaviors (view):', () => {
