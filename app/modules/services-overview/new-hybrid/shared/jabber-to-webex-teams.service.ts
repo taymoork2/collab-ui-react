@@ -14,6 +14,23 @@ export class JabberToWebexTeamsService {
     return `${this.UrlConfig.getIdentityServiceUrl()}/organization/${this.Authinfo.getOrgId()}/v1/config/templates`;
   }
 
+  public list(): ng.IPromise<IUcManagerProfile[]> {
+    return this.$http.get(this.getConfigTemplatesUrl())
+      .then((response) => {
+        return _.get(response.data, 'Resources') as IUcManagerProfile[];
+      });
+  }
+
+  public delete(templateId: string): ng.IPromise<ng.IHttpResponse<{}>> {
+    const url = `${this.getConfigTemplatesUrl()}/${templateId}`;
+    return this.$http.delete(url, {
+      data: {},
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
   public create(options: {
     profileName: string;
     voiceServerDomainName: string;

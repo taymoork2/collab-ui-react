@@ -1,0 +1,51 @@
+<cs-page-header title-name="{{::'jabberToWebexTeams.profileList.title' | translate}}"></cs-page-header>
+<div class="content-container metrics-content">
+  <div class="cs-card-container">
+    <div class="row">
+      <div class="columns medium-11 small-12">
+        <div class="row">
+          <div class="columns medium-5">
+            <h3 translate="jabberToWebexTeams.profileList.subtitle"></h3>
+          </div>
+          <div class="columns medium-7">
+            <button cs-btn
+              class="btn btn--primary"
+              name="add-profile"
+              ng-click="$ctrl.addProfile()">
+              <span translate="jabberToWebexTeams.profileList.addProfile"></span>
+            </button>
+            <cs-card-layout>
+              <cs-card ng-repeat="profile in $ctrl.profiles"
+                class="cs-card--large overview-card primary">
+                <article>
+                  <header>
+                    <div class="header-with-right-icon">
+                      <p class="h5 ellipsis">{{profile.templateName}}</p>
+                      <span cs-dropdown
+                        class="actions-menu dropdown pull-right">
+                        <button cs-dropdown-toggle
+                          class="btn-none card-action-btn"
+                          aria-label="{{:: 'common.toggleMenu' | translate}}">
+                          <i class="icon icon-three-dots"></i>
+                        </button>
+                        <ul cs-dropdown-menu
+                          class="dropdown-menu dropdown-primary actions-services">
+                          <li ng-click="$ctrl.editProfile(profile)">
+                            <a translate="common.edit"></a>
+                          </li>
+                          <li ng-click="$ctrl.deleteProfile(profile)">
+                            <a translate="common.delete"></a>
+                          </li>
+                        </ul>
+                      </span>
+                    </div>
+                  </header>
+                </article>
+              </cs-card>
+            </cs-card-layout>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

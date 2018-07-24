@@ -45,3 +45,7 @@ export interface IPrereqsSettings {
   templateName: string;
   allPrereqsDone: boolean;
 }
+
+export enum EventNames {
+  PROFILES_UPDATED = 'jabberToWebex::profilesUpdated',
+}

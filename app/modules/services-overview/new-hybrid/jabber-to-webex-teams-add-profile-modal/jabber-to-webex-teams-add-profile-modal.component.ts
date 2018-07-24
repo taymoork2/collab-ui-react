@@ -1,5 +1,6 @@
 import { JabberToWebexTeamsService } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.service';
 import { Notification } from 'modules/core/notifications';
+import { EventNames } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.types';
 
 enum BackendTypes {
   VOICE = 'voiceServiceDomain',
@@ -69,6 +70,7 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
 
   /* @ngInject */
   constructor(
+    private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
     private $window: ng.IWindowService,
     private Analytics,
@@ -94,6 +96,7 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
       const ucManagerProfiles = _.toArray(JSON.parse(this.$window.sessionStorage.getItem('spark14176.ucManagerProfiles') || '[]'));
       ucManagerProfiles.push(this.profileData);
       this.$window.sessionStorage.setItem('spark14176.ucManagerProfiles', JSON.stringify(ucManagerProfiles));
+      this.$rootScope.$emit(EventNames.PROFILES_UPDATED);
       this.dismissModal();
       this.Notification.success('common.OK');
     }).catch(( reason: any ) => {

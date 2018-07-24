@@ -12059,6 +12059,13 @@
       "udsServerAddress": "UDS Server Address",
       "udsBackupServerAddress": "UDS Backup Server Address",
       "allowUserEdit": "Allow users to edit server address"
+    },
+    "profileList": {
+      "title": "Jabber with Webex Teams",
+      "subtitle": "UC Manager Profiles",
+      "addProfile": "Add a Profile",
+      "deleteTitle": "Delete UC Profile",
+      "deleteBody": "You are deleting the UC profile, {{templateName}}, this profile will be removed from all associated users.  Are you sure?"
     }
   }
 }

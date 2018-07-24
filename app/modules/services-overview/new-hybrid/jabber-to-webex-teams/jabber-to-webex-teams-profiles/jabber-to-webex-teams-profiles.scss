@@ -1,0 +1,33 @@
+jabber-to-webex-teams-profiles {
+
+  .content-container {
+    margin-top: 2.5rem;
+  }
+  button.btn-add {
+    margin-bottom: .5rem;
+  }
+
+  .cs-card.cs-card--large>article header {
+    padding-top: .85rem;
+    padding-bottom: .75rem;
+    p {
+       padding-left: 0px;
+     }
+
+    .header-with-right-icon {
+      align-items: start;
+    }
+  }
+
+  .actions-menu.open .dropdown-menu {
+    top: 20px;
+    right: 0px;
+    padding: 0px;
+    text-align: left;
+  }
+
+  .dropdown-menu.top {
+    top: auto;
+    bottom: auto;
+  }
+}
