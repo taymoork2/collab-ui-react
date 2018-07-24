@@ -69,9 +69,9 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
 
   /* @ngInject */
   constructor(
-    private Analytics,
     private $translate: ng.translate.ITranslateService,
     private $window: ng.IWindowService,
+    private Analytics,
     public JabberToWebexTeamsService: JabberToWebexTeamsService,
     private Notification: Notification,
   ) {}

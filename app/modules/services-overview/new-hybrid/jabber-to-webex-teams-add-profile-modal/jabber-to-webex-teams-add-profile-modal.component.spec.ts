@@ -9,8 +9,8 @@ type Test = atlas.test.IComponentTest<JabberToWebexTeamsAddProfileModalControlle
   $scope: ng.IScope;
   $state: ng.ui.IStateService;
   Analytics: Analytics;
-  Notification: Notification;
   JabberToWebexTeamsService: JabberToWebexTeamsService;
+  Notification: Notification;
 }, {
 }>;
 
@@ -22,13 +22,12 @@ describe('Component: jabberToWebexTeamsAddProfileModal:', () => {
       '$scope',
       '$state',
       'Analytics',
-      'Notification',
       'JabberToWebexTeamsService',
+      'Notification',
     );
     this.$scope.dismissSpy = jasmine.createSpy('dismissSpy');
   });
 
-  // TODO: use as-appropriate
   beforeEach(function (this: Test) {
     this.compileComponent('jabberToWebexTeamsAddProfileModal', {
       dismiss: 'dismissSpy()',
@@ -118,7 +117,6 @@ describe('Component: jabberToWebexTeamsAddProfileModal:', () => {
       it('call JabberToWebexTeamsService.create(...) ', function (this: Test) {
         spyOn(this.JabberToWebexTeamsService, 'create').and.returnValue(this.$q.resolve());
         this.controller.finish();
-        this.$scope.$apply();
         expect(this.JabberToWebexTeamsService.create).toHaveBeenCalled();
       });
 

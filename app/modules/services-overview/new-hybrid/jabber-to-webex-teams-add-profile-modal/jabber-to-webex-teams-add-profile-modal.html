@@ -61,7 +61,7 @@
           type="text"
           name="udsServerAddress"
           ng-model="$ctrl.profileData.udsServerAddress"
-          ng-required = "$ctrl.backendType === $ctrl.BackendTypes.UDS"
+          ng-required="$ctrl.backendType === $ctrl.BackendTypes.UDS"
           ng-minlength="$ctrl.MIN_LENGTH"
           ng-maxlength="$ctrl.MAX_LENGTH"
           cs-input-label="{{::'jabberToWebexTeams.addProfileModal.udsServerAddress' | translate}}"
