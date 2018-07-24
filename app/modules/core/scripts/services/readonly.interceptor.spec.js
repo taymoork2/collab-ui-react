@@ -7,6 +7,7 @@ describe('ReadonlyInterceptor', function () {
       '$q',
       '$state',
       'Authinfo',
+      'Config',
       'Notification',
       'ReadonlyInterceptor'
     );
@@ -14,6 +15,7 @@ describe('ReadonlyInterceptor', function () {
     spyOn(this.Notification, 'notifyReadOnly');
 
     spyOn(this.Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
+    spyOn(this.Authinfo, 'isProvisionAdmin').and.returnValue(false);
     spyOn(this.Authinfo, 'isPartnerReadOnlyAdmin').and.returnValue(false);
     spyOn(this.Authinfo, 'getUserOrgId').and.returnValue('fe5acf7a-6246-484f-8f43-3e8c910fc50d');
     spyOn(this.Authinfo, 'getUserId').and.returnValue('09bd9c92-bdd0-4dfb-832d-618494246be5');
@@ -32,6 +34,20 @@ describe('ReadonlyInterceptor', function () {
     runReadOnlyTests();
   });
 
+  describe('read-only mode for role based read-only states', function () {
+    beforeEach(function () {
+      this.Authinfo.isProvisionAdmin.and.returnValue(true);
+      this.Config.readOnlyViewStates = {
+        Provision_Admin: [
+          'settings',
+        ],
+      };
+      this.$state.current = { name: 'settings' };
+    });
+
+    runProvisionAdminReadOnlyTests();
+  });
+
   describe('while not in read-only mode', function () {
     it('does not manipulate requests', function () {
       this.Authinfo.isReadOnlyAdmin.and.returnValue(false);
@@ -46,6 +62,54 @@ describe('ReadonlyInterceptor', function () {
     });
   });
 });
+
+function runProvisionAdminReadOnlyTests() {
+  it('intercepts POST operations and creates a read-only notification if user has restricted view access', function () {
+    this.ReadonlyInterceptor.request({
+      data: 'x',
+      method: 'POST',
+    });
+    expect(this.$q.reject.calls.count()).toBe(1);
+    expect(this.Notification.notifyReadOnly.calls.count()).toBe(1);
+  });
+
+  it('intercepts PUT operations and creates a read-only notification if user has restricted view access', function () {
+    this.ReadonlyInterceptor.request({
+      data: 'x',
+      method: 'PUT',
+    });
+    expect(this.$q.reject.calls.count()).toBe(1);
+    expect(this.Notification.notifyReadOnly.calls.count()).toBe(1);
+  });
+
+  it('intercepts DELETE operations and creates a read-only notification if user has restricted view access', function () {
+    this.ReadonlyInterceptor.request({
+      data: 'x',
+      method: 'DELETE',
+    });
+    expect(this.$q.reject.calls.count()).toBe(1);
+    expect(this.Notification.notifyReadOnly.calls.count()).toBe(1);
+  });
+
+  it('intercepts PATCH operations and creates a read-only notification if user has restricted view access', function () {
+    this.ReadonlyInterceptor.request({
+      data: 'x',
+      method: 'PATCH',
+    });
+    expect(this.$q.reject.calls.count()).toBe(1);
+    expect(this.Notification.notifyReadOnly.calls.count()).toBe(1);
+  });
+
+  it('does not intercept read operations', function () {
+    var config = {
+      data: 'x',
+      method: 'GET',
+    };
+    this.ReadonlyInterceptor.request(config);
+    expect(this.$q.reject.calls.count()).toBe(0);
+    expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
+  });
+}
 
 function runReadOnlyTests() {
   it('intercepts POST operations and creates a read-only notification', function () {

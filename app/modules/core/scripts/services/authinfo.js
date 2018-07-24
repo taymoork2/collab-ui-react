@@ -440,6 +440,17 @@
         }
         return false;
       },
+      isReadOnlyState: function (state) {
+        // if user has role and currentState in readOnlyViewStates List
+        var roles = this.getRoles();
+        var readOnlyRoles = _.keys(Config.readOnlyViewStates);
+        var usersRestrictedRoles = _.intersection(roles, readOnlyRoles);
+
+        //Check if current state is in restricted list for role
+        return _.some(usersRestrictedRoles, function (restrictedRole) {
+          return _.includes(Config.readOnlyViewStates[restrictedRole], state);
+        });
+      },
       isInitialized: function () {
         return authData.isInitialized;
       },

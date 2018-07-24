@@ -225,6 +225,24 @@ describe('Authinfo:', function () {
     });
   });
 
+  describe('.isReadOnlyState', function () {
+    it('should return false is the state is not defined and simple user', function () {
+      setupConfig({
+        readOnlyViewStates: {
+          User_Admin: [
+            'settings',
+          ],
+        },
+      });
+
+      var Authinfo = setupUser({
+        roles: ['User_Admin'], // OR PARTNER_USER
+      });
+
+      expect(Authinfo.isReadOnlyState('settings')).toBe(true);
+    });
+  });
+
   describe('.isAllowedState', function () {
     it('should return false is the state is not defined and simple user', function () {
       setupConfig();
@@ -299,6 +317,7 @@ describe('Authinfo:', function () {
       expect(Authinfo.isAllowedState('overview')).toBe(true);
       expect(Authinfo.isAllowedState('users')).toBe(true);
       expect(Authinfo.isAllowedState('services-overview')).toBe(true);
+      expect(Authinfo.isAllowedState('settings')).toBe(true);
       expect(Authinfo.isAllowedState('places')).toBe(false);
       expect(Authinfo.isAllowedState('devices')).toBe(false);
     });

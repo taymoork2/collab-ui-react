@@ -12,7 +12,7 @@
     .name;
 
   /* @ngInject */
-  function ReadonlyInterceptor($q, $injector, $log, Config) {
+  function ReadonlyInterceptor($q, $injector, $log, Authinfo) {
     var allowedList = [
       '/pcs/api/v2/',
       '/pcs/api/v3/',
@@ -71,30 +71,7 @@
       var $state = $injector.get('$state');
       var currentState = _.get($state, 'current.name');
 
-      return (isReadOnly() || hasReadOnlyViewRestrictions()) && isWriteOp(config.method) && !isInAllowedList(config.url) && !isInAllowedState(currentState);
-    }
-
-    function hasReadOnlyViewRestrictions() {
-      return isReadOnlyStateForRole();
-    }
-
-    function isReadOnlyStateForRole() {
-      var Authinfo = $injector.get('Authinfo');
-      var $state = $injector.get('$state');
-      var currentState = _.get($state, 'current.name');
-
-      // if user has role and currentState in readOnlyViewStates List
-      var roles = Authinfo.getRoles();
-      var readOnlyRoles = _.keys(Config.readOnlyViewStates);
-      var usersRestrictedRoles = _.intersection(roles, readOnlyRoles);
-      if (!_.isEmpty(usersRestrictedRoles)) {
-        //Check if current state is in restricted list for role
-        return _.some(usersRestrictedRoles, function (restrictedRole) {
-          return _.includes(Config.readOnlyViewStates[restrictedRole], currentState);
-        });
-      }
-
-      return false;
+      return (isReadOnly() || Authinfo.isReadOnlyState(currentState)) && isWriteOp(config.method) && !isInAllowedList(config.url) && !isInAllowedState(currentState);
     }
 
     function isReadOnly() {
