@@ -60,7 +60,7 @@ export class JabberToWebexTeamsPrerequisitesModalController implements ng.ICompo
 
   public finish(): void {
     // TODO (spark-14176): revisit - confirm copy to use for success notification
-    this.Notification.success('common.notAvailable');
+    this.Notification.success('jabberToWebexTeams.prerequisitesModal.savePrereqsSuccess');
     this.dismiss();
   }
 }
