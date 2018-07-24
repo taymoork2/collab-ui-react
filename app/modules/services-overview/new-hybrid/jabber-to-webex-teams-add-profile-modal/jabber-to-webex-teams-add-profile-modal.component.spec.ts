@@ -51,7 +51,7 @@ describe('Component: jabberToWebexTeamsAddProfileModal:', () => {
       it('the Save button should be disabled if the user has not fill enough infromation', function () {
         // nothing has been filled
         expect(this.view.find('.modal-footer .btn--primary')).toBeDisabled();
-        
+
         // only template name is filled
         this.controller.profileData.profileName = 'test_profile_name';
         this.$scope.$apply();
@@ -59,28 +59,28 @@ describe('Component: jabberToWebexTeamsAddProfileModal:', () => {
 
         // clear the profileName
         this.controller.profileData.profileName = '';
-       
+
         // only voice server is filled
-        this.controller.profileData.voiceServerDomainName = "voice.alpha.cisco.com";
+        this.controller.profileData.voiceServerDomainName = 'voice.alpha.cisco.com';
         this.$scope.$apply();
         expect(this.view.find('.modal-footer .btn--primary')).toBeDisabled();
 
         // only uds server is filled
-        this.controller.profileData.udsServerAddress = "uds.alpha.cisco.com";
+        this.controller.profileData.udsServerAddress = 'uds.alpha.cisco.com';
         this.$scope.$apply();
         expect(this.view.find('.modal-footer .btn--primary')).toBeDisabled();
       });
 
       it('the Save button should be enabled if the user has fill a voice or uds server', function () {
         // voice server
-        this.controller.profileData.profileName = "test_profile_name";
-        this.controller.profileData.voiceServerDomainName = "voice.alpha.cisco.com";
+        this.controller.profileData.profileName = 'test_profile_name';
+        this.controller.profileData.voiceServerDomainName = 'voice.alpha.cisco.com';
         this.$scope.$apply();
         expect(this.view.find('.modal-footer .btn--primary')).not.toBeDisabled();
 
         //uds server
-        this.controller.profileData.profileName = "test_profile_name";
-        this.controller.profileData.udsServerAddress = "uds.alpha.cisco.com";
+        this.controller.profileData.profileName = 'test_profile_name';
+        this.controller.profileData.udsServerAddress = 'uds.alpha.cisco.com';
         this.$scope.$apply();
         expect(this.view.find('.modal-footer .btn--primary')).not.toBeDisabled();
       });
@@ -105,8 +105,8 @@ describe('Component: jabberToWebexTeamsAddProfileModal:', () => {
 
       it('should call finish() if the form is valid', function (this: Test) {
         spyOn(this.controller, 'finish');
-        this.controller.profileData.profileName = "test_profile_name";
-        this.controller.profileData.voiceServerDomainName = "voice.alpha.cisco.com";
+        this.controller.profileData.profileName = 'test_profile_name';
+        this.controller.profileData.voiceServerDomainName = 'voice.alpha.cisco.com';
         this.$scope.$apply();
         this.controller.checkAndFinish();
         expect(this.controller.finish).toHaveBeenCalled();
@@ -122,8 +122,8 @@ describe('Component: jabberToWebexTeamsAddProfileModal:', () => {
 
       it('should not call dismissModal if call service failed', function (this: Test) {
         spyOn(this.controller, 'dismissModal');
-        this.controller.profileData.profileName = "test_profile_name";
-        this.controller.profileData.voiceServerDomainName = "voice.alpha.cisco.com";
+        this.controller.profileData.profileName = 'test_profile_name';
+        this.controller.profileData.voiceServerDomainName = 'voice.alpha.cisco.com';
         this.$scope.$apply();
         this.controller.finish();
         expect(this.controller.dismissModal).not.toHaveBeenCalled();
