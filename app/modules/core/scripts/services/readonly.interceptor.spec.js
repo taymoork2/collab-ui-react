@@ -144,6 +144,16 @@ function runReadOnlyTests() {
     expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
   });
 
+  it('does not intercept device alerts white-listed paths', function () {
+    var config = {
+      method: 'POST',
+      url: 'https://csdm-a.wbx2.com/csdm/api/v1/organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/devices/_alert',
+    };
+    this.ReadonlyInterceptor.request(config);
+    expect(this.$q.reject.calls.count()).toBe(0);
+    expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
+  });
+
   it('does not intercept device get all ids white-listed paths', function () {
     var config = {
       method: 'POST',
