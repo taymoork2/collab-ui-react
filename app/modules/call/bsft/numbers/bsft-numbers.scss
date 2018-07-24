@@ -3,12 +3,13 @@
 
 .bsft-number_subheading {
   padding-bottom: 1rem;
-  padding-top: 1rem;
 }
-
+.bsft-number__margin {
+  margin-top: 2rem;
+}
 .bsft-number_padding {
   padding-bottom: 1rem;
-  padding-top: .5rem;
+  padding-top: 1rem;
 }
 .bsft-number_desc {
   padding-top: .5rem;
@@ -17,10 +18,21 @@
 .bsft-margin {
   margin-left: 2rem;
 }
+.bsft-radio {
+  margin-left: .5rem;
+}
+
+.bsft-number__textarea {
+  .cs-input, .form-control, textarea {
+    border: 0 none;
+    background-color: $gray-light-4;
+    max-width: 80%;
+    height: 8.5rem;
+  }
+}
 .bsft-number {
   .cs-input, .form-control, .textarea {
     border: 0 none;
-    height: 2.5rem;
   }
 
   .tokenfield .token {

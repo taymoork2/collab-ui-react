@@ -9,7 +9,7 @@ export class PortedNumbersAddComponentCtrl implements ng.IComponentController {
   public texttoken: string;
   public onAdd: Function;
   private static readonly MINLENGTH: number = 10;
-  public static readonly NUMBER_MAX_LIMIT: number = 5;
+  public static readonly NUMBER_MAX_LIMIT: number = 25;
   private static readonly NUMBER_MIN_LIMIT: number = 2;
 
   public isInvalid: boolean = false;
@@ -73,18 +73,23 @@ export class PortedNumbersAddComponentCtrl implements ng.IComponentController {
         }
         if (!this.PhoneNumberService.numberNANPValidator(num)) {
           this.texttoken = this.texttoken + num;
-          this.textForm.numberPorting.$setValidity('invalid', false);
+          if (this.textForm) {
+            this.textForm.numberPorting.$setValidity('invalid', false);
+          }
         } else {
 
           if (this.portingNumbersCount < PortedNumbersAddComponentCtrl.NUMBER_MAX_LIMIT) {
             if (_.indexOf(this.totalNumbers, num) !== -1 || _.indexOf(validnumbers, num) !== -1) {
               this.texttoken = this.texttoken + num;
-              this.textForm.numberPorting.$setValidity('duplicate', false);
+              if (this.textForm) {
+                this.textForm.numberPorting.$setValidity('duplicate', false);
+              }
             } else {
               this.portingNumbersCount++;
               validnumbers.push(num);
             }
           } else {
+            this.portingNumbersCount++;
             this.isInvalid = true;
             this.texttoken = this.texttoken + num;
           }
@@ -95,32 +100,34 @@ export class PortedNumbersAddComponentCtrl implements ng.IComponentController {
     this.form.$setValidity('', false, this.form);
 
     this.numbers = _.uniq(validnumbers);
-    if (this.numbers.length !== validnumbers.length) {
+    if (this.numbers.length !== validnumbers.length && this.textForm) {
       this.textForm.numberPorting.$setValidity('duplicate', false);
     }
   }
 
   public validateForm() {
-    if (this.portingNumbersCount > PortedNumbersAddComponentCtrl.NUMBER_MAX_LIMIT) {
+    if (this.portingNumbersCount > PortedNumbersAddComponentCtrl.NUMBER_MAX_LIMIT && this.textForm) {
       this.textForm.numberPorting.$setValidity('maxlimit', false);
       this.Notification.error('broadCloud.numbers.maxlimit', {
         max: PortedNumbersAddComponentCtrl.NUMBER_MAX_LIMIT,
         min: PortedNumbersAddComponentCtrl.NUMBER_MIN_LIMIT,
       });
     }
-    if (this.portingNumbersCount < PortedNumbersAddComponentCtrl.NUMBER_MIN_LIMIT) {
+    if (this.portingNumbersCount < PortedNumbersAddComponentCtrl.NUMBER_MIN_LIMIT && this.textForm) {
       this.textForm.numberPorting.$setValidity('minlimit', false);
       this.form.$setValidity('', false, this.form);
-    } else {
+    } else if ( this.form) {
       this.form.$setValidity('', true, this.form);
     }
   }
 
   public resetErrors(): void {
-    this.textForm.numberPorting.$setValidity('invalid', true);
-    this.textForm.numberPorting.$setValidity('duplicate', true);
-    this.textForm.numberPorting.$setValidity('maxlimit', true);
-    this.textForm.numberPorting.$setValidity('minlimit', true);
+    if (this.textForm) {
+      this.textForm.numberPorting.$setValidity('invalid', true);
+      this.textForm.numberPorting.$setValidity('duplicate', true);
+      this.textForm.numberPorting.$setValidity('maxlimit', true);
+      this.textForm.numberPorting.$setValidity('minlimit', true);
+    }
   }
 
   public onChange(): void {

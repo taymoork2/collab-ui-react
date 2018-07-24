@@ -1,8 +1,8 @@
-<div ng-form="$ctrl.form">
-  <h3 translate="broadCloud.numbers.addNumbers"></h3>
-  <h5 class="bsft__number_desc" translate="broadCloud.numbers.addNumberHint"></h5>
-  <h4 class="bsft__number_subheading"translate="broadCloud.numbers.numberType"></h4>
+<div ng-form="$ctrl.form" class="container-fluid service-setup-container">
   <div class="row full service-setup">
+  <h4 translate="broadCloud.numbers.addNumbers"></h4>
+  <p class="sub-section__description bsft-number_padding" translate="broadCloud.numbers.addNumberHint"></p>
+  <label class="sub-section__label bsft-number_subheading"><strong translate="broadCloud.numbers.numberType"></strong></label>
     <ported-numbers-add
       numbers="$ctrl.numbers"
       on-add="$ctrl.onAdd(numbers,isBsftPorted)"

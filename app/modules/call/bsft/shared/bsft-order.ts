@@ -4,17 +4,20 @@ export interface IPortingNumber {
   telephoneNumber: IPhoneNumber;
   btNumber?: IPhoneNumber | null;
   provisionAsActive: boolean;
+  assignProductId?: string | null; //SKU for the product or service
 }
 
 export class PortingNumber implements IPortingNumber {
   public telephoneNumber: IPhoneNumber;
   public btNumber?: IPhoneNumber | null;
   public provisionAsActive: boolean;
+  public assignProductId?: string | null;
 
   constructor (portingNumber: IPortingNumber = {
     telephoneNumber: new PhoneNumber(),
     btNumber: null,
     provisionAsActive: false,
+    assignProductId: null,
   }) {
     this.telephoneNumber = portingNumber.telephoneNumber;
     this.btNumber = _.isNull(portingNumber.btNumber) ? new PhoneNumber() : new PhoneNumber({
@@ -23,6 +26,7 @@ export class PortingNumber implements IPortingNumber {
       e164Number: _.get(portingNumber.btNumber, 'e164Number'),
     });
     this.provisionAsActive = portingNumber.provisionAsActive;
+    this.assignProductId = portingNumber.assignProductId;
   }
 }
 export interface IMainNumber {
