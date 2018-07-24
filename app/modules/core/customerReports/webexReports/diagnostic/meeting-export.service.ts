@@ -164,7 +164,7 @@ export class MeetingExportService {
     const sharingData = _.filter(sharingSessions, sharingSession => {
       return sharingSession.userName === uniqueParticipant.userName;
     });
-    resultSession['Sharing Records'] = <ISharingRecord[]>this.mkDataRecords(sharingRecord, sharingData);
+    resultSession['Sharing Records'] = this.mkDataRecords(sharingRecord, sharingData);
 
     return resultSession;
   }
@@ -185,13 +185,13 @@ export class MeetingExportService {
     const roleChangeData = _.filter(roleChangeSessions, roleChangeSession => {
       return roleChangeSession.toUserName === uniqueParticipant.userName;
     });
-    resultSession['Role Change Records'] = <IRoleChangeRecord[]>this.mkDataRecords(roleChangeRecord, roleChangeData);
+    resultSession['Role Change Records'] = this.mkDataRecords(roleChangeRecord, roleChangeData);
 
     return resultSession;
   }
 
-  private mkDataRecords(dataTemplate: IDataRecord, dataStore: object[]): IDataRecord[] {
-    const records: IDataRecord[] = [];
+  private mkDataRecords<T extends IDataRecord>(dataTemplate: T, dataStore: object[]): T[] {
+    const records: T[] = [];
     _.forEach(dataStore, (item) => {
       const record = _.assignIn({}, dataTemplate);
       _.forOwn(record, (initialValue: any, key: string) => {
