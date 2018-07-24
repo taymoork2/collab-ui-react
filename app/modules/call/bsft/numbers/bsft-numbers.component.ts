@@ -1,4 +1,4 @@
-import { FtswConfigService, Site } from 'modules/call/bsft/shared';
+import { FtswConfigService, Site, BsftOrder, IPortingNumber } from 'modules/call/bsft/shared';
 
 class BsftNumbersCtrl implements ng.IComponentController {
   public ftsw: boolean;
@@ -11,19 +11,17 @@ class BsftNumbersCtrl implements ng.IComponentController {
   public isBsftPorted: boolean = false;
   public numbers: string[] = [];
   public site: Site;
+  public bsftOrder: BsftOrder;
 
   public totalNumbers: string[];
   /* @ngInject */
   constructor(
-    private $q: ng.IQService,
     private $scope: ng.IScope,
     private FtswConfigService: FtswConfigService,
-    // private Authinfo, //todo
     ) {}
 
   public $onInit(): void {
     this.loading = true;
-    this.$q.resolve(this.initComponentData()).finally( () => this.loading = true);
 
     const currentSite = this.FtswConfigService.getCurentSite();
     if (currentSite !== undefined) {
@@ -45,10 +43,20 @@ class BsftNumbersCtrl implements ng.IComponentController {
         this.$scope.$emit('wizardNextButtonDisable', !!loading);
       });
     }
+    this.initComponentData();
   }
 
   private initComponentData() {
-    //todo
+    if (!_.isUndefined(this.site)) {
+      this.bsftOrder = this.FtswConfigService.getOrder(this.site.uuid);
+      const nums: IPortingNumber[] = _.get(this.bsftOrder, 'portedNumbers');
+      if (!_.isEmpty(nums)) {
+        //existing order
+        this.bsftNumbers = _.map(_.filter(nums, num => !num.provisionAsActive), num => _.get(num.telephoneNumber, 'e164Number'));
+        this.prevNumbers = _.map(_.filter(nums, num => num.provisionAsActive), num => _.get(num.telephoneNumber, 'e164Number'));
+      }
+      this.updateTotal();
+    }
   }
 
   public onAdd(numbers, isBsftPorted): void {
@@ -68,9 +76,10 @@ class BsftNumbersCtrl implements ng.IComponentController {
   }
 
   public updateTotal(): void {
+    this.loading = false;
     this.totalNumbers = _.concat(this.prevNumbers, this.bsftNumbers);
-    if (this.totalNumbers.length === 2) {
-      this.loading = false;
+    if (this.totalNumbers.length < 2) {
+      this.loading = true;
     }
   }
 
@@ -85,6 +94,14 @@ class BsftNumbersCtrl implements ng.IComponentController {
 
   public setupNumberBsftNext() {
     this.FtswConfigService.setCurrentSite(this.site);
+    this.bsftOrder.portedNumbers = [];
+    _.forEach(this.bsftNumbers, (number) => {
+      this.bsftOrder.portedNumbers.push({ telephoneNumber: { e164Number: number }, provisionAsActive: false });
+    });
+    _.forEach(this.prevNumbers, (number) => {
+      this.bsftOrder.portedNumbers.push({ telephoneNumber: { e164Number: number }, provisionAsActive: true });
+    });
+    this.FtswConfigService.setOrder(this.bsftOrder);
   }
 }
 

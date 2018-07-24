@@ -1,6 +1,6 @@
 class SiteAssignNumberCtrl implements ng.IComponentController {
-  public selected: string;
-  public vmselected: string;
+  public mainNumber: string;
+  public vmNumber: string;
   public onChangeFn: Function;
   public onChangeVmFn: Function;
   public numberOptions: string[];
@@ -15,12 +15,12 @@ class SiteAssignNumberCtrl implements ng.IComponentController {
   }
   public onNumberChanged(): void {
     this.onChangeFn({
-      number: this.selected,
+      number: this.mainNumber,
     });
   }
   public onVMNumberChanged(): void {
     this.onChangeVmFn({
-      vmnumber: this.vmselected,
+      vmnumber: this.vmNumber,
     });
   }
 }
@@ -32,5 +32,7 @@ export class SiteAssignNumberComponent implements ng.IComponentOptions {
     onChangeFn: '&',
     onChangeVmFn: '&',
     numberOptions: '<',
+    mainNumber: '<',
+    vmNumber: '<',
   };
 }

@@ -54,8 +54,12 @@ class FtswSiteListCtrl implements ng.IComponentController {
         placesLicUsed = placesLicUsed + site.licenses.places;
       }
     });
-    _.set(_.find(licenses, { name: 'standard' }), 'available', _.find(licenses, { name: 'standard' }).total - standardLicUsed);
-    _.set(_.find(licenses, { name: 'places' }), 'available', _.find(licenses, { name: 'places' }).total - placesLicUsed);
+    if (standardLicUsed) {
+      _.set(_.find(licenses, { name: 'standard' }), 'available', _.find(licenses, { name: 'standard' }).total - standardLicUsed);
+    }
+    if (placesLicUsed) {
+      _.set(_.find(licenses, { name: 'places' }), 'available', _.find(licenses, { name: 'places' }).total - placesLicUsed);
+    }
     return licenses;
   }
 

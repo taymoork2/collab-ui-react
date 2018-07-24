@@ -2,6 +2,7 @@ import { FtswConfig } from './ftsw-config';
 import { BsftOrder } from './bsft-order';
 import { Site, ILicenseInfo } from './bsft-site';
 import { Authinfo } from 'modules/core/scripts/services/authinfo';
+// import { IBsftOrder } from '../settings/shared';
 
 export class FtswConfigService {
 
@@ -72,8 +73,9 @@ export class FtswConfigService {
     return _.get(this.ftswConfig, 'orders', []);
   }
 
-  public setOrders(orders: BsftOrder[]): void {
-    _.set(this.ftswConfig, 'Orders', orders);
+  public setOrder(order: BsftOrder): void {
+    const index = _.findIndex(this.ftswConfig.bsftOrders, item => item.siteId === order.siteId);
+    this.ftswConfig.bsftOrders[index] = order;
   }
 
   public addOrder(order: BsftOrder): void {
@@ -81,10 +83,21 @@ export class FtswConfigService {
   }
 
   public getOrder(siteId: string): BsftOrder {
-    const bsftOrder: BsftOrder = new BsftOrder();
-    bsftOrder.siteId = siteId;
-    this.addOrder(bsftOrder);
+    let bsftOrder: BsftOrder = _.find(this.ftswConfig.bsftOrders, order => order.siteId === siteId );
+    if (_.isUndefined(bsftOrder)) {
+      bsftOrder = new BsftOrder();
+      bsftOrder.siteId = siteId;
+      this.addOrder(bsftOrder);
+    }
     return bsftOrder;
+  }
+
+  public assignNumbers(siteId: string, mainNumber: string, vmNumber: string): void {
+    const bsftOrder: BsftOrder = _.find(this.ftswConfig.bsftOrders, order => order.siteId === siteId );
+    if (!_.isUndefined(bsftOrder)) {
+      bsftOrder.mainNumber = { telephoneNumber: { e164Number: mainNumber } };
+      bsftOrder.vmNumber = { telephoneNumber: { e164Number: vmNumber } };
+    }
   }
 
   public setLicenseInfo(name: string, available: number) {
