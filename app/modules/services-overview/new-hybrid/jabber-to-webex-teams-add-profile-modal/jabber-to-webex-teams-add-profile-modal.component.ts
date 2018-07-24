@@ -1,4 +1,4 @@
-import { JabberProfileService } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.service';
+import { JabberToWebexTeamsService } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.service';
 import { Notification } from 'modules/core/notifications';
 
 enum BackendTypes {
@@ -15,8 +15,8 @@ interface IUCManagerProfileData {
 }
 
 export class JabberToWebexTeamsAddProfileModalController implements ng.IComponentController {
-  public readonly MIN_LENGTH: number = 4;
-  public readonly MAX_LENGTH: number = 128;
+  public readonly MIN_LENGTH = 4;
+  public readonly MAX_LENGTH = 128;
   public dismiss: Function;
   public errorMessages = {
     profileName: {
@@ -72,7 +72,7 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
     private Analytics,
     private $translate: ng.translate.ITranslateService,
     private $window: ng.IWindowService,
-    public JabberProfileService: JabberProfileService,
+    public JabberToWebexTeamsService: JabberToWebexTeamsService,
     private Notification: Notification,
   ) {}
 
@@ -89,7 +89,7 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
   }
 
   public finish(): void {
-    this.JabberProfileService.create(this.profileData).then(() => {
+    this.JabberToWebexTeamsService.create(this.profileData).then(() => {
       // TODO : 'spark14176.ucManagerProfiles' logic should be removed after the CI service is fullly coded
       const ucManagerProfiles = _.toArray(JSON.parse(this.$window.sessionStorage.getItem('spark14176.ucManagerProfiles') || '[]'));
       ucManagerProfiles.push(this.profileData);

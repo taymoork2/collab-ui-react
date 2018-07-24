@@ -1,22 +1,16 @@
 import { PROFILE_TEMPLATE, IUcManagerProfile } from './jabber-to-webex-teams.types';
 import { JabberToWebexTeamsUtil } from './jabber-to-webex-teams.util';
-import { SessionStorageService } from 'modules/core/storage/sessionStorage.service';
 
-export class JabberProfileService {
+export class JabberToWebexTeamsService {
 
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
     private Authinfo,
-    private SessionStorage: SessionStorageService,
   ) {}
 
   public getConfigTemplatesUrl() {
     return `https://identity.webex.com/organization/${this.Authinfo.getOrgId()}/v1/config/templates`;
-  }
-
-  public getAuthorization() {
-    return `Bearer ${this.SessionStorage.get('accessToken')}`;
   }
 
   public create(options: {
@@ -30,11 +24,10 @@ export class JabberProfileService {
     let requestData = {};
     _.assignIn(requestData, PROFILE_TEMPLATE);
     _.assignIn(requestData, { templateName: profileName, VoiceMailServer: voiceServerDomainName, CUCMServer: udsServerAddress, BackupCUCMServer: udsBackupServerAddress });
-    requestData = _(requestData).omitBy(_.isEmpty);
+    requestData = _.omitBy(requestData, _.isEmpty);
     return this.$http.post(this.getConfigTemplatesUrl(), requestData, {
       headers: {
         Accept: 'application/json',
-        Authorization: this.getAuthorization(),
       },
     }).then((response) => {
       const profile: IUcManagerProfile = JabberToWebexTeamsUtil.mkUcManagerProfile();
@@ -42,5 +35,3 @@ export class JabberProfileService {
     });
   }
 }
-
-export default JabberProfileService;

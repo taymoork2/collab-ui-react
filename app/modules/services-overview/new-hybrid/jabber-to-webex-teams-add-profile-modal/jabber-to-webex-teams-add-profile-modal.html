@@ -31,14 +31,14 @@
           ng-model="$ctrl.backendType"
           cs-input-label="{{::'jabberToWebexTeams.addProfileModal.voiceServiceDomain' | translate}}">
       </div>
-      <div  class="cs-input-subgroup" ng-if="$ctrl.backendType === $ctrl.BackendTypes.VOICE" > 
+      <div class="cs-input-subgroup" ng-if="$ctrl.backendType === $ctrl.BackendTypes.VOICE" > 
         <input
           cs-input
           class="medium-6"
           type="text"
           name="voiceServerDomainName"
           ng-model="$ctrl.profileData.voiceServerDomainName"
-          ng-required = "$ctrl.backendType === $ctrl.BackendTypes.VOICE"
+          ng-required="$ctrl.backendType === $ctrl.BackendTypes.VOICE"
           ng-minlength="$ctrl.MIN_LENGTH"
           ng-maxlength="$ctrl.MAX_LENGTH"
           cs-input-label="{{::'jabberToWebexTeams.addProfileModal.voiceServiceDomainName' | translate}}"

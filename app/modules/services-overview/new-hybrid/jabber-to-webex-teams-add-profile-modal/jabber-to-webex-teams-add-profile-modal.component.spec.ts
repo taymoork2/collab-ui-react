@@ -2,15 +2,15 @@ import moduleName from './index';
 import { JabberToWebexTeamsAddProfileModalController } from './jabber-to-webex-teams-add-profile-modal.component';
 import { Analytics } from 'modules/core/analytics';
 import { Notification } from 'modules/core/notifications';
-import { JabberProfileService } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.service';
+import { JabberToWebexTeamsService } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.service';
 
 type Test = atlas.test.IComponentTest<JabberToWebexTeamsAddProfileModalController, {
-  $q: any;
+  $q: ng.IQService;
   $scope: ng.IScope;
   $state: ng.ui.IStateService;
   Analytics: Analytics;
   Notification: Notification;
-  JabberProfileService: JabberProfileService;
+  JabberToWebexTeamsService: JabberToWebexTeamsService;
 }, {
 }>;
 
@@ -23,7 +23,7 @@ describe('Component: jabberToWebexTeamsAddProfileModal:', () => {
       '$state',
       'Analytics',
       'Notification',
-      'JabberProfileService',
+      'JabberToWebexTeamsService',
     );
     this.$scope.dismissSpy = jasmine.createSpy('dismissSpy');
   });
@@ -54,7 +54,7 @@ describe('Component: jabberToWebexTeamsAddProfileModal:', () => {
         expect(this.view.find('.modal-footer .btn--primary')).toBeDisabled();
         
         // only template name is filled
-        this.controller.profileData.profileName = "test_profile_name";
+        this.controller.profileData.profileName = 'test_profile_name';
         this.$scope.$apply();
         expect(this.view.find('.modal-footer .btn--primary')).toBeDisabled();
 
@@ -115,11 +115,11 @@ describe('Component: jabberToWebexTeamsAddProfileModal:', () => {
     });
 
     describe('finish():', () => {
-      fit('call JabberProfileService.create(...) ', function (this: Test) {
-        spyOn(this.JabberProfileService, 'create').and.returnValue(this.$q.resolve());
+      it('call JabberToWebexTeamsService.create(...) ', function (this: Test) {
+        spyOn(this.JabberToWebexTeamsService, 'create').and.returnValue(this.$q.resolve());
         this.controller.finish();
         this.$scope.$apply();
-        expect(this.JabberProfileService.create).toHaveBeenCalled();
+        expect(this.JabberToWebexTeamsService.create).toHaveBeenCalled();
       });
 
       it('should not call dismissModal if call service failed', function (this: Test) {
