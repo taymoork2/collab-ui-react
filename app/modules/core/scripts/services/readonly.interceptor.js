@@ -37,6 +37,7 @@
       '/custportal/extensions/',
       '/users/report',
       '/devices/_search',
+      '/devices/_alert',
       '/devices/?field=',
       '/devices/bulk/export',
       '/preloadCaches',
