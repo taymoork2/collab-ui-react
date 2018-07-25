@@ -11,7 +11,7 @@ interface ICheckboxSelections {
 
 export class JabberToWebexTeamsPrerequisitesModalController implements ng.IComponentController {
   public dismiss: Function;
-  private preReqs: ICheckboxSelections;
+  public preReqs: ICheckboxSelections;
   public readonly preReqIds = {
     VOICE_SERVICE: 'voice-service-domain-prereq',
     DNS_SRV_RECORDS: 'dns-srv-records-prereq',
@@ -62,7 +62,7 @@ export class JabberToWebexTeamsPrerequisitesModalController implements ng.ICompo
 
   public finish(): void {
     this.JabberToWebexTeamsService.savePrereqsSettings({
-      allPrereqsDone: true
+      allPrereqsDone: true,
     }).then(() => {
       this.Notification.success('jabberToWebexTeams.prerequisitesModal.savePrereqsSuccess');
     }).catch((response) => {
