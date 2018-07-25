@@ -1,4 +1,5 @@
 import { Notification } from 'modules/core/notifications';
+import { JabberToWebexTeamsService } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.service';
 
 interface ICheckboxSelection {
   isSelected: boolean;
@@ -20,6 +21,7 @@ export class JabberToWebexTeamsPrerequisitesModalController implements ng.ICompo
   constructor(
     private $state: ng.ui.IStateService,
     private Analytics,
+    private JabberToWebexTeamsService: JabberToWebexTeamsService,
     private Notification: Notification,
   ) {}
 
@@ -59,9 +61,15 @@ export class JabberToWebexTeamsPrerequisitesModalController implements ng.ICompo
   }
 
   public finish(): void {
-    // TODO (spark-14176): revisit - confirm copy to use for success notification
-    this.Notification.success('jabberToWebexTeams.prerequisitesModal.savePrereqsSuccess');
-    this.dismiss();
+    this.JabberToWebexTeamsService.savePrereqsSettings({
+      allPrereqsDone: true
+    }).then(() => {
+      this.Notification.success('jabberToWebexTeams.prerequisitesModal.savePrereqsSuccess');
+    }).catch((response) => {
+      this.Notification.errorResponse(response, 'jabberToWebexTeams.prerequisitesModal.savePrereqsError');
+    }).finally(() => {
+      this.dismiss();
+    });
   }
 }
 

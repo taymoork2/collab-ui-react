@@ -1,4 +1,4 @@
-import { SERVICE_SCHEMAS, IUcManagerProfile } from './jabber-to-webex-teams.types';
+import { IPrereqsSettingsRequest, IUcManagerProfile, PREREQS_CONFIG_TEMPLATE, SERVICE_SCHEMAS } from './jabber-to-webex-teams.types';
 
 export class JabberToWebexTeamsUtil {
   public static mkUcManagerProfile(options: {
@@ -29,5 +29,17 @@ export class JabberToWebexTeamsUtil {
       cisEntryCreator: '',
       cisEntryModifier: '',
     }, options);
+  }
+
+  public static mkPrereqsSettingsRequest(options: {
+    allPrereqsDone?: boolean,
+  } = {}): IPrereqsSettingsRequest {
+    // notes:
+    // - as of 2018-07-23, because CI endpoint accepts config property values as strings only, we
+    //   convert boolean to string, otherwise default to 'false'
+    const strAllPrereqsDone = (_.has(options, 'allPrereqsDone')) ? options.allPrereqsDone + '' : 'false';
+    return _.assignIn({}, PREREQS_CONFIG_TEMPLATE, {
+      allPrereqsDone: strAllPrereqsDone,
+    });
   }
 }
