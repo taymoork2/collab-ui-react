@@ -64,7 +64,9 @@ export class JabberToWebexTeamsService {
     });
   }
 
-  private toPrereqsSettings(responseData: IPrereqsSettingsResponse): IPrereqsSettings {
+  // notes:
+  // - this method made public for easier unit-testing
+  public toPrereqsSettings(responseData: IPrereqsSettingsResponse): IPrereqsSettings {
     const filteredData = _.assignIn({}, _.pick(responseData, ['id', 'templateType', 'templateName']), {
       // notes:
       // - as of 2018-07-23, because CI endpoint stores config property values as strings only, we
