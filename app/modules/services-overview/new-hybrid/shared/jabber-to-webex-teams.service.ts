@@ -1,4 +1,4 @@
-import { IPrereqsSettings, IPrereqsSettingsResponse, IUcManagerProfile, PROFILE_TEMPLATE } from './jabber-to-webex-teams.types';
+import { IPrereqsSettings, IPrereqsSettingsResponse, IUcManagerProfile, PREREQS_CONFIG_TEMPLATE_TYPE, PROFILE_TEMPLATE } from './jabber-to-webex-teams.types';
 import { JabberToWebexTeamsUtil } from './jabber-to-webex-teams.util';
 
 export class JabberToWebexTeamsService {
@@ -43,14 +43,34 @@ export class JabberToWebexTeamsService {
       headers: {
         Accept: 'application/json; charset=utf-8',
       },
-    }).then((response: ng.IHttpResponse<{ data: IPrereqsSettingsResponse; }>) => {
-      const filteredData = _.assignIn({}, _.pick(response.data, ['id', 'templateType', 'templateName']), {
-        // notes (as of 2018-07-23):
-        // - because CI endpoint stores config property values as strings only, we convert string back
-        //   to boolean
-        allPrereqsDone: _.get(response.data, 'allPrereqsDone') === 'true',
-      });
-      return <IPrereqsSettings>filteredData;
+    }).then((response: ng.IHttpResponse<IPrereqsSettingsResponse>) => {
+      return this.toPrereqsSettings(response.data);
     });
+  }
+
+  public hasAllPrereqsSettingsDone(): ng.IPromise<boolean> {
+    return this.$http.get(this.getConfigTemplatesUrl(), {
+      params: {
+        filter: `templateType eq "${PREREQS_CONFIG_TEMPLATE_TYPE}" and templateName eq "${PREREQS_CONFIG_TEMPLATE_TYPE}"`,
+      },
+    }).then((response: ng.IHttpResponse<{ totalResults: string }>) => {
+      // notes:
+      // - as of 2018-07-23, because CI endpoint stores config property values as strings only, we
+      //   convert string to number
+      const { totalResults } = response.data;
+      return _.parseInt(totalResults) === 1;
+    }).catch(() => {
+      return false;
+    });
+  }
+
+  private toPrereqsSettings(responseData: IPrereqsSettingsResponse): IPrereqsSettings {
+    const filteredData = _.assignIn({}, _.pick(responseData, ['id', 'templateType', 'templateName']), {
+      // notes:
+      // - as of 2018-07-23, because CI endpoint stores config property values as strings only, we
+      //   convert string to boolean
+      allPrereqsDone: _.get(responseData, 'allPrereqsDone') === 'true',
+    });
+    return <IPrereqsSettings>filteredData;
   }
 }

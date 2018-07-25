@@ -68,7 +68,7 @@ export class JabberToWebexTeamsPrerequisitesModalController implements ng.ICompo
     }).catch((response) => {
       this.Notification.errorResponse(response, 'jabberToWebexTeams.prerequisitesModal.savePrereqsError');
     }).finally(() => {
-      this.dismiss();
+      this.$state.go('services-overview', {}, { reload: true });
     });
   }
 }
