@@ -6841,7 +6841,7 @@
         "qosdisableline2": "After you disable this setting, the nodes do not accept new calls and are restarted when current calls end."
       },
       "pendingnodescontent": {
-        "pendingnodestitle": "Qualaity of Service pending nodes",
+        "pendingnodestitle": "Quality of Service pending nodes",
         "nodes": "Pending nodes",
         "description": "Below are the nodes where enabling Quality of Service is still pending. If the update is not applied within 2 hours, <a href='https://mycase.cloudapps.cisco.com/'  target='_blank'> open a new case </a>to resolve the issue."
       }
