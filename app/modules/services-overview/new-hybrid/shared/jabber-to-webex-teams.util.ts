@@ -34,12 +34,15 @@ export class JabberToWebexTeamsUtil {
   public static mkPrereqsSettingsRequest(options: {
     allPrereqsDone?: boolean,
   } = {}): IPrereqsSettingsRequest {
+    const {
+      allPrereqsDone = false,
+    } = options;
+
     // notes:
     // - as of 2018-07-23, because CI endpoint accepts config property values as strings only, we
-    //   convert boolean to string, otherwise default to 'false'
-    const strAllPrereqsDone = (_.has(options, 'allPrereqsDone')) ? options.allPrereqsDone + '' : 'false';
+    //   convert boolean to string
     return _.assignIn({}, PREREQS_CONFIG_TEMPLATE, {
-      allPrereqsDone: strAllPrereqsDone,
+      allPrereqsDone: `${allPrereqsDone}`,
     });
   }
 }

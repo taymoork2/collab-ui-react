@@ -7,6 +7,7 @@ import { PREREQS_CONFIG_TEMPLATE_TYPE } from './jabber-to-webex-teams.types';
 type Test = atlas.test.IServiceTest<{
   Authinfo;
   JabberToWebexTeamsService: JabberToWebexTeamsService;
+  UrlConfig;
 }>;
 
 describe('Service: JabberToWebexTeamsService:', () => {
@@ -15,14 +16,16 @@ describe('Service: JabberToWebexTeamsService:', () => {
     this.injectDependencies(
       'Authinfo',
       'JabberToWebexTeamsService',
+      'UrlConfig',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('fake-org-id');
+    spyOn(this.UrlConfig, 'getIdentityServiceUrl').and.returnValue('fake-identity-url');
   });
 
   describe('getConfigTemplatesUrl():', () => {
     it('should return the correct url for the current org id', function (this: Test) {
       const result = this.JabberToWebexTeamsService.getConfigTemplatesUrl();
-      expect(result).toBe('https://identity.webex.com/organization/fake-org-id/v1/config/templates');
+      expect(result).toBe('fake-identity-url/organization/fake-org-id/v1/config/templates');
     });
   });
 
@@ -40,11 +43,7 @@ describe('Service: JabberToWebexTeamsService:', () => {
       spyOn(this.$http, 'post').and.returnValue(this.$q.resolve());
       this.JabberToWebexTeamsService.savePrereqsSettings({ allPrereqsDone: true });
       this.$scope.$apply();
-      expect(this.$http.post).toHaveBeenCalledWith('fake-url', 'fake-request-data', {
-        headers: {
-          Accept: 'application/json; charset=utf-8',
-        },
-      });
+      expect(this.$http.post).toHaveBeenCalledWith('fake-url', 'fake-request-data');
     });
 
     it('should resolve with the result of passing response data to "toPrereqsSettings()"', function (this: Test, done) {

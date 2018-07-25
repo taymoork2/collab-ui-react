@@ -7,10 +7,11 @@ export class JabberToWebexTeamsService {
   constructor(
     private $http: ng.IHttpService,
     private Authinfo,
+    private UrlConfig,
   ) {}
 
   public getConfigTemplatesUrl() {
-    return `https://identity.webex.com/organization/${this.Authinfo.getOrgId()}/v1/config/templates`;
+    return `${this.UrlConfig.getIdentityServiceUrl()}/organization/${this.Authinfo.getOrgId()}/v1/config/templates`;
   }
 
   public create(options: {
@@ -25,6 +26,7 @@ export class JabberToWebexTeamsService {
     _.assignIn(requestData, PROFILE_TEMPLATE);
     _.assignIn(requestData, { templateName: profileName, VoiceMailServer: voiceServerDomainName, CUCMServer: udsServerAddress, BackupCUCMServer: udsBackupServerAddress });
     requestData = _.omitBy(requestData, _.isEmpty);
+    // TODO (changlol): rm unnecessary headers config argument from '$http.post()'
     return this.$http.post(this.getConfigTemplatesUrl(), requestData, {
       headers: {
         Accept: 'application/json',
@@ -39,13 +41,10 @@ export class JabberToWebexTeamsService {
     allPrereqsDone: boolean;
   }): ng.IPromise<IPrereqsSettings> {
     const requestData = JabberToWebexTeamsUtil.mkPrereqsSettingsRequest(options);
-    return this.$http.post(this.getConfigTemplatesUrl(), requestData, {
-      headers: {
-        Accept: 'application/json; charset=utf-8',
-      },
-    }).then((response: ng.IHttpResponse<IPrereqsSettingsResponse>) => {
-      return this.toPrereqsSettings(response.data);
-    });
+    return this.$http.post<IPrereqsSettingsResponse>(this.getConfigTemplatesUrl(), requestData)
+      .then(response => {
+        return this.toPrereqsSettings(response.data);
+      });
   }
 
   public hasAllPrereqsSettingsDone(): ng.IPromise<boolean> {
@@ -67,12 +66,16 @@ export class JabberToWebexTeamsService {
   // notes:
   // - this method made public for easier unit-testing
   public toPrereqsSettings(responseData: IPrereqsSettingsResponse): IPrereqsSettings {
-    const filteredData = _.assignIn({}, _.pick(responseData, ['id', 'templateType', 'templateName']), {
+    const { id, templateType, templateName, allPrereqsDone } = responseData;
+    return {
+      id,
+      templateType,
+      templateName,
+
       // notes:
       // - as of 2018-07-23, because CI endpoint stores config property values as strings only, we
       //   convert string to boolean
-      allPrereqsDone: _.get(responseData, 'allPrereqsDone') === 'true',
-    });
-    return <IPrereqsSettings>filteredData;
+      allPrereqsDone: allPrereqsDone === 'true',
+    };
   }
 }
