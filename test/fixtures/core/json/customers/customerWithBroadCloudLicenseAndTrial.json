@@ -1,0 +1,210 @@
+{
+  "accountStatus": "trial",
+  "trialId": "da6d0c6e-ec52-43a6-95fb-1826a3334a50",
+  "customerOrgId": "e12fe7b9-14ae-4927-989b-a3c30990bb2f",
+  "customerName": "Atlas_Test_Shravan_3",
+  "customerEmail": "nerdboyshetty@gmail.com",
+  "endDate": "Oct 17, 2018",
+  "startDate": "2018-07-20T00:00:00.000Z",
+  "numUsers": 0,
+  "activeUsers": 0,
+  "daysLeft": 85,
+  "usage": 0,
+  "licenses": 100,
+  "deviceLicenses": 0,
+  "licenseList": [{
+    "licenseId": "SPSTD_067c0145-e223-4a6e-9c87-584e6ec5e4d0",
+    "offerName": "SPSTD",
+    "licenseType": "COMMUNICATION",
+    "features": ["bc-sp-standard"],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "da6d0c6e-ec52-43a6-95fb-1826a3334a50",
+    "status": "PENDING",
+    "partnerOrgId": "453e0f7f-9117-4fd9-8369-71d86cdfeb25",
+    "partnerEmail": "boulder.steamboat@gmail.com"
+  }, {
+    "licenseId": "SPCA_39c76b79-795d-4638-a461-4ed74cf6d39c",
+    "offerName": "SPCA",
+    "licenseType": "COMMUNICATION",
+    "features": ["bc-sp-common-area"],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "da6d0c6e-ec52-43a6-95fb-1826a3334a50",
+    "status": "PENDING",
+    "partnerOrgId": "453e0f7f-9117-4fd9-8369-71d86cdfeb25",
+    "partnerEmail": "boulder.steamboat@gmail.com"
+  }],
+  "orderedServices": {
+    "servicesManagedByCurrentPartner": ["messaging", "conferencing", "communications", "webex", "roomSystems", "sparkBoard", "care"],
+    "servicesManagedByAnotherPartner": [],
+    "servicesManagedByCustomer": []
+  },
+  "messaging": {
+    "status": "ACTIVE",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 0
+  },
+  "conferencing": {
+    "status": "ACTIVE",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 0
+  },
+  "communications": {
+    "status": "ACTIVE",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 0
+  },
+  "communicationsSPCA": {
+    "licenseId": "SPCA_39c76b79-795d-4638-a461-4ed74cf6d39c",
+    "offerName": "SPCA",
+    "licenseType": "COMMUNICATION",
+    "features": ["bc-sp-common-area"],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "da6d0c6e-ec52-43a6-95fb-1826a3334a50",
+    "status": "ACTIVE",
+    "partnerOrgId": "453e0f7f-9117-4fd9-8369-71d86cdfeb25",
+    "partnerEmail": "boulder.steamboat@gmail.com",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 1
+  },
+  "communicationsSPSTD": {
+    "licenseId": "SPSTD_067c0145-e223-4a6e-9c87-584e6ec5e4d0",
+    "offerName": "SPSTD",
+    "licenseType": "COMMUNICATION",
+    "features": ["bc-sp-standard"],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "da6d0c6e-ec52-43a6-95fb-1826a3334a50",
+    "status": "ACTIVE",
+    "partnerOrgId": "453e0f7f-9117-4fd9-8369-71d86cdfeb25",
+    "partnerEmail": "boulder.steamboat@gmail.com",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 1
+  },
+  "roomSystems": {
+    "status": "ACTIVE",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 0
+  },
+  "sparkConferencing": {
+    "status": "ACTIVE",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 0
+  },
+  "webexEEConferencing": {
+    "status": "ACTIVE",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 0
+  },
+  "webexCMR": {
+    "status": "ACTIVE",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 0
+  },
+  "care": {
+    "status": "ACTIVE",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 0
+  },
+  "advanceCare": {
+    "status": "ACTIVE",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 0
+  },
+  "daysUsed": 5,
+  "percentUsed": 6,
+  "duration": 90,
+  "offer": {
+    "trialServices": []
+  },
+  "offers": [{
+    "id": "BCALL",
+    "licenseCount": 100,
+    "usageCount": 0
+  }, {
+    "id": "BCALL",
+    "licenseCount": 100,
+    "usageCount": 0
+  }],
+  "status": "ACTIVE",
+  "state": "ACTIVE",
+  "isAllowedToManage": true,
+  "isSquaredUcOffer": true,
+  "notes": {
+    "daysLeft": 85,
+    "sortOrder": 100,
+    "text": "85 days left to purchase"
+  },
+  "isPartner": false,
+  "isTrialData": false,
+  "isPremium": false,
+  "unmodifiedLicenses": [{
+    "licenseId": "SPSTD_067c0145-e223-4a6e-9c87-584e6ec5e4d0",
+    "offerName": "SPSTD",
+    "licenseType": "COMMUNICATION",
+    "features": ["bc-sp-standard"],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "da6d0c6e-ec52-43a6-95fb-1826a3334a50",
+    "status": "PENDING",
+    "partnerOrgId": "453e0f7f-9117-4fd9-8369-71d86cdfeb25",
+    "partnerEmail": "boulder.steamboat@gmail.com"
+  }, {
+    "licenseId": "SPCA_39c76b79-795d-4638-a461-4ed74cf6d39c",
+    "offerName": "SPCA",
+    "licenseType": "COMMUNICATION",
+    "features": ["bc-sp-common-area"],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "da6d0c6e-ec52-43a6-95fb-1826a3334a50",
+    "status": "PENDING",
+    "partnerOrgId": "453e0f7f-9117-4fd9-8369-71d86cdfeb25",
+    "partnerEmail": "boulder.steamboat@gmail.com"
+  }],
+  "webexEventCenter": {
+    "status": "ACTIVE",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 0
+  },
+  "webexMeetingCenter": {
+    "status": "ACTIVE",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 0
+  },
+  "webexSupportCenter": {
+    "status": "ACTIVE",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 0
+  },
+  "sparkBoard": {
+    "status": "ACTIVE",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 0
+  },
+  "webexTrainingCenter": {
+    "status": "ACTIVE",
+    "daysLeft": 85,
+    "customerName": "Atlas_Test_Shravan_3",
+    "sortOrder": 0
+  },
+  "purchased": false,
+  "totalLicenses": 100,
+  "uniqueServiceCount": 5
+}

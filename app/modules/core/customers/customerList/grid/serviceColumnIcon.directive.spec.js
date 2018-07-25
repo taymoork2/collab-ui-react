@@ -80,4 +80,28 @@ describe('Directive: crServiceColumnIcon', function () {
     expect(tooltipHtml.find('.tooltip-block .tooltip-status').text()).toEqual('customerPage.trial');
     expect(tooltipHtml.find('.tooltip-anotherPartner').text()).toEqual('');
   });
+
+  it('should properly compile a broadCloud tooltip for trial broadcloud license', function () {
+    scope.mockData = getJSONFixture('core/json/customers/customerWithBroadCloudLicenseAndTrial.json');
+    var tooltipHtml = $(compileDirective('communications').children().attr('tt-tooltip-unsafe-text'));
+    expect(tooltipHtml.find('.service-name').text()).toEqual('customerPage.call');
+    expect(tooltipHtml.find('.service-sub-name').text()).toEqual('customerPage.broadCloud.tootTipTitle');
+    expect(tooltipHtml.find('.tooltip-block').length).toEqual(2);
+    expect(tooltipHtml.find('.tooltip-qty').length).toEqual(2);
+    expect(tooltipHtml.find('.tooltip-block .tooltip-qty').first().text()).toEqual('customerPage.broadCloud.licenseTypeAndValue');
+    expect(tooltipHtml.find('.service-status i').attr('class')).toContain('trial');
+    expect(tooltipHtml.find('.service-status .tooltip-status').text()).toEqual('customerPage.trial');
+  });
+
+  it('should properly compile a broadCloud tooltip for purchased broadcloud license', function () {
+    scope.mockData = getJSONFixture('core/json/customers/customerWithBroadCloudLicenseAndNoTrial.json');
+    var tooltipHtml = $(compileDirective('communications').children().attr('tt-tooltip-unsafe-text'));
+    expect(tooltipHtml.find('.service-name').text()).toEqual('customerPage.call');
+    expect(tooltipHtml.find('.service-sub-name').text()).toEqual('customerPage.broadCloud.tootTipTitle');
+    expect(tooltipHtml.find('.tooltip-block').length).toEqual(2);
+    expect(tooltipHtml.find('.tooltip-qty').length).toEqual(2);
+    expect(tooltipHtml.find('.tooltip-block .tooltip-qty').first().text()).toEqual('customerPage.broadCloud.licenseTypeAndValue');
+    expect(tooltipHtml.find('.service-status i').attr('class')).toContain('purchased');
+    expect(tooltipHtml.find('.service-status .tooltip-status').text()).toEqual('customerPage.purchased');
+  });
 });

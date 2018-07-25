@@ -166,6 +166,9 @@ export class Config {
     'webexMeetingCenter',
     'webexTrainingCenter',
     'webexSupportCenter',
+    'communicationsSPCA',
+    'communicationsSPSTD',
+    'communicationBCALL',
   ];
 
   public readonly webexTypes = [
@@ -175,6 +178,20 @@ export class Config {
     'webexMeetingCenter',
     'webexTrainingCenter',
     'webexSupportCenter',
+  ];
+
+  public readonly communicationsTypes = [
+    'communications',
+    'communicationsSPSTD',
+    'communicationsSPCA',
+    'communicationBCALL',
+  ];
+
+  public readonly communicationsTypeCodes = [
+    'CO',
+    'SPSTD',
+    'SPCA',
+    'BCALL',
   ];
 
   public readonly webexTypeCodes = [

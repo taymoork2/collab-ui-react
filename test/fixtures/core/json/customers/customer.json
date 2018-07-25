@@ -10,6 +10,18 @@
     "partnerOrgId": "partner-org-id",
     "partnerEmail": "partner@company.com"
   },
+  "communicationsSPCA": {
+    "customerName": "customer org name",
+    "status": "ACTIVE",
+    "daysLeft": 46,
+    "sortOrder": 1
+  },
+  "communicationsSPSTD": {
+    "customerName": "customer org name",
+    "status": "ACTIVE",
+    "daysLeft": 46,
+    "sortOrder": 1
+  },
   "conferencing": {
     "isTrial": false,
     "licenseId": 12345,
