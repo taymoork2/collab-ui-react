@@ -5,10 +5,10 @@
   <div class="active-card_content">
     <p translate="servicesOverview.cards.jabberToWebexTeams.description"></p>
     <div class="active-card_section active-card__content-links">
-      <div class="active-card_action" ng-if="$ctrl.fakeHasAtLeastOneProfileSet()">
+      <div class="active-card_action" ng-if="$ctrl.hasAtLeastOneProfileSet">
         <a ng-click="$ctrl.manageProfiles()"  translate="servicesOverview.cards.jabberToWebexTeams.edit"></a>
       </div>
-      <div class="active-card_action" ng-if="!$ctrl.fakeHasAtLeastOneProfileSet()">
+      <div class="active-card_action" ng-if="!$ctrl.hasAtLeastOneProfileSet">
         <a ng-click="$ctrl.addProfile()"  translate="servicesOverview.cards.jabberToWebexTeams.add"></a>
       </div>
     </div>

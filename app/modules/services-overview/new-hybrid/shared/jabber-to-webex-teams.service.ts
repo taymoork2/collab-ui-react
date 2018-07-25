@@ -1,4 +1,4 @@
-import { IPrereqsSettings, IPrereqsSettingsResponse, IUcManagerProfile, PREREQS_CONFIG_TEMPLATE_TYPE, PROFILE_TEMPLATE } from './jabber-to-webex-teams.types';
+import { IPrereqsSettings, IPrereqsSettingsResponse, IUcManagerProfile, PREREQS_CONFIG_TEMPLATE_TYPE, PROFILE_TEMPLATE, JABBER_CONFIG_TEMPLATE_TYPE } from './jabber-to-webex-teams.types';
 import { JabberToWebexTeamsUtil } from './jabber-to-webex-teams.util';
 
 export class JabberToWebexTeamsService {
@@ -96,5 +96,18 @@ export class JabberToWebexTeamsService {
       //   convert string to boolean
       allPrereqsDone: allPrereqsDone === 'true',
     };
+  }
+
+  public hasAnyJabberTemplate(): ng.IPromise<boolean> {
+    return this.$http.get(this.getConfigTemplatesUrl(), {
+      params: {
+        filter: `templateType eq "${JABBER_CONFIG_TEMPLATE_TYPE}"`,
+      },
+    }).then((response: ng.IHttpResponse<{ totalResults: string }>) => {
+      const { totalResults } = response.data;
+      return _.parseInt(totalResults) >= 1;
+    }).catch(() => {
+      return false;
+    });
   }
 }

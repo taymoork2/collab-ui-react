@@ -1,7 +1,8 @@
 export const SERVICE_SCHEMAS: string[] = ['urn:cisco:codev:identity:template:core:1.0'];
+export const JABBER_CONFIG_TEMPLATE_TYPE = 'jabber';
 export const PROFILE_TEMPLATE = {
   schemas: SERVICE_SCHEMAS,
-  templateType: 'jabber',
+  templateType: JABBER_CONFIG_TEMPLATE_TYPE,
 };
 export const PREREQS_CONFIG_TEMPLATE_TYPE = 'jabber-to-webex-teams-prereqs';
 export const PREREQS_CONFIG_TEMPLATE = {

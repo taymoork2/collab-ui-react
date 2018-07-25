@@ -1,10 +1,19 @@
+import { JabberToWebexTeamsService } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.service';
+
 export class JabberToWebexTeamsActiveCardController implements ng.IComponentController {
+  public hasAtLeastOneProfileSet = false;
 
   /* @ngInject */
   constructor(
-    private $window: ng.IWindowService,
     private $state: ng.ui.IStateService,
+    private JabberToWebexTeamsService: JabberToWebexTeamsService,
   ) {}
+
+  public $onInit() {
+    this.JabberToWebexTeamsService.hasAnyJabberTemplate().then((hasAny) => {
+      this.hasAtLeastOneProfileSet = hasAny;
+    });
+  }
 
   public manageProfiles(): void {
     this.$state.go('jabber-to-webex-teams.profiles');
@@ -12,11 +21,6 @@ export class JabberToWebexTeamsActiveCardController implements ng.IComponentCont
 
   public addProfile(): void {
     this.$state.go('jabber-to-webex-teams.modal.add-profile');
-  }
-
-  // TODO (spark-14176): rm this method once back-end is hooked up and can start using appropriate service id
-  public fakeHasAtLeastOneProfileSet(): boolean {
-    return !_.isEmpty(JSON.parse(this.$window.sessionStorage.getItem('spark14176.ucManagerProfiles') || '[]'));
   }
 }
 

@@ -2,7 +2,7 @@ import moduleName from './index';
 
 import { JabberToWebexTeamsService } from './jabber-to-webex-teams.service';
 import { JabberToWebexTeamsUtil } from './jabber-to-webex-teams.util';
-import { PREREQS_CONFIG_TEMPLATE_TYPE } from './jabber-to-webex-teams.types';
+import { PREREQS_CONFIG_TEMPLATE_TYPE, PROFILE_TEMPLATE, JABBER_CONFIG_TEMPLATE_TYPE } from './jabber-to-webex-teams.types';
 
 type Test = atlas.test.IServiceTest<{
   Authinfo;
@@ -30,7 +30,42 @@ describe('Service: JabberToWebexTeamsService:', () => {
   });
 
   describe('create():', () => {
-    // TODO (changlol): implement unit-test(s)
+    beforeEach(function () {
+      spyOn(this.JabberToWebexTeamsService, 'getConfigTemplatesUrl').and.returnValue('fake-url');
+    });
+
+    it('should POST to config templates url for backednType.voiceServerDomain', function (this: Test) {
+      spyOn(this.$http, 'post').and.returnValue(this.$q.resolve());
+      const createData = { profileName: 'fake-profile-name', voiceServerDomainName: 'fake-voice-server-domain', udsServerAddress: '', udsBackupServerAddress: '' };
+      this.JabberToWebexTeamsService.create(createData);
+      expect(this.$http.post).toHaveBeenCalledWith('fake-url', _.assignIn({ templateName: createData.profileName, VoiceMailServer: createData.voiceServerDomainName }, PROFILE_TEMPLATE), {
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+    });
+
+    it('should POST to config templates url for backednType.udsServer', function (this: Test) {
+      spyOn(this.$http, 'post').and.returnValue(this.$q.resolve());
+      const createData = { profileName: 'fake-profile-name', voiceServerDomainName: '', udsServerAddress: 'fake-uds-server', udsBackupServerAddress: 'fake-uds-backupserver' };
+      this.JabberToWebexTeamsService.create(createData);
+      expect(this.$http.post).toHaveBeenCalledWith('fake-url', _.assignIn({ templateName: createData.profileName, CUCMServer: createData.udsServerAddress, BackupCUCMServer: createData.udsBackupServerAddress }, PROFILE_TEMPLATE), {
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+    });
+
+    it('should POST to config templates url for both backednTypes are used', function (this: Test) {
+      spyOn(this.$http, 'post').and.returnValue(this.$q.resolve());
+      const createData = { profileName: 'fake-profile-name', voiceServerDomainName: 'fake-voice-server-domain', udsServerAddress: 'fake-uds-server', udsBackupServerAddress: 'fake-uds-backupserver' };
+      this.JabberToWebexTeamsService.create(createData);
+      expect(this.$http.post).toHaveBeenCalledWith('fake-url', _.assignIn({ templateName: createData.profileName, VoiceMailServer: createData.voiceServerDomainName, CUCMServer: createData.udsServerAddress, BackupCUCMServer: createData.udsBackupServerAddress }, PROFILE_TEMPLATE), {
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+    });
   });
 
   describe('savePrereqsSettings():', () => {
@@ -141,6 +176,71 @@ describe('Service: JabberToWebexTeamsService:', () => {
         templateName: 'fake-template-name',
         allPrereqsDone: false,
       });
+    });
+  });
+
+  describe('hasAnyJabberTemplate():', () => {
+    beforeEach(function () {
+      spyOn(this.JabberToWebexTeamsService, 'getConfigTemplatesUrl').and.returnValue('fake-url');
+    });
+
+    it('should GET to config templates url with default "filter" param', function (this: Test) {
+      spyOn(this.$http, 'get').and.returnValue(this.$q.resolve());
+      this.JabberToWebexTeamsService.hasAnyJabberTemplate();
+      expect(this.$http.get).toHaveBeenCalledWith('fake-url', {
+        params: {
+          filter: `templateType eq "${JABBER_CONFIG_TEMPLATE_TYPE}"`,
+        },
+      });
+    });
+
+    it('should resolve with true if the response contains a "totalResults" property that not less than 1', function (this: Test, done) {
+      const fakeResolvedResult = {};
+
+      // "totalResults" is "1"
+      _.set(fakeResolvedResult, 'data.totalResults', '1');
+      spyOn(this.$http, 'get').and.returnValue(this.$q.resolve(fakeResolvedResult));
+      this.JabberToWebexTeamsService.hasAnyJabberTemplate().then((parsedResolvedResult) => {
+        expect(parsedResolvedResult).toBe(true);
+      }).catch(fail);
+      this.$scope.$apply();
+
+      // "totalResults" is "2"
+      _.set(fakeResolvedResult, 'data.totalResults', '2');
+      this.JabberToWebexTeamsService.hasAnyJabberTemplate().then((parsedResolvedResult) => {
+        expect(parsedResolvedResult).toBe(true);
+        _.defer(done);
+      }).catch(fail);
+      this.$scope.$apply();
+    });
+
+    it('should resolve with false if the response contains a "totalResults" property that is less than 1', function (this: Test, done) {
+      const fakeResolvedResult = {};
+
+      // "totalResults" is "0"
+      _.set(fakeResolvedResult, 'data.totalResults', '0');
+      spyOn(this.$http, 'get').and.returnValue(this.$q.resolve(fakeResolvedResult));
+      this.JabberToWebexTeamsService.hasAnyJabberTemplate().then((parsedResolvedResult) => {
+        expect(parsedResolvedResult).toBe(false);
+      }).catch(fail);
+      this.$scope.$apply();
+
+      // "totalResults" is "-1"
+      _.set(fakeResolvedResult, 'data.totalResults', '-1');
+      this.JabberToWebexTeamsService.hasAnyJabberTemplate().then((parsedResolvedResult) => {
+        expect(parsedResolvedResult).toBe(false);
+        _.defer(done);
+      }).catch(fail);
+      this.$scope.$apply();
+    });
+
+    it('should resolve with false if the GET call rejects', function (this: Test, done) {
+      spyOn(this.$http, 'get').and.returnValue(this.$q.reject());
+      this.JabberToWebexTeamsService.hasAnyJabberTemplate().then((result) => {
+        expect(result).toBe(false);
+        _.defer(done);
+      }).catch(fail);
+      this.$scope.$apply();
     });
   });
 });

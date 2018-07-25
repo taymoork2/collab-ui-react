@@ -20,8 +20,23 @@ describe('Component: jabberToWebexTeamsActiveCard:', () => {
   });
 
   describe('primary behaviors (view):', () => {
-    it('should render a add or edit link', function (this: Test) {
-      //TODO : add link check
+    enum View {
+      ADD_LINK = '.active-card_action a[translate="servicesOverview.cards.jabberToWebexTeams.add"]',
+      EDIT_LINK = '.active-card_action a[translate="servicesOverview.cards.jabberToWebexTeams.edit"]',
+    }
+
+    it('should render a add button if hasAtLeastOneProfileSet is false', function (this: Test) {
+      this.controller.hasAtLeastOneProfileSet = false;
+      this.$scope.$apply();
+      expect(this.view.find(View.ADD_LINK)).toExist();
+      expect(this.view.find(View.EDIT_LINK)).not.toExist();
+    });
+
+    it('should render a edit button if hasAtLeastOneProfileSet is true', function (this: Test) {
+      this.controller.hasAtLeastOneProfileSet = true;
+      this.$scope.$apply();
+      expect(this.view.find(View.ADD_LINK)).not.toExist();
+      expect(this.view.find(View.EDIT_LINK)).toExist();
     });
   });
 
