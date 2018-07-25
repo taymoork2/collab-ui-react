@@ -239,8 +239,7 @@
 
         // TODO (mipark2): refactor this function for re-usability
         // notes:
-        // - as of 2018-04-16, if a GET call is made for an org with too many users (3000+), CI will respond with a 403
-        //   status containing an error code of `'200045'`
+        // - as of 2018-04-16, if a GET call is made for an org with too many users, CI will respond with a 403
         function getNumberOnboardedUsers() {
           var params = {
             orgId: Authinfo.getOrgId(),
@@ -255,16 +254,32 @@
             },
           };
           UserListService.listUsersAsPromise(params).then(function (response) {
-            card.usersOnboarded = response.data.totalResults;
+            card.usersOnboarded = _.get(response, 'data.totalResults');
           }).catch(function (error) {
-            var errors = error.data.Errors;
-            if (error.status === 403 && _.some(errors, { errorCode: '200045' })) {
-              card.usersOnboarded = '3000+';
+            // 403 + either the 'too many results' or 'too many users' error indicates a need to fail over to the estimatedUserSize from the getOrg call
+            var errors = _.get(error, 'data.Errors');
+            if (error.status === 403 && (_.some(errors, { errorCode: '200045' }) || _.some(errors, { errorCode: '100106' }))) {
+              getEstimatedSize();
             } else {
-              card.isOnboardingError = true;
-              card.usersOnboardedError = $translate.instant('overview.cards.users.onboardError');
+              setOnboardingError();
             }
           });
+        }
+
+        function getEstimatedSize() {
+          Orgservice.getOrg(_.noop, null, { basicInfo: true }).then(function (response) {
+            card.usersOnboarded = _.get(response, 'data.estimatedUserSize');
+            if (_.isUndefined(card.usersOnboarded)) {
+              setOnboardingError();
+            }
+          }).catch(function () {
+            setOnboardingError();
+          });
+        }
+
+        function setOnboardingError() {
+          card.isOnboardingError = true;
+          card.usersOnboardedError = $translate.instant('overview.cards.users.onboardError');
         }
 
         initAutoAssignTemplate();
