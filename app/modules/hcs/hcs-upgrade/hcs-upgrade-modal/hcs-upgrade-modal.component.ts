@@ -19,7 +19,7 @@ export class HcsUpgradeModalCtrl implements ng.IComponentController {
   public currentVersion;
   public upgradeTo;
   public upgradeOrder;
-  public customerId;
+  public groupId;
   public upgradeTaskType: string = 'upgrade';
 
   /* @ngInject */
@@ -58,7 +58,7 @@ export class HcsUpgradeModalCtrl implements ng.IComponentController {
       .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
       .then(() => this.HcsUpgradeService.startTasks(this.clusterUuid, this.upgradeTaskType))
       .then(() => this.dismiss())
-      .then(() => this.$state.go('hcs.upgradeClusterStatus', { groupId: this.customerId, clusterId: this.clusterUuid }));
+      .then(() => this.$state.go('hcs.upgradeClusterStatus', { groupId: this.groupId, clusterId: this.clusterUuid }));
   }
 
   public getNodeIds(clusterList) {
@@ -94,6 +94,6 @@ export class HcsUpgradeModalComponent implements ng.IComponentOptions {
     clusterUuid: '@',
     currentVersion: '@',
     upgradeTo: '@',
-    customerId: '@',
+    groupId: '@',
   };
 }
