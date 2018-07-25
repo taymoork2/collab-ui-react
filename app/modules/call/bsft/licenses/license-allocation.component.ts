@@ -29,14 +29,6 @@ class LicenseAllocationCtrl implements ng.IComponentController {
     const currentSite = this.FtswConfigService.getCurentSite();
     if (currentSite !== undefined) {
       this.site = currentSite;
-
-      if (this.site.licenses['standard']) {
-        this.licenses['standard'].available = this.site.licenses['standard'] + this.licenses['standard'].available;
-      }
-
-      if (this.site.licenses['places']) {
-        this.licenses['places'].available = this.site.licenses['places'] + this.licenses['places'].available;
-      }
     }
   }
 

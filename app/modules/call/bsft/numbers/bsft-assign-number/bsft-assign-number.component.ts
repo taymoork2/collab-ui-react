@@ -1,5 +1,6 @@
-import { FtswConfigService, Site } from 'modules/call/bsft/shared';
+import { FtswConfigService, Site, RialtoService } from 'modules/call/bsft/shared';
 import { BsftOrder, IPortingNumber } from '../../shared';
+import { Notification } from 'modules/core/notifications';
 
 class BsftAssignNumberCtrl implements ng.IComponentController {
   public isFtsw: boolean;
@@ -19,6 +20,8 @@ class BsftAssignNumberCtrl implements ng.IComponentController {
     private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
     private FtswConfigService: FtswConfigService,
+    private RialtoService: RialtoService,
+    private Notification: Notification,
   ) {
     this.messages = {
       required: this.$translate.instant('common.invalidRequired'),
@@ -26,9 +29,6 @@ class BsftAssignNumberCtrl implements ng.IComponentController {
   }
 
   public $onInit() {
-    if (this.isFtsw) {
-      this.$scope.$emit('wizardNextText', 'saveLocation');
-    }
     this.numberOptions = [];
 
     const currentSite = this.FtswConfigService.getCurentSite();
@@ -39,6 +39,7 @@ class BsftAssignNumberCtrl implements ng.IComponentController {
     this.initComponentData();
     this.loading = false;
     if (this.ftsw) {
+      this.$scope.$emit('wizardNextText', 'saveLocation');
       this.$scope.$watch(() => {
         return _.get(this.form, '$invalid');
       }, invalid => {
@@ -90,7 +91,19 @@ class BsftAssignNumberCtrl implements ng.IComponentController {
   public assignNumberBsftNext() {
     this.FtswConfigService.addSite(this.site);
     this.FtswConfigService.assignNumbers(this.site.uuid, this.mainNumber, this.vmNumber);
-    //move to number assignment when available
+    if (this.ftsw) {
+      return this.RialtoService.saveCustomer(this.site)
+        .then((response) => this.RialtoService.saveSite(response.rialtoId, this.site))
+        .catch((response) => this.Notification.error(response.status.message))
+        .then(response => {
+          if (response.status.type === 'success') {
+            this.Notification.success(response.status.message);
+          } else {
+            this.Notification.error(response.status.message);
+          }
+        })
+        .catch((response) => this.Notification.error(response.status.message));
+    }
   }
 }
 

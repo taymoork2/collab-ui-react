@@ -4,7 +4,7 @@ class BsftSiteCountryCtrl implements ng.IComponentController {
   public messages: any = {};
   public countryList = [{
     name: 'United States',
-    abbreviation: 'us',
+    abbreviation: 'US',
   }];
   public countryPlaceholder;
 
