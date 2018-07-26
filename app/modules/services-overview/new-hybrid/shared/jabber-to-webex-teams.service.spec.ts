@@ -2,7 +2,7 @@ import moduleName from './index';
 
 import { JabberToWebexTeamsService } from './jabber-to-webex-teams.service';
 import { JabberToWebexTeamsUtil } from './jabber-to-webex-teams.util';
-import { PREREQS_CONFIG_TEMPLATE_TYPE, PROFILE_TEMPLATE, JABBER_CONFIG_TEMPLATE_TYPE } from './jabber-to-webex-teams.types';
+import { JABBER_CONFIG_TEMPLATE_TYPE, PREREQS_CONFIG_TEMPLATE_TYPE, PROFILE_TEMPLATE } from './jabber-to-webex-teams.types';
 
 type Test = atlas.test.IServiceTest<{
   Authinfo;
@@ -34,37 +34,51 @@ describe('Service: JabberToWebexTeamsService:', () => {
       spyOn(this.JabberToWebexTeamsService, 'getConfigTemplatesUrl').and.returnValue('fake-url');
     });
 
-    it('should POST to config templates url for backednType.voiceServerDomain', function (this: Test) {
+    it('should POST to config templates url for backendType.voiceServerDomain', function (this: Test) {
       spyOn(this.$http, 'post').and.returnValue(this.$q.resolve());
-      const createData = { profileName: 'fake-profile-name', voiceServerDomainName: 'fake-voice-server-domain', udsServerAddress: '', udsBackupServerAddress: '' };
+      const createData = { profileName: 'fake-profile-name',
+        voiceServerDomainName: 'fake-voice-server-domain',
+        udsServerAddress: '', udsBackupServerAddress: '',
+      };
       this.JabberToWebexTeamsService.create(createData);
-      expect(this.$http.post).toHaveBeenCalledWith('fake-url', _.assignIn({ templateName: createData.profileName, VoiceMailServer: createData.voiceServerDomainName }, PROFILE_TEMPLATE), {
-        headers: {
-          Accept: 'application/json',
-        },
-      });
+      const requestData = _.assignIn({
+        templateName: createData.profileName,
+        VoiceMailServer: createData.voiceServerDomainName,
+      }, PROFILE_TEMPLATE);
+      expect(this.$http.post).toHaveBeenCalledWith('fake-url', requestData);
     });
 
-    it('should POST to config templates url for backednType.udsServer', function (this: Test) {
+    it('should POST to config templates url for backendType.udsServer', function (this: Test) {
       spyOn(this.$http, 'post').and.returnValue(this.$q.resolve());
-      const createData = { profileName: 'fake-profile-name', voiceServerDomainName: '', udsServerAddress: 'fake-uds-server', udsBackupServerAddress: 'fake-uds-backupserver' };
+      const createData = { profileName: 'fake-profile-name',
+        voiceServerDomainName: '',
+        udsServerAddress: 'fake-uds-server',
+        udsBackupServerAddress: 'fake-uds-backupserver',
+      };
       this.JabberToWebexTeamsService.create(createData);
-      expect(this.$http.post).toHaveBeenCalledWith('fake-url', _.assignIn({ templateName: createData.profileName, CUCMServer: createData.udsServerAddress, BackupCUCMServer: createData.udsBackupServerAddress }, PROFILE_TEMPLATE), {
-        headers: {
-          Accept: 'application/json',
-        },
-      });
+      const requestData = _.assignIn({
+        templateName: createData.profileName,
+        CUCMServer: createData.udsServerAddress,
+        BackupCUCMServer: createData.udsBackupServerAddress,
+      }, PROFILE_TEMPLATE);
+      expect(this.$http.post).toHaveBeenCalledWith('fake-url', requestData);
     });
 
-    it('should POST to config templates url for both backednTypes are used', function (this: Test) {
+    it('should POST to config templates url for both backendTypes are used', function (this: Test) {
       spyOn(this.$http, 'post').and.returnValue(this.$q.resolve());
-      const createData = { profileName: 'fake-profile-name', voiceServerDomainName: 'fake-voice-server-domain', udsServerAddress: 'fake-uds-server', udsBackupServerAddress: 'fake-uds-backupserver' };
+      const createData = { profileName: 'fake-profile-name',
+        voiceServerDomainName: 'fake-voice-server-domain',
+        udsServerAddress: 'fake-uds-server',
+        udsBackupServerAddress: 'fake-uds-backupserver',
+      };
       this.JabberToWebexTeamsService.create(createData);
-      expect(this.$http.post).toHaveBeenCalledWith('fake-url', _.assignIn({ templateName: createData.profileName, VoiceMailServer: createData.voiceServerDomainName, CUCMServer: createData.udsServerAddress, BackupCUCMServer: createData.udsBackupServerAddress }, PROFILE_TEMPLATE), {
-        headers: {
-          Accept: 'application/json',
-        },
-      });
+      const requestData = _.assignIn({
+        templateName: createData.profileName,
+        VoiceMailServer: createData.voiceServerDomainName,
+        CUCMServer: createData.udsServerAddress,
+        BackupCUCMServer: createData.udsBackupServerAddress,
+      }, PROFILE_TEMPLATE);
+      expect(this.$http.post).toHaveBeenCalledWith('fake-url', requestData);
     });
   });
 

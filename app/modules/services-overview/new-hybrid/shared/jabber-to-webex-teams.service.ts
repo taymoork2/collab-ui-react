@@ -45,12 +45,7 @@ export class JabberToWebexTeamsService {
     _.assignIn(requestData, PROFILE_TEMPLATE);
     _.assignIn(requestData, { templateName: profileName, VoiceMailServer: voiceServerDomainName, CUCMServer: udsServerAddress, BackupCUCMServer: udsBackupServerAddress });
     requestData = _.omitBy(requestData, _.isEmpty);
-    // TODO (changlol): rm unnecessary headers config argument from '$http.post()'
-    return this.$http.post(this.getConfigTemplatesUrl(), requestData, {
-      headers: {
-        Accept: 'application/json',
-      },
-    }).then((response) => {
+    return this.$http.post(this.getConfigTemplatesUrl(), requestData).then((response) => {
       const profile: IUcManagerProfile = JabberToWebexTeamsUtil.mkUcManagerProfile();
       return _.assignIn(profile, <IUcManagerProfile>response.data);
     });
@@ -99,11 +94,11 @@ export class JabberToWebexTeamsService {
   }
 
   public hasAnyJabberTemplate(): ng.IPromise<boolean> {
-    return this.$http.get(this.getConfigTemplatesUrl(), {
+    return this.$http.get<{ totalResults: string }>(this.getConfigTemplatesUrl(), {
       params: {
         filter: `templateType eq "${JABBER_CONFIG_TEMPLATE_TYPE}"`,
       },
-    }).then((response: ng.IHttpResponse<{ totalResults: string }>) => {
+    }).then((response) => {
       const { totalResults } = response.data;
       return _.parseInt(totalResults) >= 1;
     }).catch(() => {
