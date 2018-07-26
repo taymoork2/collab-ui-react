@@ -9,7 +9,7 @@ type Test = atlas.test.IComponentTest<IntegrationsManagementDetail,
 
 describe('Component: integrationsManagementList:', () => {
 
-  const applicationUsage =  _.cloneDeep(getJSONFixture('core/json/integrations/integrations.json')[0]) as IApplicationUsage;
+  const applicationUsage =  _.cloneDeep(getJSONFixture('integrations/integrations-list.json')[0]) as IApplicationUsage;
 
   beforeEach(function (this: Test) {
     this.initModules(moduleName);

@@ -49,15 +49,8 @@ export default function configureStates($stateProvider: ng.ui.IStateProvider) {
           template: '<integrations-management-detail integration="$resolve.integration"><integrations-management-detail>',
         },
       },
-      params: {
-        integration: undefined,
+      resolve: {
+        displayName: translateDisplayName('integrations.overview.details'),
       },
-      resolve: _.assignIn(
-        stateParamsToResolveParams({
-          integration: undefined,
-        }),
-        {
-          displayName: translateDisplayName('integrations.overview.details'),
-        }),
     });
 }
