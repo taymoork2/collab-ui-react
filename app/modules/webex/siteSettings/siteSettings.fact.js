@@ -289,11 +289,15 @@
             'iframeUrl=' + iframeUrl;
           Log.debug(logMsg);
 
-          _this.addPage(
-            category,
-            pageId,
-            iframeUrl
-          );
+          if (pageId === 'siteupgrade' && !Authinfo.isDirectCustomer()) {
+            Log.info('Site upgrade only supported for direct customers. ' + Authinfo.getOrgName() + ' cannot self upgrade.');
+          } else {
+            _this.addPage(
+              category,
+              pageId,
+              iframeUrl
+            );
+          }
         }); // siteAdminNavUrls.forEach()
       }, // processSettingPagesInfo()
 
