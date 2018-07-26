@@ -64,6 +64,10 @@ export class SipAddressModel {
     return this.origSipCloudDomain !== this.sipCloudDomain;
   }
 
+  public hasDomainMigrated(): boolean {
+    return _.includes([Domain.WEBEX, Domain.KOALABAIT], this.domain);
+  }
+
   public reset(): void {
     this.subdomain = this.origSubdomain;
   }

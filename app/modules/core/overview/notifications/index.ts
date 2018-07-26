@@ -3,6 +3,7 @@ import { SubscriptionWithUnsyncedLicensesNotificationService } from './subscript
 import { SsoCertificateExpirationNotificationService } from './ssoCertificateExpirationNotification.service';
 import { PrivacyDataSheetsNotificationService } from './privacyDataSheetsNotification.service';
 import { DirConnectorUpgradeNotificationService } from './dir-connector-upgrade-notification.service';
+import { SipAddressMigrationNotificationService } from './sip-address-migration-notification.service';
 
 import autoAssignTemplateModuleName from 'modules/core/users/shared/auto-assign-template';
 import { OverviewWifiProximityNotification } from './wifiProximityNotifcation.factory';
@@ -19,4 +20,5 @@ export default angular.module('core.overview.notifications', [
   .service('SsoCertificateExpirationNotificationService', SsoCertificateExpirationNotificationService)
   .service('PrivacyDataSheetsNotificationService', PrivacyDataSheetsNotificationService)
   .service('DirConnectorUpgradeNotificationService', DirConnectorUpgradeNotificationService)
+  .service('SipAddressMigrationNotificationService', SipAddressMigrationNotificationService)
   .name;

@@ -3259,7 +3259,9 @@
         "migrateAllModal": {
           "title": "Migrate All SIP Addresses to Webex",
           "message": "This step migrates all SIP addresses to the new Webex domain. Are you sure?"
-        }
+        },
+        "migrationNotification": "SIP addresses need to be migrated to the webex.com domain.",
+        "migrateNow": "Migrate now."
       }
     },
     "notifications": {

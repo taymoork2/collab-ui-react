@@ -44,6 +44,8 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
     PstnService,
     ServiceDescriptorService,
     SetupWizardService,
+    SipAddressMigrationNotificationService,
+    SipAddressService,
     SsoCertificateExpirationNotificationService,
     SsoCertificateService,
     SubscriptionWithUnsyncedLicensesNotificationService,
@@ -294,6 +296,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
         checkForUnsyncedSubscriptionLicenses();
         checkForSsoCertificateExpiration(response.isAtlasSsoCertificateUpdateToggled);
         checkForDirConnectorUpgrade(response.isAtlasDirectoryConnectorUpgradeStopNotificationToggled);
+        checkForSipAddressMigration();
       }).catch(function (response) {
         Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
       });
@@ -424,6 +427,18 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
       if (!isAtlasDirectoryConnectorUpgradeStopNotificationToggled) {
         pushNotification(DirConnectorUpgradeNotificationService.createNotification());
       }
+    }
+
+    function checkForSipAddressMigration() {
+      ServiceDescriptorService.isServiceEnabled('squared-fusion-ec').then(function (cscEnabled) {
+        if (cscEnabled) {
+          SipAddressService.loadSipAddressModel().then(function (sipAddressModel) {
+            if (sipAddressModel.atlasJ9614SipUriRebranding && !sipAddressModel.hasDomainMigrated()) {
+              pushNotification(SipAddressMigrationNotificationService.createNotification());
+            }
+          });
+        }
+      });
     }
 
     function getTOSStatus() {
