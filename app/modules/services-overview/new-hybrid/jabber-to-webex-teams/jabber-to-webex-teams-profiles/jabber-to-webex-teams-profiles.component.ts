@@ -5,12 +5,12 @@ import { Notification } from 'modules/core/notifications';
 export class JabberToWebexTeamsProfilesController implements ng.IComponentController {
 
   public profiles: IUcManagerProfile[];
+  private updateHandler: Function;
   /* @ngInject */
   constructor(
     private $rootScope: ng.IRootScopeService,
-    private $translate: ng.translate.ITranslateService,
-    private $scope: ng.IRootScopeService,
     private $state: ng.ui.IStateService,
+    private $translate: ng.translate.ITranslateService,
     private JabberToWebexTeamsService: JabberToWebexTeamsService,
     private ModalService: IToolkitModalService,
     private Notification: Notification,
@@ -18,8 +18,11 @@ export class JabberToWebexTeamsProfilesController implements ng.IComponentContro
 
   public $onInit() {
     this.retrieveProfiles();
-    const updateHandler = this.$rootScope.$on(EventNames.PROFILES_UPDATED, () => this.retrieveProfiles());
-    this.$scope.$on('$destroy', updateHandler);
+    this.updateHandler = this.$rootScope.$on(EventNames.PROFILES_UPDATED, () => this.retrieveProfiles());
+  }
+
+  public $onDestroy() {
+    this.updateHandler();
   }
 
   public editProfile(profile: IUcManagerProfile): void {
@@ -42,7 +45,7 @@ export class JabberToWebexTeamsProfilesController implements ng.IComponentContro
       type: 'dialog',
     };
     this.ModalService.open(options).result.then(() => {
-      this.JabberToWebexTeamsService.delete(profile.id)
+      this.JabberToWebexTeamsService.deleteUcManagerProfile(profile.id)
         .then(() => {
           //algendel TODO: replace with appropriate copy
           this.Notification.success('common.OK');
@@ -53,7 +56,7 @@ export class JabberToWebexTeamsProfilesController implements ng.IComponentContro
   }
 
   private retrieveProfiles(): ng.IPromise<void> {
-    return this.JabberToWebexTeamsService.list().then(result => {
+    return this.JabberToWebexTeamsService.listUcManagerProfiles().then(result => {
       this.profiles = _.sortBy(result, profile => profile.templateName.toUpperCase());
     });
   }

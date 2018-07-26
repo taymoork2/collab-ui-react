@@ -12065,7 +12065,7 @@
       "subtitle": "UC Manager Profiles",
       "addProfile": "Add a Profile",
       "deleteTitle": "Delete UC Profile",
-      "deleteBody": "You are deleting the UC profile, {{templateName}}, this profile will be removed from all associated users.  Are you sure?"
+      "deleteBody": "You are deleting the UC profile {{templateName}}. This profile will be removed from all associated users.<br>Are you sure?"
     }
   }
 }

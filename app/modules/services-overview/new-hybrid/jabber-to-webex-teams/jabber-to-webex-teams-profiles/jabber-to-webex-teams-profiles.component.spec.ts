@@ -25,8 +25,8 @@ describe('Component: jabberToWebexTeamsProfiles:', () => {
       'Notification',
     );
     installPromiseMatchers();
-    spyOn(this.JabberToWebexTeamsService, 'list').and.returnValue(this.$q.resolve(profiles));
-    spyOn(this.JabberToWebexTeamsService, 'delete').and.returnValue(this.$q.resolve({}));
+    spyOn(this.JabberToWebexTeamsService, 'listUcManagerProfiles').and.returnValue(this.$q.resolve(profiles));
+    spyOn(this.JabberToWebexTeamsService, 'deleteUcManagerProfile').and.returnValue(this.$q.resolve({}));
     spyOn(this.ModalService, 'open').and.returnValue({ result: this.$q.resolve() });
     spyOn(this.Notification, 'success');
     spyOn(this.$state, 'go');
@@ -50,7 +50,7 @@ describe('Component: jabberToWebexTeamsProfiles:', () => {
 
     it('should show the list of profiles', function (this: Test) {
       expect(this.view.find('.cs-card').length).toBe(profiles.length);
-      expect(getCard.apply(this, [1]).find('.h5').html()).toBe(profiles[0].templateName);
+      expect(getCard.apply(this, [1]).find('.h5').text()).toBe(profiles[0].templateName);
     });
 
     it('should go to add profile when the "add" button is clicked', function (this: Test) {
@@ -68,7 +68,7 @@ describe('Component: jabberToWebexTeamsProfiles:', () => {
     it('should call delete service with correct profile id when  "delete" is clicked', function (this: Test) {
       getCardMenuItem.apply(this, [1, 1]).click();
       this.$scope.$digest();
-      expect(this.JabberToWebexTeamsService.delete).toHaveBeenCalledWith(profiles[0].id);
+      expect(this.JabberToWebexTeamsService.deleteUcManagerProfile).toHaveBeenCalledWith(profiles[0].id);
       expect(this.Notification.success).toHaveBeenCalled();
     });
   });

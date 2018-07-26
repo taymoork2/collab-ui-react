@@ -47,5 +47,5 @@ export interface IPrereqsSettings {
 }
 
 export enum EventNames {
-  PROFILES_UPDATED = 'jabberToWebex::profilesUpdated',
+  PROFILES_UPDATED = 'services-overview::ucManagerProfilesUpdated',
 }

@@ -1,3 +1,4 @@
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 jabber-to-webex-teams-profiles {
 
   .content-container {
@@ -11,8 +12,8 @@ jabber-to-webex-teams-profiles {
     padding-top: .85rem;
     padding-bottom: .75rem;
     p {
-       padding-left: 0px;
-     }
+      padding-left: 0;
+    }
 
     .header-with-right-icon {
       align-items: start;
@@ -20,9 +21,9 @@ jabber-to-webex-teams-profiles {
   }
 
   .actions-menu.open .dropdown-menu {
-    top: 20px;
-    right: 0px;
-    padding: 0px;
+    top: 1.25rem;
+    right: 0;
+    padding: 0;
     text-align: left;
   }
 
