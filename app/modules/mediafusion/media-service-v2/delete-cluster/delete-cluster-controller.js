@@ -9,7 +9,7 @@
     vm.close = $modalInstance.close;
     vm.selectModel = {};
     vm.fillModel = {};
-    vm.radioModel = '1';
+    vm.radioModel = '2';
     vm.checkboxModel = false;
     vm.isMove = true;
     vm.successCount = 0;

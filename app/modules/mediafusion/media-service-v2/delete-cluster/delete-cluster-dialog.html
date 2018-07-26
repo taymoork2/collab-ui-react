@@ -16,13 +16,13 @@
           <div class="cs-radio-group radioGroup">
             <div class="cs-input-group cs-input-radio">
               <div class="radioButton1">
-                <input type="radio" id="mfMoveNodeCheck" ng-model="deleteClust.radioModel" ng-value="1">
+                <input type="radio" id="mfMoveNodeCheck" ng-model="deleteClust.radioModel" ng-value="'1'">
                 <label for="mfMoveNodeCheck">
                   <span translate="mediaFusion.clusters.moveallnodes"></span>
                 </label>
               </div>
               <div class="radioButton1">
-                <input type="radio" id="mfDeregisterNodeCheck" ng-model="deleteClust.radioModel" ng-value="2">
+                <input type="radio" id="mfDeregisterNodeCheck" ng-model="deleteClust.radioModel" ng-value="'2'">
                 <label for="mfDeregisterNodeCheck">
                   <span translate="mediaFusion.clusters.deregisterallnodes"></span>
                 </label>
@@ -42,12 +42,12 @@
             <th translate="mediaFusion.clusters.moveTo"></th>
           </tr>
           <tr class="deleteClusterTableRow" ng-repeat="host in deleteClust.hosts">
-            <td ng-disabled="deleteClust.radioModel === 2">{{ host.hostname }} </td>
+            <td ng-disabled="deleteClust.radioModel === '2'">{{ host.hostname }} </td>
             <td>
-              <cs-select ng-hide="deleteClust.radioModel === 2" ng-model="deleteClust.selectModel[host.hostname]" options="deleteClust.options"
+              <cs-select ng-hide="deleteClust.radioModel === '2'" ng-model="deleteClust.selectModel[host.hostname]" options="deleteClust.options"
                 placeholder="deleteClust.selectPlaceholder" combo="true">
               </cs-select>
-              <cs-select ng-hide="deleteClust.radioModel === 1" is-disabled="deleteClust.radioModel === 2" ng-model="deleteClust.selectModel[host.hostname]"
+              <cs-select ng-hide="deleteClust.radioModel === '1'" is-disabled="deleteClust.radioModel === '2'" ng-model="deleteClust.selectModel[host.hostname]"
                 options="deleteClust.options" placeholder="deleteClust.selectPlaceholder">
               </cs-select>
             </td>
@@ -55,15 +55,15 @@
         </table>
       </div>
     </div>
-    <div ng-show="deleteClust.radioModel === 2 && !deleteClust.ngDisable">
+    <div ng-show="deleteClust.radioModel === '2' && !deleteClust.ngDisable">
       <div class="form-group">
-        <div class="cs-checkbox-group" ng-show="deleteClust.radioModel === 2">
+        <div class="cs-checkbox-group" ng-show="deleteClust.radioModel === '2'">
           <span class="warning-icon">
             <i class="icon icon-warning"></i>
           </span>
           <div class="warning-container">
             <span translate="mediaFusion.clusters.deregisterWarning"></span>
-            <div class="cs-input-group cs-input-checkbox">
+            <div class="cs-input-group cs-input-checkbox cs-checkbox-margin">
               <input type="checkbox" id="mfDeregisterWarningcheckbox" ng-model="deleteClust.checkboxModel">
               <label for="mfDeregisterWarningcheckbox">
                 <span translate="common.iUnderstand"></span>
@@ -77,7 +77,7 @@
           </span>
           <div class="warning-container">
             <span translate="mediaFusion.clusters.deactivateWarning"></span>
-            <div class="cs-input-group cs-input-checkbox">
+            <div class="cs-input-group cs-input-checkbox cs-checkbox-margin">
               <input type="checkbox" id="deactivateCheckbox" ng-model="deleteClust.lastClusterCheckboxModel">
               <label for="deactivateCheckbox">
                 <span translate="common.iUnderstand"></span>
@@ -94,7 +94,7 @@
         </span>
         <div class="warning-container">
           <span translate="mediaFusion.clusters.deactivateWarning"></span>
-          <div class="cs-input-group cs-input-checkbox">
+          <div class="cs-input-group cs-input-checkbox cs-input-checkbox">
             <input type="checkbox" id="alertCheckbox" ng-model="deleteClust.alertCheckboxModel">
             <label for="alertCheckbox">
               <span translate="common.iUnderstand"></span>
@@ -111,7 +111,7 @@
   </div>
 </div>
 <div class="modal-footer">
-  <div ng-show="deleteClust.radioModel === 1 && deleteClust.noOfHost > 0">
+  <div ng-show="deleteClust.radioModel === '1' && deleteClust.noOfHost > 0">
     <button
       class="btn btn--primary pull-right"
       ng-click="deleteClust.continue()"
@@ -124,7 +124,7 @@
       </span>
     </button>
   </div>
-  <div ng-show="deleteClust.radioModel === 2 && deleteClust.clusters.length === 1">
+  <div ng-show="deleteClust.radioModel === '2' && deleteClust.clusters.length === 1">
     <button
       class="btn btn--negative pull-right"
       ng-click="deleteClust.deleteCluster()"
@@ -136,7 +136,7 @@
       </span>
     </button>
   </div>
-  <div ng-show="deleteClust.radioModel === 2 && deleteClust.clusters.length !== 1">
+  <div ng-show="deleteClust.radioModel === '2' && deleteClust.clusters.length !== 1">
       <button
         class="btn btn--negative pull-right"
         ng-click="deleteClust.deleteCluster()"
