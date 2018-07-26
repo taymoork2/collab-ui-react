@@ -1,10 +1,7 @@
 import { Analytics } from 'modules/core/analytics';
 import { MeetingExportService } from './meeting-export.service';
-import { WebexReportsUtilService } from 'modules/core/partnerReports/webexReports/diagnostic/webex-reports-util.service';
+import { WebexReportsUtilService } from './webex-reports-util.service';
 
-export enum SERVICE_TYPE {
-  PARTNER = 'PARTNER',
-}
 class MeetingExportController implements ng.IComponentController {
 
   public type: string;

@@ -1,7 +1,6 @@
 import { IMeeting, IMeetingDetail, IServerTime, ISession } from './partner-search.interfaces';
-import { SearchStorage } from './partner-meeting.enum';
+import { SearchStorage, SERVICE_TYPE } from './partner-meeting.enum';
 import { TrackUsageEvent } from './track-usage.enum';
-import { SERVICE_TYPE } from 'modules/core/customerReports/webexReports/diagnostic/meeting-export.component';
 import { Notification } from 'modules/core/notifications/notification.service';
 import { CustomerSearchService } from './customer-search.service';
 import { PartnerSearchService } from './partner-search.service';
