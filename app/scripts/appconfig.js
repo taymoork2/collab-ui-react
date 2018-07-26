@@ -4298,6 +4298,18 @@
             controller: 'LinesListCtrl',
             controllerAs: 'linesListCtrl',
           })
+          .state('bsft-numbers', {
+            parent: 'hurondetails',
+            url: '/services/bsft-numbers',
+            template: '<bsft-number-list></bsft-number-list>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/call/bsft/numbers'));
+                }, 'bsft-numbers');
+              }),
+            },
+          })
           .state('externalNumberDelete', {
             parent: 'modalDialog',
             params: {

@@ -6823,7 +6823,7 @@
       "description": "Enable this setting for quality of service (QoS) on Video Mesh node traffic. This setting marks audio (#EF) and video (#AF41) separately. Disabling this setting reduces the required port range, but you'll lose QoS functionality. See the <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'> Ports and Protocols documentation</a> for guidance.",
       "success": "Extended port range for QoS setting was set successfully.",
       "error": "Error in saving extended port range for QoS setting. Please revert the change and try again later.",
-      "disclaimar1": "If Quality of Service enablement is taking more than two hours, ", 
+      "disclaimar1": "If Quality of Service enablement is taking more than two hours, ",
       "disclaimar2": "<a href='https://mycase.cloudapps.cisco.com/'  target='_blank'> open a new case </a>to resolve the issue and temporarily disable the setting.",
       "pendingnodes": "review pending nodes,",
       "cluster": "(Cluster)",
@@ -11987,6 +11987,19 @@
       "vmNumber": "Voicemail Number",
       "invalid": "Invalid phone numbers detected",
       "duplicate": "Duplicate phone number detected"
+    },
+    "numberList": {
+      "internalNum": "Internal Extension",
+      "phoneNumber": "Phone Number",
+      "location": "Location",
+      "assignedTo": "Assigned To",
+      "actions": "Actions",
+      "unassigned": "Unassigned",
+      "assigned": "Assigned"
+    },
+    "headers": {
+      "calling": "Calling",
+      "locations": "Locations"
     },
     "wizardButton": {
       "nextAssignLicenses": "Next: Assign Licenses",

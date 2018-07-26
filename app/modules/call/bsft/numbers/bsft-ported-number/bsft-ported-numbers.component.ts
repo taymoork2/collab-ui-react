@@ -19,6 +19,7 @@ export class BsftPortedNumbersComponentCtrl implements ng.IComponentController {
   public tokenmethods: TokenMethods;
   public invalidCount: number = 0;
   public isCiscoBsft: boolean = false;
+  public isPrevPorted: boolean = false;
 
   /* @ngInject */
   constructor(private $timeout: ng.ITimeoutService,
@@ -42,13 +43,16 @@ export class BsftPortedNumbersComponentCtrl implements ng.IComponentController {
     _.set(this.tokenoptions, tokenfieldlimit, maxNumberOfTokens);
   }
 
-  public $onChanges(changes): void {
-    const { numbers } = changes;
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
+    const { numbers, isPrevPorted } = changes;
     if (numbers) {
       this.$timeout(() => {
         this.numbers = numbers.currentValue;
         this.setBsftPortedNumberTokens(numbers.currentValue);
       }, BsftPortedNumbersComponentCtrl.TIMEOUT);
+    }
+    if (isPrevPorted) {
+      this.isPrevPorted = isPrevPorted.currentValue;
     }
   }
 
@@ -141,6 +145,7 @@ export class BsftPortedNumbersComponent implements ng.IComponentOptions {
   public template = require('modules/call/bsft/numbers/bsft-ported-number/bsft-ported-numbers.component.html');
   public bindings = {
     numbers: '<',
+    isPrevPorted: '<',
     onChange: '&',
   };
 }

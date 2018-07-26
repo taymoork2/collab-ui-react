@@ -10,7 +10,7 @@
         name="prevPorted"
         ng-change="$ctrl.setPortingNumberType('prev')"
         cs-input-label="{{::'broadCloud.numbers.prevPorted' | translate}}">
-      <label class="bsft-margin" translate="broadCloud.numbers.prevPortedHint"></label>
+      <span class="bsft-margin" translate="broadCloud.numbers.prevPortedHint"></span>
       <input
         cs-input
         type="radio"
@@ -20,10 +20,10 @@
         value="bsft"
         ng-change="$ctrl.setPortingNumberType('bsft')"
         cs-input-label="{{::'broadCloud.numbers.bcProvided' | translate}}">
-      <label class="bsft-margin" translate="broadCloud.numbers.bcProvidedHint"></label>
+      <span class="bsft-margin" translate="broadCloud.numbers.bcProvidedHint"></span>
     </div>
   </div>
-  <label class="sub-section__label bsft-number_subheading"><strong translate="broadCloud.numbers.phoneNumber"></strong></label>
+  <label class="sub-section__label" ng-class="{'bsft-number_subheading':$ctrl.isPrevPorted}"><strong translate="broadCloud.numbers.phoneNumber"></strong></label>
   <form name="$ctrl.textForm" novalidate
     ng-class="{'error':  $ctrl.textForm && $ctrl.textForm.numberPorting.$invalid && $ctrl.textForm.numberPorting.$dirty && $ctrl.textForm.numberPorting.$touched}">
     <div class="bsft-number__textarea">
@@ -44,8 +44,8 @@
       <div id="minlimit" class="message" ng-message="minlimit" translate="broadCloud.numbers.minlimit"></div>
     </div>
     </div>
+    <label class="bsft-number__margin" translate="broadCloud.numbers.numberHint"></label>
   </form>
-  <label translate="broadCloud.numbers.numberHint"></label>
   <div class="bsft__number_subheading">
     <button class="btn" ng-disabled="$ctrl.texttoken.length===0" ng-click="$ctrl.clear()" translate="common.clear"></button>
     <button class="btn btn--people"  ng-disabled="$ctrl.texttoken.length===0 || $ctrl.isInvalid" ng-click="$ctrl.addNumbers()" translate="common.add" focus-on></button>

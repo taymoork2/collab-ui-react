@@ -19,6 +19,7 @@ export class PortedNumbersAddComponentCtrl implements ng.IComponentController {
   public portingNumbersCount: number = 0;
   public tokenplaceholder: string;
   public totalNumbers: string[] = [];
+  public isPrevPorted: boolean = false;
   /* @ngInject */
   constructor(
               private Notification: Notification,
@@ -103,6 +104,7 @@ export class PortedNumbersAddComponentCtrl implements ng.IComponentController {
     if (this.numbers.length !== validnumbers.length && this.textForm) {
       this.textForm.numberPorting.$setValidity('duplicate', false);
     }
+    this.isPrevPorted = !this.isPrevPorted && !this.isBsftPorted ? this.numbers.length > 0 : false;
   }
 
   public validateForm() {

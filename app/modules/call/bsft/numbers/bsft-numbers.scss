@@ -1,9 +1,12 @@
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 @import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/settings/typography';
 
 .bsft-number_subheading {
   padding-bottom: 1rem;
 }
+
 .bsft-number__margin {
   margin-top: 2rem;
 }
@@ -16,10 +19,13 @@
 }
 
 .bsft-margin {
-  margin-left: 2rem;
+  margin: -1rem 0 1rem 2rem;
 }
 .bsft-radio {
   margin-left: .5rem;
+  .cs-input-group label.cs-radio {
+    font-weight: bold;
+  }
 }
 
 .bsft-number__textarea {
@@ -35,11 +41,18 @@
     border: 0 none;
   }
 
-  .tokenfield .token {
-    border: 2px solid $gray-light-4;
-    background-color: transparent;
-    color: $gray-darkest;
+  .tokenfield {
+    font-weight: bold;
+    .token {
+      border: 2px solid $gray-light-4;
+      background-color: transparent;
+      color: $gray-darkest;
+      .label {
+        font-weight: bold;
+      }
+    }
   }
+
   .form-control {
     margin-left: -10px;
     .token .close {

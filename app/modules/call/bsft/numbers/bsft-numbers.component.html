@@ -14,7 +14,8 @@
     </prev-ported-numbers>
     <bsft-ported-numbers ng-if="$ctrl.bsftNumbers.length"
       numbers="$ctrl.bsftNumbers"
-      on-change="$ctrl.onChangeBsftPortedNumbers(numbers)">
+      on-change="$ctrl.onChangeBsftPortedNumbers(numbers)"
+      is-prev-ported="$ctrl.prevNumbers.length > 0">
     </bsft-ported-numbers>
   </div>
 </div>
