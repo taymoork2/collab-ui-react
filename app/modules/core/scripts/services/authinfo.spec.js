@@ -226,7 +226,7 @@ describe('Authinfo:', function () {
   });
 
   describe('.isReadOnlyState', function () {
-    it('should return false is the state is not defined and simple user', function () {
+    it('should return true if the state is allowed with a user role', function () {
       setupConfig({
         readOnlyViewStates: {
           User_Admin: [
@@ -240,6 +240,22 @@ describe('Authinfo:', function () {
       });
 
       expect(Authinfo.isReadOnlyState('settings')).toBe(true);
+    });
+
+    it('should return false if the state is not in the allowed states under role list', function () {
+      setupConfig({
+        readOnlyViewStates: {
+          User_Admin: [
+            'settings',
+          ],
+        },
+      });
+
+      var Authinfo = setupUser({
+        roles: ['User_Admin'], // OR PARTNER_USER
+      });
+
+      expect(Authinfo.isReadOnlyState('helpdesk')).toBe(false);
     });
   });
 

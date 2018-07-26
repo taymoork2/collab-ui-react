@@ -375,7 +375,6 @@
         $httpProvider.interceptors.push('ResponseInterceptor');
         $httpProvider.interceptors.push('TimingInterceptor');
         $httpProvider.interceptors.push('ServerErrorInterceptor');
-        $httpProvider.interceptors.push('ReadonlyInterceptor');
 
         var modalMemo = 'modalMemo';
         var wizardmodalMemo = 'wizardmodalMemo';

@@ -1,21 +1,20 @@
-'use strict';
+import testModule from './index';
 
-describe('ReadonlyInterceptor', function () {
+describe('ReadonlyInterceptor', () => {
   beforeEach(function () {
-    this.initModules(require('./readonly.interceptor'));
+    this.initModules(testModule);
     this.injectDependencies(
       '$q',
       '$state',
+      '$injector',
       'Authinfo',
-      'Config',
       'Notification',
-      'ReadonlyInterceptor'
+      'ReadonlyInterceptor',
     );
     spyOn(this.$q, 'reject');
     spyOn(this.Notification, 'notifyReadOnly');
 
     spyOn(this.Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
-    spyOn(this.Authinfo, 'isProvisionAdmin').and.returnValue(false);
     spyOn(this.Authinfo, 'isPartnerReadOnlyAdmin').and.returnValue(false);
     spyOn(this.Authinfo, 'getUserOrgId').and.returnValue('fe5acf7a-6246-484f-8f43-3e8c910fc50d');
     spyOn(this.Authinfo, 'getUserId').and.returnValue('09bd9c92-bdd0-4dfb-832d-618494246be5');
@@ -34,25 +33,11 @@ describe('ReadonlyInterceptor', function () {
     runReadOnlyTests();
   });
 
-  describe('read-only mode for role based read-only states', function () {
-    beforeEach(function () {
-      this.Authinfo.isProvisionAdmin.and.returnValue(true);
-      this.Config.readOnlyViewStates = {
-        Provision_Admin: [
-          'settings',
-        ],
-      };
-      this.$state.current = { name: 'settings' };
-    });
-
-    runProvisionAdminReadOnlyTests();
-  });
-
   describe('while not in read-only mode', function () {
     it('does not manipulate requests', function () {
       this.Authinfo.isReadOnlyAdmin.and.returnValue(false);
       this.Authinfo.isPartnerReadOnlyAdmin.and.returnValue(false);
-      var config = {
+      const config = {
         data: 'x',
         method: 'POST',
       };
@@ -62,54 +47,6 @@ describe('ReadonlyInterceptor', function () {
     });
   });
 });
-
-function runProvisionAdminReadOnlyTests() {
-  it('intercepts POST operations and creates a read-only notification if user has restricted view access', function () {
-    this.ReadonlyInterceptor.request({
-      data: 'x',
-      method: 'POST',
-    });
-    expect(this.$q.reject.calls.count()).toBe(1);
-    expect(this.Notification.notifyReadOnly.calls.count()).toBe(1);
-  });
-
-  it('intercepts PUT operations and creates a read-only notification if user has restricted view access', function () {
-    this.ReadonlyInterceptor.request({
-      data: 'x',
-      method: 'PUT',
-    });
-    expect(this.$q.reject.calls.count()).toBe(1);
-    expect(this.Notification.notifyReadOnly.calls.count()).toBe(1);
-  });
-
-  it('intercepts DELETE operations and creates a read-only notification if user has restricted view access', function () {
-    this.ReadonlyInterceptor.request({
-      data: 'x',
-      method: 'DELETE',
-    });
-    expect(this.$q.reject.calls.count()).toBe(1);
-    expect(this.Notification.notifyReadOnly.calls.count()).toBe(1);
-  });
-
-  it('intercepts PATCH operations and creates a read-only notification if user has restricted view access', function () {
-    this.ReadonlyInterceptor.request({
-      data: 'x',
-      method: 'PATCH',
-    });
-    expect(this.$q.reject.calls.count()).toBe(1);
-    expect(this.Notification.notifyReadOnly.calls.count()).toBe(1);
-  });
-
-  it('does not intercept read operations', function () {
-    var config = {
-      data: 'x',
-      method: 'GET',
-    };
-    this.ReadonlyInterceptor.request(config);
-    expect(this.$q.reject.calls.count()).toBe(0);
-    expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
-  });
-}
 
 function runReadOnlyTests() {
   it('intercepts POST operations and creates a read-only notification', function () {
@@ -149,7 +86,7 @@ function runReadOnlyTests() {
   });
 
   it('does not intercept read operations', function () {
-    var config = {
+    const config = {
       data: 'x',
       method: 'GET',
     };
@@ -159,7 +96,7 @@ function runReadOnlyTests() {
   });
 
   it('allows CI patches to self (own user)', function () {
-    var config = {
+    const config = {
       url: 'https://identity.webex.com/identity/scim/fe5acf7a-6246-484f-8f43-3e8c910fc50d/v1/Users/09bd9c92-bdd0-4dfb-832d-618494246be5',
       method: 'PATCH',
     };
@@ -169,7 +106,7 @@ function runReadOnlyTests() {
   });
 
   it('intercepts PATCH requests to other CI users)', function () {
-    var config = {
+    const config = {
       url: 'https://identity.webex.com/identity/scim/fe5acf7a-6246-484f-8f43-3e8c910fc50d/v1/Users/2c5c9a99-3ab4-4266-aeb1-e950f52ec806',
       method: 'PATCH',
     };
@@ -179,7 +116,7 @@ function runReadOnlyTests() {
   });
 
   it('does not intercept white-listed paths', function () {
-    var config = {
+    const config = {
       method: 'PATCH',
       url: 'https://idbroker.webex.com/idb/oauth2/v1/access_token',
     };
@@ -189,7 +126,7 @@ function runReadOnlyTests() {
   });
 
   it('does not intercept users report white-listed paths', function () {
-    var config = {
+    const config = {
       method: 'POST',
       url: 'https://atlas-intb.ciscospark.com/admin/api/v1/csv/organizations/4ccdd247-9f7a-4ffe-b10d-64c7872b9cca/users/report',
     };
@@ -199,7 +136,7 @@ function runReadOnlyTests() {
   });
 
   it('does not intercept device search white-listed paths', function () {
-    var config = {
+    const config = {
       method: 'POST',
       url: 'https://csdm-a.wbx2.com/csdm/api/v1/organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/devices/_search',
     };
@@ -209,7 +146,7 @@ function runReadOnlyTests() {
   });
 
   it('does not intercept device alerts white-listed paths', function () {
-    var config = {
+    const config = {
       method: 'POST',
       url: 'https://csdm-a.wbx2.com/csdm/api/v1/organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/devices/_alert',
     };
@@ -219,7 +156,7 @@ function runReadOnlyTests() {
   });
 
   it('does not intercept device get all ids white-listed paths', function () {
-    var config = {
+    const config = {
       method: 'POST',
       url: 'https://csdm-a.wbx2.com/csdm/api/v1/organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/devices/?field=url',
     };
@@ -229,7 +166,7 @@ function runReadOnlyTests() {
   });
 
   it('does not intercept device bulk csv export white-listed paths', function () {
-    var config = {
+    const config = {
       method: 'POST',
       url: 'https://csdm-a.wbx2.com/csdm/api/v1/organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/devices/bulk/export',
     };
@@ -239,7 +176,7 @@ function runReadOnlyTests() {
   });
 
   it('does not intercept device search white-listed paths', function () {
-    var config = {
+    const config = {
       method: 'POST',
       url: 'https://csdm-a.wbx2.com/csdm/api/v1/organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/devices/_search',
     };
@@ -249,7 +186,7 @@ function runReadOnlyTests() {
   });
 
   it('does not intercept white-listed states', function () {
-    var config = {
+    const config = {
       data: 'x',
       method: 'PATCH',
     };

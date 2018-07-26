@@ -54,7 +54,7 @@
     require('modules/core/scripts/services/logmetricsservice'),
     require('modules/core/scripts/services/missing-translation-handler.factory').default,
     require('modules/core/scripts/services/responseinterceptor'),
-    require('modules/core/scripts/services/readonly.interceptor'),
+    require('modules/core/interceptors/readonly').default,
     require('modules/core/scripts/services/timingInterceptor'),
     require('modules/core/scripts/services/serverErrorInterceptor'),
     require('modules/core/state-redirect/shared').default,
