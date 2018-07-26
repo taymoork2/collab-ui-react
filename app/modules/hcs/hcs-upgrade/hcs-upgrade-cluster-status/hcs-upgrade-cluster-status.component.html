@@ -20,7 +20,11 @@
         </span>
         <span ng-switch-when="started">
           <i class="icon icon-circle status-indicator warning"></i>
-          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.started' | translate}}</span>
+          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.upgradeInProgress' | translate}}</span>
+        </span>
+        <span ng-switch-when="posted">
+            <i class="icon icon-circle status-indicator warning"></i>
+            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.upgradeInProgress' | translate}}</span>
         </span>
         <span ng-switch-when="scheduled">
           <i class="icon icon-circle status-indicator warning"></i>
@@ -73,15 +77,15 @@
         <span ng-switch-when="unknown">
             <i class="icon icon-circle"></i>
             <span class="h6">{{::'hcs.clusterDetail.nodeStatus.notAvailable' | translate}}</span>
-          </span>
+        </span>
         <span ng-switch-default>
           <i class="icon icon-circle"></i>
           <span translate="common.unknown"></span>
         </span>
+        <span>,</span>
       </span>
-      <span ng-if="$ctrl.estCompletionTime">, {{:: 'hcs.upgrade.upgradeGroup.upgradeClusterStatus.estimatedCompletion' | translate}}: {{$ctrl.estCompletionTime | date:'dd MMM y HH:mm':'UTC'}}</span>
-      <span ng-if="!$ctrl.estCompletionTime">, {{:: 'hcs.upgrade.upgradeGroup.upgradeClusterStatus.estimatedCompletion' | translate}}: {{:: 'hcs.clusterDetail.nodeStatus.notAvailable' | translate}}</span>
-
+      <span ng-if="$ctrl.estCompletionTime"> {{:: 'hcs.upgrade.upgradeGroup.upgradeClusterStatus.estimatedCompletion' | translate}}: {{$ctrl.estCompletionTime | date:'dd MMM y HH:mm':'UTC'}}</span>
+      <span ng-if="!$ctrl.estCompletionTime"> {{:: 'hcs.upgrade.upgradeGroup.upgradeClusterStatus.estimatedCompletion' | translate}}: {{:: 'hcs.clusterDetail.nodeStatus.notAvailable' | translate}}</span>
     </div>
   </cs-page-sub-header-left>
 </cs-page-sub-header>

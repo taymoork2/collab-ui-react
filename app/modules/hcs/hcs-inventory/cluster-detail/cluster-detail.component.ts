@@ -199,6 +199,12 @@ export class ClusterDetailCtrl implements ng.IComponentController {
 
   public cancel(): void {
     this.form.$setPristine();
+    if (this.clusterDetail.nodes) {
+      _.forEach(this.clusterDetail.nodes, (node) => {
+        node.isAccepted = false;
+        node.isRejected = false;
+      });
+    }
   }
 
   public openEditModal(modalType: HcsModalTypeSelect, node?: IHcsNode): void {
