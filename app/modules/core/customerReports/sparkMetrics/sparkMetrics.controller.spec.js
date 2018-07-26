@@ -77,7 +77,7 @@ describe('Controller: Spark Metrics Ctrl', function () {
   });
 
   it('should get the right parameters', function () {
-    expect(this.controller.sparkMetrics.appData.appId).toBe(this.testQBSData.appName);
+    expect(this.controller.sparkMetrics.appData.appName).toBe(this.testQBSData.appName);
   });
 
   it('should turn to premium view, and to base view after ProPack perchased', function () {
@@ -88,7 +88,7 @@ describe('Controller: Spark Metrics Ctrl', function () {
     this.initController();
     expect(this.controller.reportView.view).toBe(this.base);
 
-    expect(this.controller.sparkMetrics.appData.appId).toBe(this.testQBSBasicData.appDefaultName);
+    expect(this.controller.sparkMetrics.appData.appName).toBe(this.testQBSBasicData.appDefaultName);
   });
 });
 

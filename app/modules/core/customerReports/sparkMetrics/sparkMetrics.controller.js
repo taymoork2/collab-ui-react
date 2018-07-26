@@ -86,19 +86,14 @@
         return;
       }
       getSparkReportData(reportType, viewType, userInfo).then(function (data) {
-        vm.sparkMetrics.appData = {
-          ticket: data.ticket,
-          appId: data.appName,
-          node: data.host,
-          qrp: data.qlik_reverse_proxy,
-          persistent: data.isPersistent,
-          vID: Authinfo.getOrgId(),
-        };
-        //TODO remove this 'if' segment, if QBS can handle this parameter
-        if (vm.sparkMetrics.appData.persistent === 'false') {
-          vm.sparkMetrics.appData.appId = vm.reportView.appName;
+        if (!_.isUndefined(data) && _.isObject(data)) {
+          vm.sparkMetrics.appData = data;
         }
-        var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.sparkMetrics.appData.qrp, reportType, viewType);
+        //TODO remove this 'if' segment, if QBS can handle this parameter
+        if (vm.sparkMetrics.appData.isPersistent === 'false') {
+          vm.sparkMetrics.appData.appName = vm.reportView.appName;
+        }
+        var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.sparkMetrics.appData.qlik_reverse_proxy, reportType, viewType);
         vm.sparkMetrics.appData.url = QlikMashupChartsUrl;
 
         updateIframe();
@@ -113,20 +108,22 @@
       var iframeUrl = vm.sparkMetrics.appData.url;
       var data = {
         trustIframeUrl: $sce.trustAsResourceUrl(iframeUrl),
-        appId: vm.sparkMetrics.appData.appId,
+        appid: vm.sparkMetrics.appData.appName,
         QlikTicket: vm.sparkMetrics.appData.ticket,
-        node: vm.sparkMetrics.appData.node,
-        persistent: vm.sparkMetrics.appData.persistent,
-        vID: vm.sparkMetrics.appData.vID,
+        node: vm.sparkMetrics.appData.host,
+        persistent: vm.sparkMetrics.appData.isPersistent,
+        vID: Authinfo.getOrgId(),
       };
       $scope.$broadcast('updateIframe', iframeUrl, data);
     }
 
     $scope.iframeLoaded = function (elem) {
       elem.ready(function () {
-        var token = $window.sessionStorage.getItem('accessToken');
-        var orgID = Authinfo.getOrgId();
-        elem[0].contentWindow.postMessage(token + ',' + orgID, '*');
+        if (!_.startsWith(elem[0].src, 'about')) {
+          var token = $window.sessionStorage.getItem('accessToken');
+          var orgID = Authinfo.getOrgId();
+          elem[0].contentWindow.postMessage(token + ',' + orgID, '*');
+        }
       });
     };
   }

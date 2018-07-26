@@ -32,10 +32,8 @@ require('./metrics-frame.scss');
       vm.data = data;
       $timeout(
         function loadIframe() {
-          if (vm.iframeForm) {
-            startLoadReport();
-            vm.qlikReportUrl = setQlikUrls(iframeUrl, data);
-          }
+          startLoadReport();
+          vm.qlikReportUrl = setQlikUrls(iframeUrl, data);
         },
         0
       );

@@ -17,7 +17,6 @@
     Authinfo,
     Notification,
     QlikService,
-    $log,
     FeatureToggleService,
     Userservice
   ) {
@@ -40,7 +39,6 @@
                 isFeatureToggleOn: FeatureToggleService.atlasPartnerSparkReportsGetStatus(),
               };
               $q.all(promises).then(function (features) {
-                $log.log('FeatureToggleService.atlasPartnerSparkReportsGetStatus() is ' + features.isFeatureToggleOn);
                 if (!features.isFeatureToggleOn) {
                   $state.go('partnerreports.tab.base');
                 }
@@ -77,17 +75,11 @@
       var reportType = _.get($stateParams, 'sparktype');
 
       getSparkPartnerReportData(reportType, vm.viewType, userInfo).then(function (data) {
-        vm.sparkReports.appData = {
-          QlikTicket: data.ticket,
-          appId: data.appName,
-          node: data.host,
-          qrp: data.qlik_reverse_proxy,
-          persistent: true,
-          vID: Authinfo.getOrgId(),
-        };
-        var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.sparkReports.appData.qrp, reportType, vm.viewType);
+        if (!_.isUndefined(data) && _.isObject(data)) {
+          vm.sparkReports.appData = data;
+        }
+        var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.sparkReports.appData.qlik_reverse_proxy, reportType, vm.viewType);
         vm.sparkReports.appData.url = QlikMashupChartsUrl;
-        $log.log('Spark partner report: got Mashup Url');
         updateIframe();
       })
         .catch(function (error) {
@@ -99,20 +91,22 @@
       var iframeUrl = vm.sparkReports.appData.url;
       var data = {
         trustIframeUrl: $sce.trustAsResourceUrl(iframeUrl),
-        appId: vm.sparkReports.appData.appId,
-        QlikTicket: vm.sparkReports.appData.QlikTicket,
-        node: vm.sparkReports.appData.node,
-        persistent: vm.sparkReports.appData.persistent,
-        vID: vm.sparkReports.appData.vID,
+        appid: vm.sparkReports.appData.appName,
+        QlikTicket: vm.sparkReports.appData.ticket,
+        node: vm.sparkReports.appData.host,
+        persistent: true,
+        vID: Authinfo.getOrgId(),
       };
       $scope.$broadcast('updateIframe', iframeUrl, data);
     }
 
     $scope.iframeLoaded = function (elem) {
       elem.ready(function () {
-        var token = $window.sessionStorage.getItem('accessToken');
-        var orgID = Authinfo.getOrgId();
-        elem[0].contentWindow.postMessage(token + ',' + orgID, '*');
+        if (!_.startsWith(elem[0].src, 'about')) {
+          var token = $window.sessionStorage.getItem('accessToken');
+          var orgID = Authinfo.getOrgId();
+          elem[0].contentWindow.postMessage(token + ',' + orgID, '*');
+        }
       });
     };
   }
