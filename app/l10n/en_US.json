@@ -6206,13 +6206,17 @@
   "customerPage": {
     "all": "All",
     "allCustomers": "All Customers",
+    "broadCloud": {
+      "tootTipTitle": "BroadCloud Flex",
+      "licenseTypeAndValue": "{{licenseType}} QTY: {{quantity}}"
+    },
     "trial": "Trial",
     "title": "Customers",
     "customerNameHeader": "Customer Name",
     "service": "Service",
     "services": "Services",
     "message": "Message",
-    "call": "Call",
+    "call": "Calling",
     "care": "Care",
     "careLicenses": "Care Licenses",
     "webex": "Webex",

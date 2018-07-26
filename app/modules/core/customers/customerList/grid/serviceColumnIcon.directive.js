@@ -28,9 +28,12 @@
       // caching some of the expensive and repeated operations
       scope.TOOLTIP_TEMPLATE = $(require('modules/core/customers/customerList/grid/serviceIconTooltip.tpl.html'));
       scope.WEBEX_TRANSLATION = $translate.instant('customerPage.webex');
+      scope.COMMUNICATIONS_TRANSLATION = $translate.instant('customerPage.call');
       scope.TOOLTIP_TEMPLATE_BLOCK = $(require('modules/core/customers/customerList/grid/webexTooltipBlock.tpl.html'));
+      scope.COMMUNICATIONS_TOOLTIP_TEMPLATE_BLOCK = $(require('modules/core/customers/customerList/grid/broadCloudTooltip.tpl.html'));
       var MAX_SITES_DISPLAYED = 2;
       var WEBEX_TYPE = 'webex'; // use this to stand for all types of webex products
+      var COMMUNICATIONS_TYPE = 'communications'; // use this to stand for all types of calling products
       var POSSIBLE_SERVICE_STATUSES = {
         expired: 'expired',
         trial: 'trial',
@@ -52,6 +55,9 @@
         type = $sanitize(type);
         if (type === WEBEX_TYPE) {
           return getWebexTooltip(rowData, type);
+        } else if (type === COMMUNICATIONS_TYPE && (!_.isUndefined(rowData.communicationsSPCA.licenseId) || !_.isUndefined(rowData.communicationsSPSTD.licenseId))) {
+          //call this tooltip for broadcloud services
+          return getBroadCloudToolTip(rowData, type);
         } else {
           return getNonWebexTooltip(rowData, type);
         }
@@ -147,6 +153,55 @@
         return $interpolate(tooltip[0].outerHTML)();
       }
 
+      function getBroadCloudToolTip(rowData) {
+        var serviceStatus = '';
+        var tooltipDataObj = {
+          serviceName: scope.COMMUNICATIONS_TRANSLATION,
+        };
+        var tooltip = scope.TOOLTIP_TEMPLATE.clone();
+        var totalLicensesCount = 0;
+        tooltip.find('.tooltip-qty').remove();
+        tooltip.find('.service-status').remove();
+        tooltip.find('.tooltip-another-partner').remove();
+        tooltip.append('<p class="service-sub-name">' + $translate.instant('customerPage.broadCloud.tootTipTitle') + '</p>');
+        var communicationsTypes = _.without(Config.communicationsTypes, 'communications', 'communicationBCALL');
+        _.forEach(communicationsTypes, function (licenseType) {
+          var licenseData = rowData[licenseType];
+          if (!_.isUndefined(licenseData)) {
+            var isLicenseAny = PartnerService.isLicenseTypeAny(rowData, licenseType);
+            var hasLicenseId = !_.isUndefined(licenseData.licenseId);
+
+            if (isLicenseAny && hasLicenseId) {
+              serviceStatus = getServiceStatus(rowData, licenseType);
+              tooltip.append(createCommunicationsTooltipBlock(rowData, licenseType, licenseData));
+              totalLicensesCount += licenseData.volume;
+            }
+            setTooltipText(serviceStatus, rowData[licenseType], tooltipDataObj);
+          }
+        });
+
+        //as per current design both broadCloud offers will have same status, but if this changes, logic needs to be added here to determine status priority.
+        if (serviceStatus) {
+          tooltipDataObj.status = $translate.instant('customerPage.' + serviceStatus);
+          tooltipDataObj.statusClass = serviceStatus;
+        }
+        //giving total count to ariaLable
+        tooltipDataObj.quantity = totalLicensesCount;
+
+        tooltip.append('<div class="service-status">' +
+        '<i class="icon icon-circle {{statusClass}}"></i>' +
+        '<span class="service-text tooltip-status">{{status}}</span>' +
+        '<span class="service-text tooltip-anotherPartner">{{anotherPartner}}</span>' +
+        '</div>');
+
+        scope.ariaLabel = _.join([
+          $translate.instant('customerPage.ariaTooltips.service', { serviceName: tooltipDataObj.serviceName + ' ' + $translate.instant('customerPage.broadCloud.tootTipTitle') }),
+          $translate.instant('customerPage.ariaTooltips.quantity', tooltipDataObj),
+          $translate.instant('customerPage.ariaTooltips.status', tooltipDataObj),
+        ], ', ');
+        return $interpolate(tooltip[0].outerHTML)(tooltipDataObj);
+      }
+
       function createWebexTooltipBlock(rowData, type, licenseData, sitesFound, serviceStatus) {
         var tooltipBlock = scope.TOOLTIP_TEMPLATE_BLOCK.clone();
         var tooltipDataObj = {
@@ -159,6 +214,17 @@
         };
 
         setTooltipText(serviceStatus, rowData[type], tooltipDataObj);
+        return $interpolate(tooltipBlock[0].outerHTML)(tooltipDataObj);
+      }
+
+      function createCommunicationsTooltipBlock(rowData, type, licenseData) {
+        var tooltipBlock = scope.COMMUNICATIONS_TOOLTIP_TEMPLATE_BLOCK.clone();
+        var tooltipDataObj = {
+          qty: $translate.instant('customerPage.broadCloud.licenseTypeAndValue', {
+            licenseType: licenseData.offerName === 'SPSTD' ? 'Standard' : 'Places',
+            quantity: licenseData.volume,
+          }),
+        };
         return $interpolate(tooltipBlock[0].outerHTML)(tooltipDataObj);
       }
 
