@@ -13,7 +13,7 @@ let cspIntConfig = mkCspConfig({
     'https://upgrade.int-ucmgmt.cisco.com', //HCS Upgrade as a service
     'https://licensing.int-ucmgmt.cisco.com', //HCS Upgrade as a service
     'https://controller.int-ucmgmt.cisco.com', //HCS Upgrade as a service
-    'http://172.24.77.211:80', //broadcloud dev and int
+    'http://172.24.77.211:8000', //broadcloud dev and int
   ],
 });
 
