@@ -51,7 +51,7 @@
     "TODO: upgrade angular@~1.6.8 after fixing ngMock $httpBackend unexpected failures"
   ],
   "dependencies": {
-    "@atlas/bmmp": "=0.0.4",
+    "@atlas/bmmp": "=0.0.6",
     "@ciscospark/internal-plugin-encryption": "1.28.5",
     "@ciscospark/internal-plugin-metrics": "1.28.5",
     "@ciscospark/internal-plugin-search": "1.28.5",
