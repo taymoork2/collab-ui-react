@@ -17,7 +17,8 @@ describe('SetupWizardCtrl', function () {
       'FeatureToggleService',
       'Orgservice',
       'DirSyncService',
-      'SetupWizardService'
+      'SetupWizardService',
+      'RialtoService'
     );
 
     this.usageFixture = getJSONFixture('core/json/organizations/usage.json');
@@ -29,6 +30,7 @@ describe('SetupWizardCtrl', function () {
     spyOn(this.Authinfo, 'setSetupDone').and.callThrough();
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'isCare').and.returnValue(false);
+    spyOn(this.Authinfo, 'isSquaredUC').and.returnValue(false);
     spyOn(this.$state, 'go');
     spyOn(this.SetupWizardService, 'populatePendingSubscriptions').and.returnValue(this.$q.resolve());
     spyOn(this.SetupWizardService, 'hasPendingLicenses').and.returnValue(true);
@@ -57,6 +59,7 @@ describe('SetupWizardCtrl', function () {
     }.bind(this));
     spyOn(this.Orgservice, 'getAdminOrgUsage').and.returnValue(this.$q.resolve(this.usageFixture));
     spyOn(this.Analytics, 'trackServiceSetupSteps');
+    spyOn(this.RialtoService, 'getCustomer').and.returnValue({});
 
     this._expectStepIndex = _expectStepIndex;
     this._expectSubStepIndex = _expectSubStepIndex;
@@ -440,7 +443,7 @@ describe('SetupWizardCtrl', function () {
     it('the wizard should have a lot of settings', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'enterpriseSettings']);
       this.expectSubStepOrder('planReview', ['init']);
-      this.expectSubStepOrder('serviceSetup', ['setupBsft', 'bsftLicenseAllocation', 'setupNumberBsft', 'assignNumberBsft', 'siteListBsft']);
+      this.expectSubStepOrder('serviceSetup', ['setupBsft', 'bsftLicenseAllocation', 'setupNumberBsft', 'assignNumberBsft']);
       this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
     });

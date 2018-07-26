@@ -1,10 +1,11 @@
 import moduleName from './index';
 
-import { ServicesOverviewController } from './services-overview.component';
 import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
+import { Config } from 'modules/core/config/config';
 import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
-import { Config } from 'modules/core/config/config';
+import { JabberToWebexTeamsService } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.service';
+import { ServicesOverviewController } from './services-overview.component';
 import { UserOverviewService } from 'modules/core/users/userOverview/userOverview.service';
 
 describe('ServicesOverviewController', () => {
@@ -21,6 +22,7 @@ describe('ServicesOverviewController', () => {
   let EnterprisePrivateTrunkService: EnterprisePrivateTrunkService;
   let FeatureToggleService;
   let HybridServicesClusterService: HybridServicesClusterService;
+  let JabberToWebexTeamsService: JabberToWebexTeamsService;
   let enabledFeatureToggles: string[] = [];
   let ServiceDescriptorService;
   let HybridServicesClusterStatesService;
@@ -69,7 +71,7 @@ describe('ServicesOverviewController', () => {
 
   });
 
-  function dependencies(_$componentController_, _$q_, _$rootScope_, _Analytics_, _Authinfo_, _CloudConnectorService_, _Config_, _EnterprisePrivateTrunkService_, _FeatureToggleService_, _HybridServicesClusterService_, _HybridServicesClusterStatesService_, _ServiceDescriptorService_, _$state_, _UserOverviewService_) {
+  function dependencies(_$componentController_, _$q_, _$rootScope_, _Analytics_, _Authinfo_, _CloudConnectorService_, _Config_, _EnterprisePrivateTrunkService_, _FeatureToggleService_, _HybridServicesClusterService_, _HybridServicesClusterStatesService_, _JabberToWebexTeamsService_, _ServiceDescriptorService_, _$state_, _UserOverviewService_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
@@ -81,6 +83,7 @@ describe('ServicesOverviewController', () => {
     FeatureToggleService = _FeatureToggleService_;
     HybridServicesClusterService = _HybridServicesClusterService_;
     HybridServicesClusterStatesService = _HybridServicesClusterStatesService_;
+    JabberToWebexTeamsService = _JabberToWebexTeamsService_;
     ServiceDescriptorService = _ServiceDescriptorService_;
     UserOverviewService = _UserOverviewService_;
     $state = _$state_;
@@ -316,6 +319,16 @@ describe('ServicesOverviewController', () => {
       enabledFeatureToggles = [FeatureToggleService.features.atlasHybridImp];
       initController();
       expect(ctrl._servicesActive).toEqual(['spark-hybrid-impinterop']);
+    });
+
+    it('should set "allJabberToWebexTeamsPrereqsDone" property to "JabberToWebexTeamsService.hasAllPrereqsSettingsDone()" resolved value', () => {
+      spyOn(JabberToWebexTeamsService, 'hasAllPrereqsSettingsDone').and.returnValue($q.resolve(true));
+      initController();
+      expect(ctrl.allJabberToWebexTeamsPrereqsDone).toBe(true);
+
+      (JabberToWebexTeamsService.hasAllPrereqsSettingsDone as any).and.returnValue($q.resolve(false));
+      initController();
+      expect(ctrl.allJabberToWebexTeamsPrereqsDone).toBe(false);
     });
   });
 

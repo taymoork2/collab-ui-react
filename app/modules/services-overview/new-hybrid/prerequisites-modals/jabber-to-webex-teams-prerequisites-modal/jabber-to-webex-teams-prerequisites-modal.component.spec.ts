@@ -1,5 +1,6 @@
 import moduleName from './index';
 import { Analytics } from 'modules/core/analytics';
+import { JabberToWebexTeamsService } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.service';
 import { JabberToWebexTeamsPrerequisitesModalController } from './jabber-to-webex-teams-prerequisites-modal.component';
 import { Notification } from 'modules/core/notifications';
 
@@ -7,6 +8,7 @@ type Test = atlas.test.IComponentTest<JabberToWebexTeamsPrerequisitesModalContro
   $scope: ng.IScope;
   $state: ng.ui.IStateService;
   Analytics: Analytics;
+  JabberToWebexTeamsService: JabberToWebexTeamsService;
   Notification: Notification;
 }, {
 }>;
@@ -21,6 +23,7 @@ describe('Component: jabberToWebexTeamsPrerequisitesModal:', () => {
       '$scope',
       '$state',
       'Analytics',
+      'JabberToWebexTeamsService',
       'Notification',
     );
     this.$scope.dismissSpy = jasmine.createSpy('dismissSpy');
@@ -46,7 +49,7 @@ describe('Component: jabberToWebexTeamsPrerequisitesModal:', () => {
     });
 
     describe('primary CTA button:', () => {
-      it('should be a "Next" button if not all prereqs are selected', function () {
+      it('should be a "Next" button if not all prereqs are selected', function (this: Test) {
         // no prereqs selected yet
         expect(this.view.find('.modal-footer .btn--primary [translate="common.next"]')).toExist();
 
@@ -55,7 +58,7 @@ describe('Component: jabberToWebexTeamsPrerequisitesModal:', () => {
         expect(this.view.find('.modal-footer .btn--primary [translate="common.next"]')).toExist();
       });
 
-      it('should be a "Finish" button if all prereqs are selected', function () {
+      it('should be a "Finish" button if all prereqs are selected', function (this: Test) {
         // both prereqs selected
         this.view.find('cr-checkbox-item:eq(0) input').click();
         this.view.find('cr-checkbox-item:eq(1) input').click();
@@ -75,7 +78,7 @@ describe('Component: jabberToWebexTeamsPrerequisitesModal:', () => {
     });
 
     describe('(get) hasPrereqs():', () => {
-      it('should return false if "preReqs" property does not have enough entries', function () {
+      it('should return false if "preReqs" property does not have enough entries', function (this: Test) {
         // zero entries
         expect(_.size(this.controller.preReqs)).toBe(0);
         expect(this.controller.hasPrereqs).toBe(false);
@@ -86,7 +89,7 @@ describe('Component: jabberToWebexTeamsPrerequisitesModal:', () => {
         expect(this.controller.hasPrereqs).toBe(false);
       });
 
-      it('should return true if "preReqs" property has enough entries and all entries are selected, false otherwise', function () {
+      it('should return true if "preReqs" property has enough entries and all entries are selected, false otherwise', function (this: Test) {
         expect(_.size(this.controller.preReqIds)).toBe(2);
         _.set(this.controller.preReqs, 'fake-entry-1', { isSelected: true });
         _.set(this.controller.preReqs, 'fake-entry-2', { isSelected: true });
@@ -119,7 +122,7 @@ describe('Component: jabberToWebexTeamsPrerequisitesModal:', () => {
     });
 
     describe('next():', () => {
-      it('should jump to add profile page', function () {
+      it('should jump to add profile page', function (this: Test) {
         spyOn(this.$state, 'go');
         this.controller.next();
         expect(this.$state.go).toHaveBeenCalledWith('jabber-to-webex-teams.modal.add-profile');
@@ -127,12 +130,26 @@ describe('Component: jabberToWebexTeamsPrerequisitesModal:', () => {
     });
 
     describe('finish():', () => {
-      it('should notify success and dismiss the modal', function () {
+      it('should notify success and transition back to services overview page if save operation resolves', function (this: Test) {
+        spyOn(this.JabberToWebexTeamsService, 'savePrereqsSettings').and.returnValue(this.$q.resolve());
         spyOn(this.Notification, 'success');
-        spyOn(this.controller, 'dismiss');
+        spyOn(this.$state, 'go');
         this.controller.finish();
+        this.$scope.$apply();
+
         expect(this.Notification.success).toHaveBeenCalled();
-        expect(this.controller.dismiss).toHaveBeenCalled();
+        expect(this.$state.go).toHaveBeenCalledWith('services-overview', {}, { reload: true });
+      });
+
+      it('should notify error and transition back to services overview page if save operation rejects', function (this: Test) {
+        spyOn(this.JabberToWebexTeamsService, 'savePrereqsSettings').and.returnValue(this.$q.reject());
+        spyOn(this.Notification, 'errorResponse');
+        spyOn(this.$state, 'go');
+        this.controller.finish();
+        this.$scope.$apply();
+
+        expect(this.Notification.errorResponse).toHaveBeenCalled();
+        expect(this.$state.go).toHaveBeenCalledWith('services-overview', {}, { reload: true });
       });
     });
   });
