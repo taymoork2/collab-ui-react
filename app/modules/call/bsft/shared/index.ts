@@ -4,6 +4,7 @@ import { RialtoService } from './rialto.service';
 export * from './bsft-site';
 export * from './bsft-number';
 export * from './bsft-order';
+export * from './bsft-rialto';
 
 export { FtswConfigService };
 export { RialtoService };

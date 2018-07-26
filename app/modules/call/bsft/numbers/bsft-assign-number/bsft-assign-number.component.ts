@@ -1,4 +1,4 @@
-import { FtswConfigService, Site, RialtoService } from 'modules/call/bsft/shared';
+import { FtswConfigService, Site, RialtoService, RialtoCustomer, RialtoSite } from 'modules/call/bsft/shared';
 import { BsftOrder, IPortingNumber } from '../../shared';
 import { Notification } from 'modules/core/notifications';
 
@@ -22,6 +22,7 @@ class BsftAssignNumberCtrl implements ng.IComponentController {
     private FtswConfigService: FtswConfigService,
     private RialtoService: RialtoService,
     private Notification: Notification,
+    private Authinfo,
   ) {
     this.messages = {
       required: this.$translate.instant('common.invalidRequired'),
@@ -92,8 +93,8 @@ class BsftAssignNumberCtrl implements ng.IComponentController {
     this.FtswConfigService.addSite(this.site);
     this.FtswConfigService.assignNumbers(this.site.uuid, this.mainNumber, this.vmNumber);
     if (this.ftsw) {
-      return this.RialtoService.saveCustomer(this.site)
-        .then((response) => this.RialtoService.saveSite(response.rialtoId, this.site))
+      return this.RialtoService.saveCustomer(new RialtoCustomer(this.Authinfo.getOrgId(), this.Authinfo.getOrgName(), this.site))
+        .then((response) => this.RialtoService.saveSite(response.rialtoId, new RialtoSite(this.site)))
         .catch((response) => this.Notification.error(response.status.message))
         .then(response => {
           if (response.status.type === 'success') {
