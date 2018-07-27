@@ -61,7 +61,7 @@ var Wizard = function () {
   this.enterpriseSettingsBanner = element.all(by.css('[translate="firstTimeWizard.enterpriseSettings"]')).first();
   this.sipInput = element(by.id('sipDomainInput'));
   this.checkAvailabilityBtn = element(by.css('.btn.btn--cta'));
-  this.checkAvailabilitySuccess = element.all(by.css('i.icon.icon-check.domain-icon.domain-success')).first();
+  this.checkAvailabilitySuccess = element.all(by.css('div[ng-if="vm.isDomainAvailable"]')).first();
   this.getStartedBanner = element.all(by.css('[translate="firstTimeWizard.getStarted"]'));
   this.saveToaster = element(by.cssContainingText('div[ng-repeat="message in directiveData.messages"]', SETTINGS_SAVED));
   this.closeToaster = element(by.css('.toast-close-button'));
