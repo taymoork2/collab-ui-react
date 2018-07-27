@@ -47,6 +47,7 @@
       getUserLicence: getUserLicence,
       getPreferredWebExSiteForCalendaring: getPreferredWebExSiteForCalendaring,
       updateUserData: updateUserData,
+      addExternalAdmin: addExternalAdmin,
       _helpers: {
         checkAndUpdateSunlightUser: checkAndUpdateSunlightUser,
         mkOnboardUsersPayload: mkOnboardUsersPayload,
@@ -363,6 +364,10 @@
       };
 
       return $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/migrate', requestBody);
+    }
+
+    function addExternalAdmin(requestBody) {
+      return $http.post(userUrl + 'users/externalAdmin', requestBody);
     }
 
     // DEPRECATED
