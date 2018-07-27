@@ -264,7 +264,14 @@
       var filter;
       var scimSearchUrl = null;
       var encodedSearchStr = '';
-      var adminFilter = '&filter=roles%20eq%20%22id_full_admin%22%20and%20active%20eq%20true';
+      // Create the CI query filter to get the org's admins
+      var filterList = [];
+      var rolesFilter = service._helpers.mkAttrEqValsExpr('roles',
+        ['id_full_admin', 'id_readonly_admin', 'id_device_admin', 'id_user_admin', 'atlas-portal.support'], 'or');
+      filterList.push(rolesFilter);
+      var activeFilter = service._helpers.mkAttrEqValsExpr('active', 'true');
+      filterList.push(activeFilter);
+      var adminFilter = '&filter=' + $window.encodeURIComponent(filterList.join(' and '));
 
       if (getAdmins && listUrl.indexOf(adminFilter) === -1) {
         listUrl = listUrl + adminFilter;
