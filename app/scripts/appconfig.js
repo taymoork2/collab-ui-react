@@ -19,11 +19,19 @@
 
         // sidepanel helper
         function isStateInSidepanel($state) {
-          var rootStateName = $state.current.name.split('.')[0];
-          var rootState = $state.get(rootStateName);
-          var rootStateIsSidepanel = rootState.parent === 'sidepanel';
-          return $state.current.parent === 'sidepanel' || (rootStateIsSidepanel && $state.includes(rootState));
+          return isCurrentStateInSidepanel($state.$current);
         }
+
+        function isCurrentStateInSidepanel(state) {
+          if (state) {
+            if (state.name === 'sidepanel') {
+              return true;
+            }
+            return isCurrentStateInSidepanel(state.parent);
+          }
+          return false;
+        }
+
 
         /* @ngInject */
         function SidePanelLargeOpen($window) {

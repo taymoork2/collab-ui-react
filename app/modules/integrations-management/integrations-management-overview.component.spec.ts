@@ -305,6 +305,7 @@ const applicationUsage: IApplicationUsage = {
   appId: 'app-id',
   appName: 'app-name',
   appPrivacyUrl: 'app-privacy-url',
+  appSupportUrl: 'app-support-url',
   appUserAdoption: 100,
   id: 'id',
   orgId: 'org-id',
