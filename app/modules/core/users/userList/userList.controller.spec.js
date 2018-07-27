@@ -82,6 +82,7 @@ describe('UserListCtrl: Ctrl', function () {
     this.isCiscoSpy = spyOn(this.Authinfo, 'isCisco').and.returnValue(false);
 
     spyOn(this.FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasUserAddExternalAdminGetStatus').and.returnValue(this.$q.resolve(true));
 
     this.$httpBackend.whenGET(/.*\/v1\/Users\/me.*/g).respond(200);
 
@@ -540,6 +541,36 @@ describe('UserListCtrl: Ctrl', function () {
       expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
       this.user.userStatus = 'batman';
       expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
+    });
+  });
+
+  describe('canShowAddExtAdmin', function () {
+    beforeEach(function () {
+      initController.apply(this);
+    });
+
+    it('should return false if not on External Admins tab', function () {
+      spyOn(this.Authinfo, 'hasRole').and.returnValue(true);
+      spyOn(this.Authinfo, 'isProvisionAdmin').and.returnValue(false);
+      this.$scope.activeFilter = 'administrators';
+
+      expect(this.$scope.canShowAddExtAdmin()).toBe(false);
+    });
+
+    it('should return false if user is not a full admin', function () {
+      spyOn(this.Authinfo, 'hasRole').and.returnValue(false);
+      spyOn(this.Authinfo, 'isProvisionAdmin').and.returnValue(true);
+      this.$scope.activeFilter = 'partners';
+
+      expect(this.$scope.canShowAddExtAdmin()).toBe(false);
+    });
+
+    it('should return true if all conditions are met', function () {
+      spyOn(this.Authinfo, 'hasRole').and.returnValue(true);
+      spyOn(this.Authinfo, 'isProvisionAdmin').and.returnValue(false);
+      this.$scope.activeFilter = 'partners';
+
+      expect(this.$scope.canShowAddExtAdmin()).toBe(true);
     });
   });
 });

@@ -10,7 +10,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($q, $rootScope, $scope, $state, $timeout, $translate, Authinfo, Config, FeatureToggleService, GridService,
+  function UserListCtrl($modal, $q, $rootScope, $scope, $state, $timeout, $translate, Authinfo, Config, FeatureToggleService, GridService,
     Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, DirSyncService, UserOverviewService) {
     var vm = this;
     var DEFAULT_SORT = {
@@ -73,6 +73,8 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     $scope.setDeactivateUser = setDeactivateUser;
     $scope.setDeactivateSelf = setDeactivateSelf;
     $scope.getUserLicenses = getUserLicenses;
+    $scope.addExternalAdmin = addExternalAdmin;
+    $scope.canShowAddExtAdmin = canShowAddExtAdmin;
 
     // graph appScope data and functions
     vm.userName = Authinfo.getUserName();
@@ -130,6 +132,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
       var promises = {
         atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus(),
+        isAddExternalAdminEnabled: FeatureToggleService.atlasUserAddExternalAdminGetStatus(),
         configureGrid: vm.configureGrid(),
         adminOrg: Orgservice.getAdminOrgAsPromise(null, params),
       };
@@ -139,6 +142,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
         // retrieve org data to determine if invite emails are suppressed
         vm.isEmailSuppressed = _.get(results.adminOrg, 'data.isOnBoardingEmailSuppressed', false);
+        vm.isAddExternalAdminEnabled = results.isAddExternalAdminEnabled;
 
         bind();
         getUserList();
@@ -576,6 +580,19 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
         var isHuronUser = Userservice.isHuronUser(user.entitlements);
         return (user.userStatus === 'pending' || user.userStatus === 'error' || isHuronUser);
       }
+    }
+
+    function canShowAddExtAdmin() {
+      return (($scope.activeFilter === 'partners' && Authinfo.hasRole('Full_Admin') &&
+        !Authinfo.isProvisionAdmin() && vm.isAddExternalAdminEnabled));
+    }
+
+    function addExternalAdmin() {
+      $modal.open({
+        template: '<add-external-admin dismiss="$dismiss()"></add-external-admin>',
+        controllerAs: '$ctrl',
+        type: 'small',
+      });
     }
 
     function keypressResendInvitation($event, userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {

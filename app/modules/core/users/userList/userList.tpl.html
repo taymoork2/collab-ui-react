@@ -12,8 +12,11 @@
           no-icon="true"
           status-message="{{::'usersPage.exportingUserAttributes' | translate}}"
           download-state="users.csv"></csv-download>
-        <button ng-if="!isProvisionAdmin()" ng-disabled="!obtainedTotalUserCount" id="manageUsers" class="btn btn--people" ng-click="onManageUsers()"
-                translate="usersPage.manageUsers">
+        <button ng-show="!isProvisionAdmin() && activeFilter !== 'partners'" ng-disabled="!obtainedTotalUserCount" id="manageUsers"
+                class="btn btn--people" ng-click="onManageUsers()" translate="usersPage.manageUsers">
+        </button>
+        <button ng-show="canShowAddExtAdmin()" id="addExtAdmin" class="btn btn--people"
+                ng-click="addExternalAdmin()" translate="usersPage.addExternalAdmin">
         </button>
       </div>
     </cs-page-sub-header-right>

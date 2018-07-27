@@ -1,0 +1,73 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="$ctrl.close()" aria-label="{{::'common.close' | translate}}"></button>
+    <h3 class="modal-title" translate="usersPage.addExternalAdministrator"></h3>
+</div>
+<div class="modal-body add-external-admin" ng-form="$ctrl.form">
+    <div class="add-external-admin__lg-pad">
+        <h6>{{::'usersPage.addExternalAdminNote'|translate}}</h6>
+    </div>
+    <div  class="add-external-admin__pad">
+      <div ng-class="{'error': $ctrl.form.emailAddress.$invalid && $ctrl.form.emailAddress.$touched}">
+        <label class="cs-input__label" for="emailAddress" translate="usersPage.addExternalAdminEmail"></label>
+        <input class="cs-input add-external-admin__input"
+              type="email"
+              id="emailAddress"
+              name="emailAddress"
+              ng-change="$ctrl.verifyConfirmEmailAddress()"
+              ng-model="$ctrl.emailAddress"
+              required
+              focus-on>
+        <div class="cs-input__messages" ng-messages="$ctrl.form.emailAddress.$error" role="alert">
+          <div class="message" ng-message="required">{{::'common.invalidRequired' | translate}}</div>
+          <div class="message" ng-message="email">{{::'common.invalidEmail' | translate}}</div>
+          <div class="message" ng-message="addError">{{$ctrl.errorMsg}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="add-external-admin__lg-pad">
+      <div ng-class="{'error': $ctrl.form.confirmEmailAddress.$invalid && $ctrl.form.confirmEmailAddress.$touched}">
+        <label class="cs-input__label" for="confirmEmailAddress" translate="usersPage.addExternalAdminConfirm"></label>
+        <input class="cs-input add-external-admin__input"
+              type="email"
+              id="confirmEmailAddress"
+              name="confirmEmailAddress"
+              ng-model="$ctrl.confirmEmailAddress"
+              ng-change="$ctrl.verifyConfirmEmailAddress()"
+              ng-paste="$event.preventDefault()"
+              required>
+        <div class="cs-input__messages" ng-messages="$ctrl.form.confirmEmailAddress.$error" role="alert">
+          <div class="message" ng-message="required">{{::'common.invalidRequired' | translate}}</div>
+          <div class="message" ng-message="email">{{::'common.invalidEmail' | translate}}</div>
+          <div class="message" ng-message="emailsDoNotMatch">{{::'common.emailAddressesDonotMatch' | translate}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="cs-radio-group">
+      <input cs-input type="radio"
+        ng-model="$ctrl.role"
+        id="fullAdmin"
+        name="adminRole"
+        ng-value="$ctrl.roles.FULL_ADMIN"
+        cs-input-label="{{::'rolesPanel.fullAdmin'|translate}}">
+      <input cs-input type="radio"
+        ng-model="$ctrl.role"
+        id="readOnly"
+        name="adminRole"
+        ng-value="$ctrl.roles.READ_ONLY"
+        cs-input-label="{{::'rolesPanel.readonlyAdmin'|translate}}">
+    </div>
+</div>
+<div class="modal-footer">
+    <button
+      class="btn btn--default"
+      ng-click="$ctrl.close()">
+      <span translate="common.cancel"></span>
+    </button>
+    <button
+      class="btn btn--primary"
+      cs-btn loading="$ctrl.loading"
+      ng-disabled="$ctrl.form.$invalid"
+      ng-click="$ctrl.handleAdd()">
+      <span translate="common.OK"></span>
+    </button>
+</div>

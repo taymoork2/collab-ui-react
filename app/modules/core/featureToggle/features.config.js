@@ -91,6 +91,7 @@ module.exports = {
   atlasSsoCertificateUpdate: 'atlas-sso-certificate-update',
   atlasSuppressOnboardingEmail: 'atlas-suppress-onboarding-email',
   atlasTrialsShipDevices: 'atlasTrialsShipDevices',
+  atlasUserAddExternalAdmin: 'atlas-user-add-external-admin',
   atlasUserCsvSubscriptionEnable: 'atlas-user-csv-subscription-enable',
   atlasVirtualAssistantEnable: 'atlas-virtual-assistant-enable',
   atlasWebexAddSite: 'atlas-webex-add-site',
