@@ -538,13 +538,10 @@ describe('Controller: OverviewCtrl', function () {
   describe('directory connector upgrade notification', function () {
     it('should be added', function () {
       this.initController();
-      var dcNotificationExists = false;
-      _.forEach(this.controller.notifications, function (notif) {
-        if (notif.name === 'dirConnectorUpgrade') {
-          dcNotificationExists = true;
-        }
+      var dcNotificationExists = _.some(this.controller.notifications, function (notification) {
+        return notification.name === 'dirConnectorUpgrade';
       });
-      expect(dcNotificationExists).toBeTruthy();
+      expect(dcNotificationExists).toBe(true);
     });
   });
 
@@ -558,13 +555,10 @@ describe('Controller: OverviewCtrl', function () {
         },
       }));
       this.initController();
-      var sipAddressMigrationNotificationExists = false;
-      _.forEach(this.controller.notifications, function (notif) {
-        if (notif.name === 'sipAddressMigration') {
-          sipAddressMigrationNotificationExists = true;
-        }
+      var sipAddressMigrationNotificationExists = _.some(this.controller.notifications, function (notification) {
+        return notification.name === 'sipAddressMigration';
       });
-      expect(sipAddressMigrationNotificationExists).toBeTruthy();
+      expect(sipAddressMigrationNotificationExists).toBe(true);
     });
   });
 });

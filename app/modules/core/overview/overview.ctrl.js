@@ -430,6 +430,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
     }
 
     function checkForSipAddressMigration() {
+      // TODO - To extract the following logic into the new SipCloudDomainService
       ServiceDescriptorService.isServiceEnabled('squared-fusion-ec').then(function (cscEnabled) {
         if (cscEnabled) {
           SipAddressService.loadSipAddressModel().then(function (sipAddressModel) {
