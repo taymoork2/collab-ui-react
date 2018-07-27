@@ -14,6 +14,25 @@ export class JabberToWebexTeamsService {
     return `${this.UrlConfig.getIdentityServiceUrl()}/organization/${this.Authinfo.getOrgId()}/v1/config/templates`;
   }
 
+  public listUcManagerProfiles(): ng.IPromise<IUcManagerProfile[]> {
+    return this.$http.get(this.getConfigTemplatesUrl())
+      .then((response) => {
+        return _.get(response.data, 'Resources') as IUcManagerProfile[];
+      });
+  }
+
+  public deleteUcManagerProfile(templateId: string): ng.IPromise<ng.IHttpResponse<{}>> {
+    const url = `${this.getConfigTemplatesUrl()}/${templateId}`;
+    return this.$http.delete(url, {
+      //algendel: content-type specification is required and when data attribute is missing
+      //the content-type is getting stripped so the empty data object needs to be provided
+      data: {},
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
   public create(options: {
     profileName: string;
     voiceServerDomainName: string;

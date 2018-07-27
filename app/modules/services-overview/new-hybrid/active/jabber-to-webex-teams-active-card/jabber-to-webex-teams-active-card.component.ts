@@ -7,7 +7,7 @@ export class JabberToWebexTeamsActiveCardController implements ng.IComponentCont
   ) {}
 
   public manageProfiles(): void {
-    // TODO (spark-14176): implement jump to add/edit wizard
+    this.$state.go('jabber-to-webex-teams.profiles');
   }
 
   public addProfile(): void {
