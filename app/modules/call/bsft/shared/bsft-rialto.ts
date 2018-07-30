@@ -65,6 +65,7 @@ export class RialtoSite {
   public timezone: string;
   public emailAddress: string;
   public defaultSite: boolean;
+  public siteType: string;
   public siteAddress: IRialtoSiteAddress;
   public siteContact: IRialtoContact;
 
@@ -73,6 +74,7 @@ export class RialtoSite {
     this.timezone = site.timeZone;
     this.emailAddress = site.contact.email,
     this.defaultSite = site.defaultLocation,
+    this.siteType = 'FLEX';
     this.siteAddress = {
       address1: site.address.address1,
       address2: site.address.address2,
