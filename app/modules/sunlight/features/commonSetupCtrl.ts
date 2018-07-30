@@ -197,6 +197,10 @@ export class CommonSetupCtrl implements ng.IComponentController {
     const last = this.states.length - 1;
     if (next > last) {
       return this.states[last];
+    }
+    const nextPage = this.template.configuration.pages[this.states[next]];
+    if (nextPage && !nextPage.enabled) {
+      return this.getAdjacentEnabledState(next, jump);
     } else {
       return this.states[next];
     }

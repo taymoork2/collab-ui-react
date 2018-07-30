@@ -220,6 +220,7 @@
         name: 'Virtual Assistant operations',
         eventNames: {
           CVA_OVERVIEW_PAGE: 'Customer VA Overview',
+          CVA_SAMPLE_PAGE: 'Customer VA Sample Agent',
           CVA_DIALOGUE_PAGE: 'Customer VA Dialogue Integration',
           CVA_ACCESS_TOKEN_PAGE: 'Customer VA Client Access Token',
           CVA_NAME_PAGE: 'Customer VA Name',

@@ -20,9 +20,11 @@
               name="dialogflowRadio"
               ng-model="$ctrl.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured"
               ng-value="false"
+              ng-click="$ctrl.enableDisableSamplePage()"
               cs-input-label="{{$ctrl.getText('configOverview.boxRadioOne')}}">
             <p class="radio-desc">
-              <span class="h5" translate="careChatTpl.virtualAssistant.configOverview.boxRadioOneDesc"></span>
+              <span class="h5" translate="careChatTpl.virtualAssistant.configOverview.boxRadioOneDesc" ng-if="!$ctrl.isCVASelfServiceEnabled()"></span>
+              <span class="h5" translate="careChatTpl.virtualAssistant.configOverview.boxRadioOneDescNew" ng-if="$ctrl.isCVASelfServiceEnabled()"></span>
             </p>
             <input cs-input type="radio"
               class="radio-row"
@@ -30,6 +32,7 @@
               name="dialogflowRadio"
               ng-model="$ctrl.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured"
               ng-value="true"
+              ng-click="$ctrl.enableDisableSamplePage()"
               cs-input-label="{{$ctrl.getText('configOverview.boxRadioTwo')}}">
             <p class="radio-desc">
               <span class="h5">{{$ctrl.getText('configOverview.boxRadioTwoDesc')}}</span>

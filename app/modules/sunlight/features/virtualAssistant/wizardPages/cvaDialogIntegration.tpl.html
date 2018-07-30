@@ -11,12 +11,8 @@
           <h4>{{$ctrl.getText('dialogIntegration.boxStepOne')}}</h4>
         </div>
         <p>{{$ctrl.getText('dialogIntegration.boxStepOneDesc')}}</p>
-        <a class="btn download-button orig-button"
-          target="_self"
-          ng-href="{{$ctrl.escalationIntentUrl}}"
-          download="escalation.json"
-          focus-on>
-          {{$ctrl.getText('dialogIntegration.downloadButtonText')}}
+        <a id="download-link" target="_self" ng-href="{{$ctrl.escalationIntentUrl}}" download="escalation.json" focus-on>
+          <button type="button" class="btn btn--lg download-button" tabindex="-1">{{$ctrl.getText('dialogIntegration.downloadButtonText')}}</button>
         </a>
         <div class="instruction-row">
           <img class="icon-circle" src="/images/icon-circle-two.svg" />
@@ -59,12 +55,8 @@
           <li translate="careChatTpl.virtualAssistant.dialogIntegration.stepOneBulletOne" translate-values="{featureName: $ctrl.getFeatureName()}"/>
           <li translate="careChatTpl.virtualAssistant.dialogIntegration.stepOneBulletTwo" translate-values="{featureName: $ctrl.getFeatureName()}"/>
         </ul>
-        <a class="btn download-button"
-          target="_self"
-          ng-href="{{$ctrl.dialogFlowIntentsUrl}}"
-          download="intents.zip"
-          focus-on>
-          {{$ctrl.getText('dialogIntegration.downloadButtonTextNew')}}
+        <a id="download-link" target="_self" ng-href="{{$ctrl.dialogFlowIntentsUrl}}" download="intents.zip" focus-on>
+          <button type="button" class="btn btn--lg download-button" tabindex="-1">{{$ctrl.getText('dialogIntegration.downloadButtonTextNew')}}</button>
         </a>
         <div class="instruction-row">
           <img class="icon-circle" src="/images/icon-circle-two.svg" />

@@ -1,0 +1,40 @@
+<div>
+	<div class="ct-title">
+		<span class="h3">{{$ctrl.getText('sampleAgent.title')}}</span>
+	</div>
+	<h6 class="h6 ct-title-desc">{{$ctrl.getText('sampleAgent.desc')}}</h6>
+	<div class="cs-card-container ct-sa-content">
+		<cs-card-layout block-view="true" class="va-card-center">
+		<cs-card class="va-box cva-dialog-integration-box va-card">
+			<div class="instruction-row">
+			<img class="icon-circle" src="/images/icon-circle-one.svg" />
+			<h4>{{$ctrl.getText('sampleAgent.boxStepOne')}}</h4>
+			</div>
+			<p>{{$ctrl.getText('sampleAgent.boxStepOneDesc')}}</p>
+			<a id="download-link" target="_self" ng-href="{{$ctrl.dialogFlowSampleAgentUrl}}" download="sampleAgent.zip" focus-on>
+				<button type="button" class="btn btn--lg download-button">{{$ctrl.getText('sampleAgent.downloadButtonText')}}</button>
+			</a>
+			<div class="instruction-row">
+			<img class="icon-circle" src="/images/icon-circle-two.svg" />
+			<h4>{{$ctrl.getText('sampleAgent.boxStepTwo')}}</h4>
+			</div>
+			<p>{{$ctrl.getText('sampleAgent.boxStepTwoDesc')}}</p>
+			<div class="instruction-row">
+			<img class="icon-circle" src="/images/icon-circle-three.svg" />
+			<h4>{{$ctrl.getText('sampleAgent.boxStepThree')}}</h4>
+			</div>
+			<p>{{$ctrl.getText('sampleAgent.boxStepThreeDesc')}}</p>
+			<div class="body-small warning-message">
+			<div class="warning-sign">
+				<i class="icon icon-warning"></i>
+			</div>
+			<div>{{$ctrl.getText('dialogIntegration.intentWarning')}}</div>
+			</div>
+			<div class="learn-more-row">
+				<span translate="careChatTpl.virtualAssistant.sampleAgent.learnMoreLink" translate-value-howtolink="http://www.cisco.com/go/cva-integrate"/>
+			</div>
+		</cs-card>
+		</cs-card-layout>   
+	</div>
+</div>
+  

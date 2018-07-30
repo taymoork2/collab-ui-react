@@ -9,7 +9,12 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     {
       name: 'cvaConfigOverview',
       previousButtonState: 'hidden',
-      nextButtonState: false,
+      nextButtonState: true,
+    },
+    {
+      name: 'cvaSampleAgent',
+      previousButtonState: true,
+      nextButtonState: true,
     },
     {
       name: 'cvaDialogIntegration',
@@ -97,6 +102,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     );
 
     this.$state.isAppleBusinessChatEnabled = true;
+    this.$state.isCVASelfServiceEnabled = true;
 
     //create mock deferred object which will be used to return promises
     getLogoDeferred = this.$q.defer();
@@ -198,8 +204,12 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       expect(this.$modal.open).toHaveBeenCalled();
     });
 
-    it('Walk pages forward in order ', function () {
+    it('Self-service is enabled, Walk pages forward in order ', function () {
       for (let i = 0; i < controller.states.length; i++) {
+        // Skipping dialog integration since self-service is enabled
+        if (controller.states[i] === 'cvaDialogIntegration') {
+          continue;
+        }
         expect(controller.currentState).toEqual(controller.states[i]);
         controller.nextPage();
         expect(this.Analytics.trackEvent).toHaveBeenCalledWith(controller.template.configuration.pages[controller.currentState].eventName, { durationInMillis: 0 });
@@ -208,9 +218,43 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       }
     });
 
-    it('Walk pages Backward in order ', function () {
+    it('Self-service is disabled, Walk pages forward in order ', function () {
+      controller.template.configuration.pages.cvaSampleAgent.enabled = false;
+      controller.template.configuration.pages.cvaDialogIntegration.enabled = true;
+      for (let i = 0; i < controller.states.length; i++) {
+        // Skipping sample agent since self-service is disabled
+        if (controller.states[i] === 'cvaSampleAgent') {
+          continue;
+        }
+        expect(controller.currentState).toEqual(controller.states[i]);
+        controller.nextPage();
+        expect(this.Analytics.trackEvent).toHaveBeenCalledWith(controller.template.configuration.pages[controller.currentState].eventName, { durationInMillis: 0 });
+        this.Analytics.trackEvent.calls.reset();
+        this.$timeout.flush();
+      }
+    });
+
+    it('Self-service is enabled, Walk pages Backward in order ', function () {
       controller.currentState = controller.states[controller.states.length - 1];
       for (let i = (controller.states.length - 1); 0 <= i; i--) {
+        if (controller.states[i] === 'cvaDialogIntegration') {
+          continue;
+        }
+        expect(controller.currentState).toEqual(controller.states[i]);
+        controller.previousPage();
+        this.$timeout.flush();
+      }
+    });
+
+    it('Self-service is disabled, Walk pages Backward in order ', function () {
+      controller.template.configuration.pages.cvaSampleAgent.enabled = false;
+      controller.template.configuration.pages.cvaDialogIntegration.enabled = true;
+      controller.currentState = controller.states[controller.states.length - 1];
+      for (let i = (controller.states.length - 1); 0 <= i; i--) {
+        // Skipping sample agent since self-service is disabled
+        if (controller.states[i] === 'cvaSampleAgent') {
+          continue;
+        }
         expect(controller.currentState).toEqual(controller.states[i]);
         controller.previousPage();
         this.$timeout.flush();
@@ -241,9 +285,9 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
 
   describe('Field Checks on All Pages with fields', function () {
     const CONFIG_OVERVIEW_PAGE_INDEX = 0;
-    const ACCESS_TOKEN_PAGE_INDEX = 2;
-    const NAME_PAGE_INDEX = 3;
-    const CVA_CONTENTS_FIELDS_INDEX = 5;
+    const ACCESS_TOKEN_PAGE_INDEX = 3;
+    const NAME_PAGE_INDEX = 4;
+    const CVA_CONTENTS_FIELDS_INDEX = 6;
 
     beforeEach(function () {
       controller.nameForm = getForm('nameInput');
@@ -255,8 +299,14 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     });
 
     it('Next button on Config Overview Page disabled when isDialogflowAgentConfigured is false', function () {
+      this.$state.isCVASelfServiceEnabled = false;
       controller.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured = false;
       checkStateOfNavigationButtons(CONFIG_OVERVIEW_PAGE_INDEX, 'hidden', false);
+    });
+
+    it('Next button on Config Overview Page enabled when isDialogflowAgentConfigured is false, but self-service feature flag is enabled', function () {
+      controller.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured = false;
+      checkStateOfNavigationButtons(CONFIG_OVERVIEW_PAGE_INDEX, 'hidden', true);
     });
 
     it('Next button on Access Token Page enabled when accessTokenValue is valid and validation not needed', function () {
@@ -298,6 +348,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     });
 
     it('Next page keyboard shortcut should not work if name field is invalid', function () {
+      controller.currentState = controller.states[NAME_PAGE_INDEX];
       controller.template.configuration.pages.name.nameValue = '';
       const ENTER_KEYPRESS_EVENT = {
         which: KeyCodes.ENTER,
@@ -308,6 +359,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     });
 
     it('space keyboard shortcut should not trigger next page', function () {
+      controller.currentState = controller.states[NAME_PAGE_INDEX];
       controller.template.configuration.pages.name.nameValue = 'testName';
       const SPACE_KEYPRESS_EVENT = {
         which: KeyCodes.SPACE,

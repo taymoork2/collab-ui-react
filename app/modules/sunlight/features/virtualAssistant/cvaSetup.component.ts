@@ -34,6 +34,9 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   public tokenForm: ng.IFormController;
   private cvaInputContext: CvaContextFields;
   private CVA_CONTENTS_FIELDS: string = 'cvaContextFields';
+  public escalationIntentUrl: string;
+  public dialogFlowIntentsUrl: string;
+  public dialogFlowSampleAgentUrl: string;
 
   public template = {
     templateId: '',
@@ -47,6 +50,11 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
           configurationType: this.CvaService.configurationTypes.dialogflow,
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_OVERVIEW_PAGE,
+        },
+        cvaSampleAgent: {
+          enabled: false,
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_SAMPLE_PAGE,
         },
         cvaDialogIntegration: {
           enabled: true,
@@ -127,6 +135,10 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     }
     this.currentState = this.states[0];
     this.cvaInputContext = new CvaContextFields(this.ContextFieldsetsService, this.ContextFieldsService, $translate, this.FieldUtils, this.$q);
+
+    this.escalationIntentUrl = this.UrlConfig.getEscalationIntentUrl();
+    this.dialogFlowIntentsUrl = this.UrlConfig.getDialogFlowIntentsUrl();
+    this.dialogFlowSampleAgentUrl = this.UrlConfig.getDialogFlowSampleAgentUrl();
   }
 
   /**
@@ -158,6 +170,8 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
         this.cvaInputContext.init(null);
       }
     }
+
+    this.enableDisableSamplePage();
   }
 
   private pageFocus: ICvaSetupPages = {};
@@ -184,6 +198,21 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   }
 
   /**
+   * enable or disable the sample bot page depending on feature flag and radio button selected on first page
+   */
+  protected enableDisableSamplePage(): void {
+    if (this.isCVASelfServiceEnabled()) {
+      // enable sample bot page, and disable intents page if no is clicked and vice versa
+      const isDialogflowAgentConfigured = this.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured;
+      this.template.configuration.pages.cvaSampleAgent.enabled = !isDialogflowAgentConfigured;
+      this.template.configuration.pages.cvaDialogIntegration.enabled = isDialogflowAgentConfigured;
+    } else {
+      this.template.configuration.pages.cvaSampleAgent.enabled = false;
+      this.template.configuration.pages.cvaDialogIntegration.enabled = true;
+    }
+  }
+
+  /**
    * should next button be rendered.
    * @returns {boolean}
    */
@@ -191,7 +220,10 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     switch (this.currentState) {
       case 'cvaConfigOverview':
         this.setFocus(PageFocusKey.CVA_CONFIG_OVERVIEW, PageLocatorKey.CVA_CONFIG_OVERVIEW);
-        return this.isDialogflowAgentConfigured(); // check radio button state
+        return this.isDialogflowAgentConfigured() || this.isCVASelfServiceEnabled(); // check radio button state
+      case 'cvaSampleAgent':
+        this.unsetFocus();
+        return true;
       case 'cvaDialogIntegration':
         this.unsetFocus();
         return true;

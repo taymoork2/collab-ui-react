@@ -13,8 +13,6 @@ export class VaCommonSetupCtrl extends CommonSetupCtrl {
   public logoUrl = '';
   public logoFile = '';
   public logoUploaded = false;
-  public escalationIntentUrl: string;
-  public dialogFlowIntentsUrl: string;
   public evaAlreadyExisted = false;
   public summaryErrorMessage: string;
 
@@ -62,8 +60,6 @@ export class VaCommonSetupCtrl extends CommonSetupCtrl {
       controller.logoFile = 'data:image/png;base64,' + controller.$window.btoa(String.fromCharCode.apply(null, new Uint8Array(data.data)));
       controller.logoUploaded = true;
     });
-    this.escalationIntentUrl = this.UrlConfig.getEscalationIntentUrl();
-    this.dialogFlowIntentsUrl = this.UrlConfig.getDialogFlowIntentsUrl();
   }
 
   /**
