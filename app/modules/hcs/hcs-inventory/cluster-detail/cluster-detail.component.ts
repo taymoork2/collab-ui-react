@@ -125,8 +125,9 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   public initSftpServers(): void {
     this.sftpServersList = [];
     this.HcsUpgradeService.listSftpServers()
-      .then((sftpObject: ISftpServersObject) => {
-        _.forEach(sftpObject.sftpServers, (sftp) => {
+      .then((sftpServersObject: ISftpServersObject) => {
+        sftpServersObject.sftpServers = _.sortBy(sftpServersObject.sftpServers, sftpServer => sftpServer.name.toLowerCase());
+        _.forEach(sftpServersObject.sftpServers, (sftp) => {
           const sftpServersListItem: ISelectOption = {
             label: sftp.name,
             value: sftp.uuid,
@@ -166,6 +167,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     //After BETA: get list of customers for partner from ci.
     this.HcsControllerService.listHcsCustomers()
       .then((hcsCustomers: IHcsCustomer[]) => {
+        hcsCustomers = _.sortBy(hcsCustomers, hcsCustomer => hcsCustomer.name.toLowerCase());
         _.forEach(hcsCustomers, (hcsCustomer) => {
           const customer = new HcsCustomer(hcsCustomer);
           this.customerList.push(customer);

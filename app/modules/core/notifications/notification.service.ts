@@ -312,8 +312,10 @@ export class Notification {
         let errorString;
         if (_.isString(error)) {
           errorString = error;
-        } else {
+        } else if (_.get(error, 'description')) {
           errorString = _.get(error, 'description', '');
+        } else if (_.get(error, 'message')) {
+          errorString = _.get(error, 'message', '');
         }
         return this.addTrailingPeriod(errorString);
       })

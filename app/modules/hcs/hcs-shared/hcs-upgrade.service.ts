@@ -1,9 +1,15 @@
 import { ISftpServer } from 'modules/hcs/hcs-setup/hcs-setup-sftp';
-import { IHcsCluster, IHcsCustomerClusters, IHcsClusterSummaryItem, ISftpServerItem, IHcsUpgradeCustomer, IHcsClusterTask } from './hcs-upgrade';
-import { ISoftwareProfile, IApplicationVersion } from './hcs-swprofile';
+import { IHcsCluster, IHcsCustomerClusters, IHcsClusterSummaryItem, ISftpServerItem, IHcsUpgradeCustomer, IHcsClusterTask, ISftpServersObject } from './hcs-upgrade';
+import { ISoftwareProfile, IApplicationVersion, ISoftwareProfilesObject } from './hcs-swprofile';
 
-interface ISftpServerResource extends ng.resource.IResourceClass<ng.resource.IResource<ISftpServer>> {
-  update: ng.resource.IResourceMethod<ng.resource.IResource<ISftpServer>>;
+type ISftpServerType = ISftpServer & ng.resource.IResource<ISftpServer>;
+interface ISftpServerResource extends ng.resource.IResourceClass<ISftpServerType> {
+  update: ng.resource.IResourceMethod<ISftpServerType>;
+}
+
+type ISftpServersObjectType = ISftpServersObject & ng.resource.IResource<ISftpServersObject>;
+interface ISftpServersResource extends ng.resource.IResourceClass<ISftpServersObjectType> {
+  update: ng.resource.IResourceMethod<ISftpServersObjectType>;
 }
 
 interface IClusterResource extends ng.resource.IResourceClass<ng.resource.IResource<IHcsCluster>> {
@@ -25,6 +31,11 @@ interface ISwProfileResource extends ng.resource.IResourceClass<ng.resource.IRes
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISoftwareProfile>>;
 }
 
+type ISwProfilesObjectType = ISoftwareProfilesObject & ng.resource.IResource<ISoftwareProfilesObject>;
+interface ISwProfilesResource extends ng.resource.IResourceClass<ISwProfilesObjectType> {
+  update: ng.resource.IResourceMethod<ISwProfilesObjectType>;
+}
+
 interface IApplicationVersionResource extends ng.resource.IResourceClass<ng.resource.IResource<IApplicationVersion>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<IApplicationVersion>>;
 }
@@ -34,9 +45,11 @@ interface IClusterTaskResource extends ng.resource.IResourceClass<IClusterTaskTy
 
 export class HcsUpgradeService {
   private sftpServerResource: ISftpServerResource;
+  private sftpServersResource: ISftpServersResource;
   private clusterResource: IClusterResource;
   private customerClustersResource: ICustomerClustersResource;
   private swProfileResource: ISwProfileResource;
+  private swProfilesResource: ISwProfilesResource;
   private appVersionResource: IApplicationVersionResource;
   private nodeResource: INodeResource;
   private customerResource: ICustomerResource;
@@ -64,7 +77,9 @@ export class HcsUpgradeService {
     this.sftpServerResource = <ISftpServerResource>this.$resource(BASE_URL + 'partners/:partnerId/sftpServers/:sftpServerId', {},
       {
         update: updateAction,
+        query: queryAction,
       });
+    this.sftpServersResource = <ISftpServersResource>this.$resource(BASE_URL + 'partners/:partnerId/sftpServers', {});
     this.clusterResource = <IClusterResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId', {},
       {
         update: updateAction,
@@ -78,6 +93,7 @@ export class HcsUpgradeService {
         update: updateAction,
         query: queryAction,
       });
+    this.swProfilesResource = <ISwProfilesResource>this.$resource(BASE_URL + 'partners/:partnerId/softwareprofiles/:id', {});
 
     this.appVersionResource = <IApplicationVersionResource>this.$resource(BASE_URL + 'applicationVersions', {}, {});
 
@@ -122,12 +138,10 @@ export class HcsUpgradeService {
     }).$promise;
   }
 
-  public listSftpServers(): ng.IPromise <any> {
-    return this.sftpServerResource.get({
+  public listSftpServers(): ng.IPromise <ISftpServersObject> {
+    return this.sftpServersResource.get({
       partnerId: this.Authinfo.getOrgId(),
-    }).$promise.then(response => {
-      return response;
-    });
+    }).$promise;
   }
 
   public getCluster(_clusterId: string): ng.IPromise<IHcsCluster> {
@@ -197,8 +211,8 @@ export class HcsUpgradeService {
     }).$promise;
   }
 
-  public listSoftwareProfiles(): ng.IPromise <any> {
-    return this.swProfileResource.get({
+  public listSoftwareProfiles(): ng.IPromise <ISoftwareProfilesObject> {
+    return this.swProfilesResource.get({
       partnerId: this.Authinfo.getOrgId(),
     }).$promise;
   }
