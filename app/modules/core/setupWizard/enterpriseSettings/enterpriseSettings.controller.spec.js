@@ -15,7 +15,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       '$q',
       '$timeout',
       'Authinfo',
-      'FeatureToggleService',
       'Notification',
       'Orgservice',
       'SSOService',
@@ -26,7 +25,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     this.$scope.wizard = { nextTab: jasmine.createSpy('nextTab') };
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7');
     spyOn(this.UrlConfig, 'getSSOSetupUrl').and.returnValue('https://idbroker.webex.com/idb/idbconfig/');
-    spyOn(this.FeatureToggleService, 'atlasSubdomainUpdateGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ServiceSetup, 'getTimeZones').and.returnValue(this.$q.resolve());
     spyOn(this.ServiceSetup, 'getTranslatedTimeZones').and.returnValue(['1', '2', '3']);
     spyOn(this.Notification, 'errorWithTrackingId').and.callThrough();
@@ -44,7 +42,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         $scope: this.$scope,
         $rootScope: this.$rootScope,
         Authinfo: this.Authinfo,
-        FeatureToggleService: this.FeatureToggleService,
       });
       this.$scope.$apply();
     };
@@ -135,29 +132,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       var promise = this.$scope.initNext();
       this.$scope.$apply();
       expect(promise).toBeResolved();
-    });
-  });
-
-  describe('test Personal Meeting Room Setup', function () {
-    it('should handle valid org settings', function () {
-      this.initController();
-      expect(this.controller.pmrField.inputValue).toEqual('amtest2.ciscospark.com');
-    });
-
-    it('should handle org data not having a sipCloudDomain in orgSettings', function () {
-      this.Orgservice.getOrg.and.callFake(function (callback) {
-        var org = _.cloneDeep(orgServiceJSONFixture.getOrg);
-        org.orgSettings.sipCloudDomain = undefined;
-        callback(org, getOrgStatus);
-      });
-      this.initController();
-
-      expect(this.controller.pmrField.inputValue).toEqual('');
-    });
-
-    it('should shallow validate the Sip Domain', function () {
-      this.initController();
-      expect(this.Orgservice.validateSiteUrl).toHaveBeenCalledWith('amtest2.ciscospark.com');
     });
   });
 });

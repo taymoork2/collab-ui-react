@@ -26,6 +26,21 @@ $tl-padding-right: 30px;
   rect {
     fill: $color-red-base;
     stroke: $color-red-base;
+
+    &.activity {
+      fill: $color-blue-base;
+      stroke: $color-blue-base;
+    }
+  }
+
+  .activityPoint {
+    rect {
+      fill: $color-blue-base;
+      stroke: $color-blue-base;
+    }
+    text {
+      fill: $white;
+    }
   }
   
   .unitStr {
@@ -41,6 +56,7 @@ $tl-padding-right: 30px;
     display: inline-block;
     position: absolute;
     left: 0;
+    top: 0;
     width: $tl-padding-left;
     min-height: 250px;
     z-index: 10;
@@ -122,6 +138,11 @@ $tl-padding-right: 30px;
     .defaultLine {
       stroke-dasharray: none;
     }
+
+    .sharingLine {
+      stroke-dasharray: none;
+      stroke: $color-blue-darker;
+    }
   }
 
   .coverLine {
@@ -133,7 +154,6 @@ $tl-padding-right: 30px;
 
   .legend {
     overflow: hidden;
-    margin: 2rem 0 0 0;
     box-sizing: border-box;
     svg {
       height: 30px;
@@ -152,15 +172,13 @@ $tl-padding-right: 30px;
     }
 
     .legendCircle, .legendLine {
-      height: 20px;
-      width: 50%;
       overflow: hidden;
       margin-top: 20px;
       box-sizing: border-box;
       text-align: center;
       padding: 0 3rem;
 
-      div {
+      div.legendItem {
         width: 75px;
         display: inline-block;
         overflow: hidden;
@@ -170,13 +188,21 @@ $tl-padding-right: 30px;
         }
       }
     }
-    .legendLine {
-      padding: 0;
-    }
     text {
       stroke-width: 1;
-      fill-opacity: 0.6;
       font-size: 0.9rem;
+
+      &.small {
+        fill: $white;
+      }
+    }
+    .title {
+      padding-bottom: 0.5rem;
+
+      i {
+        color: $gray-base;
+        vertical-align: middle;
+      }
     }
   }
 
@@ -184,7 +210,6 @@ $tl-padding-right: 30px;
     position: absolute;
     top: 0;
     width: 100%;
-    height: 30px;
     line-height: 30px;
 
     span {

@@ -8,6 +8,7 @@
       require('angular-sanitize'),
       require('modules/core/account').default,
       require('modules/core/auth/token.service'),
+      require('modules/core/config/config').default,
       require('modules/core/config/oauthConfig'),
       require('modules/core/config/urlConfig'),
       require('modules/core/scripts/services/authinfo'),
@@ -20,7 +21,7 @@
     .name;
 
   /* @ngInject */
-  function Auth($http, $injector, $q, $sanitize, $window, AccountService, Authinfo, HuronCompassService, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, WindowLocation) {
+  function Auth($http, $injector, $q, $sanitize, $window, AccountService, Authinfo, Config, HuronCompassService, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, WindowLocation) {
     var service = {
       logout: logout,
       logoutAndRedirectTo: logoutAndRedirectTo,
@@ -80,6 +81,7 @@
       return $q.resolve(res)
         .then(replaceOrTweakServices)
         .then(injectMessengerService)
+        .then(toggleProvisionAdmin)
         .then(initializeAuthinfo);
     }
 
@@ -305,6 +307,25 @@
         });
       });
       return authData;
+    }
+
+    function toggleProvisionAdmin(authData) {
+      var FeatureToggleService = $injector.get('FeatureToggleService');
+      if (_.includes(authData.roles, Config.roles.provision_admin)) {
+        return FeatureToggleService.supports(FeatureToggleService.features.atlasProvisionAdmin).then(function (supported) {
+          if (supported) {
+            _.pull(authData.roles, Config.roles.full_admin);
+          } else {
+            _.pull(authData.roles, Config.roles.provision_admin);
+            if (!_.includes(authData.roles, Config.roles.full_admin)) {
+              authData.roles.push(Config.roles.full_admin);
+            }
+          }
+          return authData;
+        });
+      } else {
+        return authData;
+      }
     }
 
     function initializeAuthinfo(authData) {

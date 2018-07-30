@@ -12,6 +12,7 @@ import { FeatureToggleService } from 'modules/core/featureToggle';
 import { HybridServicesClusterService, IServiceStatusWithSetup } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { HybridServiceId, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { IToolkitModalService } from 'modules/core/modal';
+import { JabberToWebexTeamsService } from './new-hybrid/shared/jabber-to-webex-teams.service';
 import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
 import { Notification } from 'modules/core/notifications';
 import { ProPackService }  from 'modules/core/proPack/proPack.service';
@@ -42,6 +43,8 @@ export class ServicesOverviewController implements ng.IComponentController {
   public loadingHybridServicesCards = true;
   public hasCapacityFeatureToggle: boolean;
   public hasEventsHistoryFeatureToggle: boolean;
+  public hasCalsvcHybridExchangeDeploymentFeatureToggle: boolean;
+  public allJabberToWebexTeamsPrereqsDone = false;
 
   /* @ngInject */
   constructor(
@@ -57,6 +60,7 @@ export class ServicesOverviewController implements ng.IComponentController {
     private HcsTestManagerService: TaskManagerService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+    private JabberToWebexTeamsService: JabberToWebexTeamsService,
     private MessengerInteropService: MessengerInteropService,
     private Notification: Notification,
     private ProPackService: ProPackService,
@@ -75,6 +79,12 @@ export class ServicesOverviewController implements ng.IComponentController {
       .then(result => {
         this.forwardEvent('proPackEventHandler', result);
       });
+
+    this.JabberToWebexTeamsService.hasAllPrereqsSettingsDone()
+      .then((isDone) => {
+        this.allJabberToWebexTeamsPrereqsDone = isDone;
+      });
+
     if (this.$state.current.name === 'partner-services-overview') {
       this.initPartnerAdminServices();
     } else {
@@ -83,6 +93,7 @@ export class ServicesOverviewController implements ng.IComponentController {
         atlasHybridAuditLog: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridAuditLog),
         atlasHybridImp: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp),
         atlasOffice365Support: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasOffice365Support),
+        calsvcHybridExchangeDeployment: this.FeatureToggleService.supports(this.FeatureToggleService.features.calsvcHybridExchangeDeployment),
         hI1484: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484),
         hI1638: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1638),
         hI802: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802),
@@ -100,6 +111,7 @@ export class ServicesOverviewController implements ng.IComponentController {
           // Used by hybrid cards
           this.hasCapacityFeatureToggle = response.atlasHybridCapacity;
           this.hasEventsHistoryFeatureToggle = response.atlasHybridAuditLog;
+          this.hasCalsvcHybridExchangeDeploymentFeatureToggle = response.calsvcHybridExchangeDeployment;
           if (this.Authinfo.isFusionUC() || ((this.Authinfo.hasCallLicense() || this.Authinfo.hasCareLicense()) && response.hybridCare)) {
             this._servicesToDisplay.push('squared-fusion-uc');
           }
@@ -289,7 +301,12 @@ export class ServicesOverviewController implements ng.IComponentController {
   }
 
   public isAnyHybridServiceActive(): boolean {
-    return this._servicesActive.length > 0;
+    // notes:
+    // - as of 2018-07-23, there is a new type of hybrid service that is NOT related to FMS services
+    //   (ie. "Jabber Service" (aka. jabber to webex teams))
+    // - initialization logic is handled in a separate codepath, but we need it to render in the list
+    //   of hybrid service cards
+    return this._servicesActive.length > 0 || this.allJabberToWebexTeamsPrereqsDone;
   }
 
   public showOnPremisesCard(): boolean {

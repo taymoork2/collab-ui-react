@@ -6,12 +6,20 @@
 </header>
 <section ng-if="card.enabled">
   <div class="overview-info">
-    <div translate="overview.cards.hybrid.serviceHeader"></div>
     <ul class="hybrid-ul">
-      <li ng-repeat="service in card.serviceList | filter: {setup: true} ">
+      <li ng-repeat="service in card.serviceList | filter: {setup: true}">
         <a ui-sref="{{service.UIstateLink}}">
           <i class="icon icon-circle status-indicator" ng-class="service.healthStatus"></i>
-          <span>{{::'overview.cards.hybrid.services.'+ service.serviceId | translate}}</span>
+          <span class="adjusted-hybrid-service-name">
+            <span class="hybrid-service-name">{{::'overview.cards.hybrid.services.'+ service.serviceId | translate}}</span>
+            <span class="hybrid-alarm-position">
+              <span 
+                class="badge badge--outline warning" 
+                translate="overview.cards.hybrid.alarm" 
+                ng-if="service.alarms"> 
+              </span>
+            </span>
+          </span>
         </a>
       </li>
     </ul>

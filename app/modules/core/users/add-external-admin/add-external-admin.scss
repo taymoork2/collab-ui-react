@@ -1,0 +1,19 @@
+@import 'styles/partials/mixins';
+
+add-external-admin {
+  @include keep-flex-container(column);
+
+  .add-external-admin {
+    &__input {
+      width: 300px;
+    }
+
+    &__pad {
+      margin-bottom: 10px;
+    }
+
+    &__lg-pad {
+      margin-bottom: 20px;
+    }
+  }
+}

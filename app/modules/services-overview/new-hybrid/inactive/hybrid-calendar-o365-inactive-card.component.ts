@@ -33,8 +33,12 @@ export class HybridCalendarO365InactiveCardComponent implements ng.IComponentOpt
       </div>
       <div class="inactive-card_footer">
         <p><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p>
-        <p><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
+        <p><button class="btn btn--primary" ng-disabled="!$ctrl.canSetup" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
       </div>
     </article>
   `;
+
+  public bindings = {
+    canSetup: '<',
+  };
 }

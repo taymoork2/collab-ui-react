@@ -15,8 +15,8 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
   public conferenceLicensesInSubscription;
   public licenseDistributionForm: ng.IFormController;
   public sitesArray: IWebExSite[];
-  public existingWebexSites: WebExSite[];
-  public distributedLicensesArray: IWebExSite[][];
+  public existingWebexSites: IWebExSite[];
+  public sitesByCenterType: IWebExSite[][];
   public centerDetails: ICenterDetails[];
   public isHideDescription: boolean;
   public onDistributionChange: Function;
@@ -56,7 +56,8 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
       if (_.isEmpty(this.centerDetails)) {
         this.centerDetails = this.WebExSiteService.extractCenterDetailsFromSingleSubscription(this.conferenceLicensesInSubscription);
       }
-      this.constructDistributedSitesArray();
+      this.sitesByCenterType = this.getSitesByCenterType();
+      this.addExistingLicenseCounts(this.sitesByCenterType);
     }
   }
 
@@ -66,27 +67,24 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
     }
   }
 
-  public constructDistributedSitesArray(): void {
-    //if it doesn't exist build
-    if (_.isEmpty(this.distributedLicensesArray)) {
-      this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
-        return _.map(this.centerDetails, (center) => {
-          return new WebExSite({
-            centerType: center.serviceName,
-            quantity: (this.sitesArray.length === 1) ? center.quantity : 0,
-            siteUrl: site.siteUrl,
-            timezone: site.timezone,
-            setupType: site.setupType,
-          });
+  // TODO (mipark2): migrate OO -> factory pattern
+  private getSitesByCenterType(): IWebExSite[][] {
+    return _.map(this.sitesArray, (site) => {
+      return _.map(this.centerDetails, (center) => {
+        return new WebExSite({
+          centerType: center.serviceName,
+          quantity: (this.sitesArray.length === 1) ? center.quantity : 0,
+          siteUrl: site.siteUrl,
+          timezone: site.timezone,
+          setupType: site.setupType,
         });
       });
-      this.addExistingLicenseCounts();
-    }
+    });
   }
 
-  private addExistingLicenseCounts(): void {
-    _.forEach(this.distributedLicensesArray, (sitesArray) => {
-      _.forEach(sitesArray, (site) => {
+  private addExistingLicenseCounts(sitesByCenterType: IWebExSite[][]): void {
+    _.forEach(sitesByCenterType, (sites) => {
+      _.forEach(sites, (site) => {
         const matchingExistingSiteAndCenterType = _.find(this.existingWebexSites, { siteUrl: site.siteUrl, centerType: site.centerType });
         if (matchingExistingSiteAndCenterType) {
           site.quantity = matchingExistingSiteAndCenterType.quantity;
@@ -95,11 +93,11 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
     });
   }
 
-  public hasTotalLicensesRemaining () {
+  public hasTotalLicensesRemaining (): boolean {
     return this.getTotalLicensesRemaining() > 0;
   }
 
-  private getTotalLicensesRemaining () {
+  private getTotalLicensesRemaining (): number {
     let licensesRemaining = 0;
     _.forEach(this.centerDetails, (center) => {
       licensesRemaining += this.calculateLicensesRemaining(center.serviceName);
@@ -119,7 +117,7 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
     }
   }
 
-  public hasSitesWithoutLicensesAssigned() {
+  public hasSitesWithoutLicensesAssigned(): boolean {
     let result = false;
     _.forEach(this.sitesArray, (site) => {
       if (this.getLicensesForSite(site.siteUrl) === 0) {
@@ -129,51 +127,51 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
     return result;
   }
 
-  public getCenterTypeString(offerCode: string) {
+  public getCenterTypeString(offerCode: string): string {
     return this.centerTypes[offerCode];
   }
 
-  public getCenterTypeInits(offerCode: string) {
+  public getCenterTypeInits(offerCode: string): string {
     return this.centerTypesInits[offerCode];
   }
 
-  public getLicensesForSite(siteUrl) {
-    const total = _.sumBy(_.filter(_.flatten(this.distributedLicensesArray), { siteUrl: siteUrl }), 'quantity');
+  public getLicensesForSite(siteUrl: string) {
+    const total = _.sumBy(_.filter(_.flatten(this.sitesByCenterType), { siteUrl: siteUrl }), 'quantity');
     return total;
   }
 
-  public getLicensesAssignedTotal(centerType) {
-    const siteArray = _.filter(_.flatten(this.distributedLicensesArray), { centerType: centerType });
+  public getLicensesAssignedTotal(centerType: string): number {
+    const siteArray = _.filter(_.flatten(this.sitesByCenterType), { centerType: centerType });
 
     return this.sumOfWebExLicensesAssigned(siteArray);
   }
 
-  public getLicensesRemaining(centerType) {
+  public getLicensesRemaining(centerType: string): number {
     const licensesRemaining = this.calculateLicensesRemaining(centerType);
 
     return licensesRemaining;
   }
 
-  private calculateLicensesRemaining(centerType) {
-    const siteArray = _.filter(_.flatten(this.distributedLicensesArray), { centerType: centerType });
+  private calculateLicensesRemaining(centerType: string): number {
+    const siteArray = _.filter(_.flatten(this.sitesByCenterType), { centerType: centerType });
     const centerDetail = _.find(this.centerDetails, { serviceName: centerType });
     const licenseVolume = _.get<number>(centerDetail, 'quantity');
 
     return (licenseVolume - this.sumOfWebExLicensesAssigned(siteArray));
   }
 
-  public sumOfWebExLicensesAssigned(siteArray) {
-    const result = _.sumBy(siteArray, (site: WebExSite) => {
+  public sumOfWebExLicensesAssigned(siteArray: IWebExSite[]): number {
+    const result = _.sumBy(siteArray, (site: IWebExSite) => {
       return Number(site.quantity);
     });
 
     return result;
   }
 
-  private constructWebexLicensesPayload(distributedLicensesArray): WebExSite[] {
-    const webexSiteDetailsList: WebExSite[] = [];
-    const distributedLicenses = _.flatten(distributedLicensesArray);
-    _.forEach(distributedLicenses, (site: WebExSite) => {
+  private constructWebexLicensesPayload(sitesByCenterType: IWebExSite[][]): IWebExSite[] {
+    const webexSiteDetailsList: IWebExSite[] = [];
+    const sites = _.flatten(sitesByCenterType);
+    _.forEach(sites, (site) => {
       if (_.get(site, 'quantity', 0) > 0) {
         const siteUrl = site.siteUrl + this.Config.siteDomainUrl.webexUrl;
         const webexSiteDetail = new WebExSite({
@@ -190,8 +188,8 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
     return webexSiteDetailsList;
   }
 
-  private updateSitesLicenseCount() {
-    const sourceArray = _.flatten(this.distributedLicensesArray);
+  private updateSitesLicenseCount(): void {
+    const sourceArray = _.flatten(this.sitesByCenterType);
     _.forEach(this.sitesArray, (site) => {
       const matchingSite = _.filter(sourceArray, { siteUrl: site.siteUrl });
       if (matchingSite.length) {
@@ -200,7 +198,7 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
         site.quantity = 0;
       }
     });
-    const licensePayload = this.constructWebexLicensesPayload(this.distributedLicensesArray);
+    const licensePayload = this.constructWebexLicensesPayload(this.sitesByCenterType);
     this.onDistributionChange({ sites: licensePayload, isValid: true });
   }
 }

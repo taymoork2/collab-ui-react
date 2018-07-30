@@ -29,7 +29,10 @@
               refresh-data-fn="$ctrl.onCustomerSearch(filter)"
               on-change-fn="$ctrl.onCustomerChanged()"
               input-placeholder="$ctrl.customerInputPlaceholder"
-              placeholder="$ctrl.customerSelectPlaceholder">
+              placeholder="$ctrl.customerSelectPlaceholder"
+              is-disabled="$ctrl.disableCustomerSelect"
+              is-warn="{{$ctrl.disableCustomerSelect}}"
+              warn-msg="{{$ctrl.warningMsgCustomerSelect}}">
               </cs-select>
             </div>
           </div>

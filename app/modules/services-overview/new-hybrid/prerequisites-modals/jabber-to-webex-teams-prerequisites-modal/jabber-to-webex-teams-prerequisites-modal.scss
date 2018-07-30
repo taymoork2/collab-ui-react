@@ -1,0 +1,17 @@
+@import 'styles/partials/mixins';  // <- for 'keep-flex-container()'
+
+jabber-to-webex-teams-prerequisites-modal {
+  @include keep-flex-container();
+
+  .prereqs-list {
+    margin-top: 2.375rem;
+  }
+
+  .prereqs-list__item {
+    padding-bottom: 1px;
+
+    &:nth-of-type(n+2) {
+      margin-top: 1rem;
+    }
+  }
+}

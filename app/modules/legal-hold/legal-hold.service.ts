@@ -1,6 +1,6 @@
 import { Matter } from './matter.model';
-import { ICustodian, IImportResult, IMatterJsonData, IMatterJsonDataForDisplay } from './legal-hold.interfaces';
-import { MatterState, CustodianImportErrors, Events } from './legal-hold.enums';
+import { ICustodian, IImportResult, IMatterJsonData, IMatterJsonDataForDisplay, IUserUpdateResult } from './legal-hold.interfaces';
+import { MatterState, CustodianErrors, Events, ImportMode } from './legal-hold.enums';
 
 export enum Actions {
   CREATE = 'CREATE',
@@ -26,6 +26,7 @@ export enum OperationObject {
 export class LegalHoldService {
   private adminServiceUrl: string;
   private shouldCancel = false;
+  private retentionUrl: string;
 
   /* @ngInject */
   constructor(
@@ -39,10 +40,11 @@ export class LegalHoldService {
     private Userservice,
   ) {
     this.adminServiceUrl = this.UrlConfig.getAdminServiceUrl();
+    this.retentionUrl = this.UrlConfig.getRetentionUrl();
   }
 
   private getActionUrl(action: Actions, operationObject: OperationObject = OperationObject.MATTER): string {
-    return `https://retention-integration.wbx2.com/retention/api/v1/admin/onhold/${operationObject}?operationType=${action}`;
+    return `${this.retentionUrl}admin/onhold/${operationObject}?operationType=${action}`;
   }
 
   private getUserUrl(userEmailAddress: string): string {
@@ -103,29 +105,53 @@ export class LegalHoldService {
       });
   }
 
-  public addUsersToMatter(orgId: string, caseId: string, usersUUIDList: string[]): IPromise<Matter> {
+  public addUsersToMatter(orgId: string, caseId: string, usersUUIDList: string[]): IPromise<IUserUpdateResult> {
     const data = {
       orgId: orgId,
       caseId: caseId,
       usersUUIDList: usersUUIDList,
     };
-    return this.$http.post(this.getActionUrl(Actions.ADD_USERS, OperationObject.USERS), data)
-      .then(() => {
-        return this.readMatter(orgId, caseId);
-      })
-      .catch(() => { //algendel 5/1 TODO: remove this once back end is in place
-        return this.readMatter(orgId, caseId);
+    //TODO algendel 7/10: remove readMatter once back end is updated to return new user count and failed UUIDs list
+
+    return this.readMatter(orgId, caseId)
+      .then((matter) => {
+        return this.$http.post(this.getActionUrl(Actions.ADD_USERS, OperationObject.USERS), data)
+          .then((updateResult) => {
+            return this.getInfoFromUserUpdate(ImportMode.ADD, usersUUIDList, orgId, caseId, updateResult.data, matter.userList);
+          });
       });
   }
 
-  public removeUsersFromMatter(orgId: string, caseId: string, usersUUIDList: string[]): IPromise<Matter> {
+  public removeUsersFromMatter(orgId: string, caseId: string, usersUUIDList: string[]): IPromise<IUserUpdateResult> {
     const data = {
       orgId: orgId,
       caseId: caseId,
       usersUUIDList: usersUUIDList,
     };
     return this.$http.post(this.getActionUrl(Actions.REMOVE_USERS, OperationObject.USERS), data)
-      .then(() => this.readMatter(orgId, caseId));
+      .then((updateResult) => {
+        //TODO algendel 7/10: remove the call once back end is updated to return new user count and failed UUIDs list
+        return this.getInfoFromUserUpdate(ImportMode.REMOVE, usersUUIDList, orgId, caseId, updateResult.data );
+      });
+  }
+
+  //algendel 7/10: this whole function should go away once the back end is modified to return the list of failed UUIDs and new number of users in matter
+  private getInfoFromUserUpdate(operation: ImportMode, usersUUIDList: string[], orgId: string, caseId: string, response: Object, usersInMatterBeforeUpdate: string[] = []): IPromise<IUserUpdateResult> {
+    return this.readMatter(orgId, caseId)
+      .then((matter) => {
+        const usersInMatter = _.isArray(matter.userList) ? matter.userList.length : 0;
+        let failList: string[] = [];
+        if (operation === ImportMode.ADD) {
+          const usersAddedToMatter = _.difference(matter.userList || [], usersInMatterBeforeUpdate);
+          failList = _.difference(usersUUIDList, usersAddedToMatter);
+        } else {
+          failList = _.difference(usersUUIDList, _.get(response, 'usersRemovedFromMatter', []));
+        }
+        return {
+          failList: failList,
+          userListSize: usersInMatter,
+        };
+      });
   }
 
   public listUsersInMatter(orgId: string, caseId: string): IPromise<string[]> {
@@ -160,7 +186,7 @@ export class LegalHoldService {
 
     if (this.shouldCancel) {
       this.shouldCancel = false;
-      return this.$q.reject(`legalHold.custodianImport.${CustodianImportErrors.CANCELED}`);
+      return this.$q.reject(`legalHold.custodianImport.${CustodianErrors.CANCELED}`);
     }
     // don't want to time out if this takes long
     this.$rootScope.$emit(this.Config.idleTabKeepAliveEvent);
@@ -207,7 +233,7 @@ export class LegalHoldService {
         return user;
       })
       .catch(error => {
-        const err = (_.get(error, 'status', '').toString() === '404') ? CustodianImportErrors.DIFF_ORG : CustodianImportErrors.UNKNOWN;
+        const err = (_.get(error, 'status', '').toString() === '404') ? CustodianErrors.DIFF_ORG : CustodianErrors.UNKNOWN;
         const user = {
           emailAddress: userId,
           error: this.$translate.instant(`legalHold.custodianImport.${err}`),
@@ -229,7 +255,7 @@ export class LegalHoldService {
         return user;
       })
       .catch(error => {
-        const err = (_.get(error, 'status', '').toString() === '404') ? CustodianImportErrors.NOT_FOUND : CustodianImportErrors.UNKNOWN;
+        const err = (_.get(error, 'status', '').toString() === '404') ? CustodianErrors.NOT_FOUND : CustodianErrors.UNKNOWN;
         const user: ICustodian = {
           emailAddress: emailAddress,
           error: this.$translate.instant(`legalHold.custodianImport.${err}`),

@@ -15,6 +15,7 @@ interface IRoleStates {
   Partner_Management: string[];
   PARTNER_READ_ONLY_ADMIN?: string[];
   PARTNER_SALES_ADMIN: string[];
+  Provision_Admin: string[];
   Site_Admin: string[];
   Support: string[];
   Tech_Support: string[];
@@ -142,6 +143,8 @@ export class Config {
     advanceCare: 'CAREVOICE',
     context: 'CONTEXT',
     spca: 'SPCA', //Broadcloud common area offer
+    spstd: 'SPSTD', // Broadcloud standard offer
+    bcall: 'BCALL', // Broadcloud trial offer
   };
 
   public readonly shallowValidationSourceTypes = {
@@ -163,6 +166,9 @@ export class Config {
     'webexMeetingCenter',
     'webexTrainingCenter',
     'webexSupportCenter',
+    'communicationsSPCA',
+    'communicationsSPSTD',
+    'communicationBCALL',
   ];
 
   public readonly webexTypes = [
@@ -172,6 +178,20 @@ export class Config {
     'webexMeetingCenter',
     'webexTrainingCenter',
     'webexSupportCenter',
+  ];
+
+  public readonly communicationsTypes = [
+    'communications',
+    'communicationsSPSTD',
+    'communicationsSPCA',
+    'communicationBCALL',
+  ];
+
+  public readonly communicationsTypeCodes = [
+    'CO',
+    'SPSTD',
+    'SPCA',
+    'BCALL',
   ];
 
   public readonly webexTypeCodes = [
@@ -245,6 +265,7 @@ export class Config {
     tech_support: 'Tech_Support',
     user_admin: 'User_Admin',
     device_admin: 'Device_Admin',
+    provision_admin: 'Provision_Admin',
   };
 
   public readonly roleState = {
@@ -378,6 +399,7 @@ export class Config {
       'device-overview',
       'bulk-overview',
       'deviceConfiguration',
+      'deviceAlerts',
       'devices',
       'deviceBulkFlow',
       'didadd',
@@ -557,6 +579,7 @@ export class Config {
       'editService',
       'firsttimewizard',
       'integrations-management',
+      'jabber-to-webex-teams',
       'my-company',
       'overview',
       'profile',
@@ -640,6 +663,24 @@ export class Config {
     Partner_Management: ['partnerManagement'],
     User_Admin: ['user-overview', 'userprofile', 'users', 'userRedirect', 'editService', 'addDeviceFlow'],
     Device_Admin: ['device-overview', 'bulk-overview', 'devices', 'deviceBulkFlow', 'addDeviceFlow', 'place-overview', 'places'],
+    Provision_Admin: [
+      'firsttimewizard',
+      'overview',
+      'users',
+      'my-company.subscriptions',
+      'my-company.info',
+      'services-overview',
+      'support.status',
+      'site-list',
+      'site-list-add',
+      'site-list-distribute-licenses',
+      'site-list-delete',
+      'site-csv-import',
+      'site-csv',
+      'site-csv-results',
+      'site-settings',
+      'site-setting',
+    ],
   };
 
   private readonly TEST_ENV_CONFIG: string = 'TEST_ENV_CONFIG';

@@ -57,10 +57,11 @@
         }; // webExSiteSettingsObj
 
         webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('CommonSettings', null));
-        webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('MC', 'Meeting Center'));
+        webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('MC', 'Webex Meeting Center'));
         webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('TC', 'Training Center'));
         webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('SC', 'Support Center'));
         webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('EC', 'Event Center'));
+        webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('RecordingManagement', null));
 
         webExSiteSettingsObj.categoryObjs.push(newCategoryObj('EMAIL', ''));
         webExSiteSettingsObj.categoryObjs.push(newCategoryObj('SiteInfo', ''));
@@ -71,6 +72,7 @@
         webExSiteSettingsObj.categoryObjs.push(newCategoryObj('TC', 'tc_options'));
         webExSiteSettingsObj.categoryObjs.push(newCategoryObj('RA', 'remote_options'));
         webExSiteSettingsObj.categoryObjs.push(newCategoryObj('WebACD', 'webacd_settings'));
+        webExSiteSettingsObj.categoryObjs.push(newCategoryObj('RecordingManagement', ''));
 
         return webExSiteSettingsObj;
 
@@ -287,11 +289,15 @@
             'iframeUrl=' + iframeUrl;
           Log.debug(logMsg);
 
-          _this.addPage(
-            category,
-            pageId,
-            iframeUrl
-          );
+          if (pageId === 'siteupgrade' && !Authinfo.isDirectCustomer()) {
+            Log.info('Site upgrade only supported for direct customers. ' + Authinfo.getOrgName() + ' cannot self upgrade.');
+          } else {
+            _this.addPage(
+              category,
+              pageId,
+              iframeUrl
+            );
+          }
         }); // siteAdminNavUrls.forEach()
       }, // processSettingPagesInfo()
 
@@ -512,6 +518,8 @@
               if ('CommonSettings' == siteSettingCardObjId) {
                 siteSettingCardObj.label = $translate.instant('webexSiteSettingsLabels.commonSettingsCardTitle');
                 siteSettingCardObj.comment = $translate.instant('webexSiteSettingsLabels.commonSettingsCardNote');
+              } else if ('RecordingManagement' === siteSettingCardObjId) {
+                siteSettingCardObj.label = $translate.instant('webexSiteSettingsLabels.recordingManagementCardTitle');
               } else {
                 siteSettingCardObj.lang = 'en'; //Centre names are in English
               }

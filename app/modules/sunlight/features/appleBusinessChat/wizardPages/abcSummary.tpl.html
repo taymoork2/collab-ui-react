@@ -15,4 +15,8 @@
     <i class="icon icon-error"></i>
     <span class="error-message">{{$ctrl.getText('summary.saveErrorMessage')}}</span>
   </div>
+  <div class="h6 retry-message" ng-if="$ctrl.displayCustomErrorMessage()">
+    <i class="icon icon-error"></i>
+    <span class="error-message">{{$ctrl.customErrorMessage}}</span>
+  </div>
 </div>

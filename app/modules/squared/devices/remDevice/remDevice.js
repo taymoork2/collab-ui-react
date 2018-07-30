@@ -6,10 +6,16 @@
     .controller('RemDeviceController',
 
       /* @ngInject */
-      function ($modalInstance, $translate, CsdmDataModelService, device, Notification) {
+      function ($modalInstance, $translate, $q, CsdmDataModelService, device, Notification, CsdmLyraConfigurationService, FeatureToggleService) {
         var rdc = this;
 
         rdc.device = device;
+        rdc.deleteConfig = false;
+
+        rdc.deleteConfigurationOptionAvailable = false;
+        FeatureToggleService.csdmDeviceDeleteConfigurationOptionGetStatus().then(function (status) {
+          rdc.deleteConfigurationOptionAvailable = status;
+        });
 
         rdc.getDeleteText = function () {
           if (device.isATA) {
@@ -26,10 +32,30 @@
         };
 
         rdc.deleteDevice = function () {
-          return CsdmDataModelService.deleteItem(rdc.device)
-            .then($modalInstance.close)
+          var deleteConfigPromise;
+
+          if (rdc.device.isCloudberryDevice() && (rdc.deleteConfig || !rdc.deleteConfigurationOptionAvailable)) {
+            deleteConfigPromise = CsdmLyraConfigurationService.deleteConfig(rdc.device.cisUuid, rdc.device.wdmUrl);
+          } else {
+            deleteConfigPromise = $q.resolve();
+          }
+
+          return deleteConfigPromise
+            .then(function () {
+              return CsdmDataModelService.deleteItem(rdc.device);
+            })
+            .then(function () {
+              $modalInstance.close();
+            })
             .catch(function (error) {
-              Notification.errorResponse(error, 'spacesPage.failedToDelete');
+              // If Lyra cannot find the device, there is nothing to delete
+              if (error.status === 404) {
+                return CsdmDataModelService.deleteItem(rdc.device)
+                  .then($modalInstance.close);
+              } else {
+                Notification.errorResponse(error, 'spacesPage.failedToDelete');
+                return $q.reject(error);
+              }
             });
         };
       }

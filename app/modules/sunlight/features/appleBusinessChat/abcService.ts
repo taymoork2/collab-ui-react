@@ -122,10 +122,10 @@ export class AbcService {
    * @param businessId
    * @param name
    * @param orgId
-   * @param cvaId (optional)
+   * @param cva (optional)
    * returns promise
    */
-  public addAbcConfig(businessId: string, name: string, orgId: string, waitingMessage: string, leftChatMessage: string, cvaId?: string): ng.IPromise<any> {
+  public addAbcConfig(businessId: string, name: string, orgId: string, waitingMessage: string, leftChatMessage: string, cva?: any): ng.IPromise<any> {
     if (_.isEmpty(waitingMessage)) {
       waitingMessage = this.$translate.instant('careChatTpl.appleBusinessChat.statusMessage.waitingDefault');
     }
@@ -137,7 +137,9 @@ export class AbcService {
     return this.getConfigResource(orgId || this.Authinfo.getOrgId(), businessId)
       .save({
         name,
-        cvaId,
+        cvaId: cva.id,
+        attachmentStorageUrl: cva.storageUrl,
+        attachmentStorageAccessToken: cva.storageToken,
         queueIds: [orgId],
         statusMessages,
       }, function (data, headers) {
@@ -151,10 +153,10 @@ export class AbcService {
    * @param businessId
    * @param name
    * @param orgId
-   * @param cvaId (optional)
+   * @param cva (optional)
    * returns promise
    */
-  public updateAbcConfig(businessId: string, name: string, orgId: string, waitingMessage: string, leftChatMessage: string, cvaId?: string): ng.IPromise<void> {
+  public updateAbcConfig(businessId: string, name: string, orgId: string, waitingMessage: string, leftChatMessage: string, cva?: any): ng.IPromise<void> {
     if (_.isEmpty(waitingMessage)) {
       waitingMessage = this.$translate.instant('careChatTpl.appleBusinessChat.statusMessage.waitingDefault');
     }
@@ -166,7 +168,9 @@ export class AbcService {
     return this.getConfigResource(orgId || this.Authinfo.getOrgId(), businessId)
       .update({
         name,
-        cvaId,
+        cvaId: cva.id,
+        attachmentStorageUrl: cva.storageUrl,
+        attachmentStorageAccessToken: cva.storageToken,
         queueIds: [orgId],
         statusMessages,
       }).$promise;

@@ -250,6 +250,10 @@
 
     function getReportingData(reportName, timeSelected, mediaType, isSnapshot) {
       var config, startTimeStamp, endTimeStamp, dataPromise;
+      var isAbc = false;
+      if (mediaType === 'abc') {
+        isAbc = true;
+      }
       switch (timeSelected) {
         // today
         case 0:
@@ -264,7 +268,7 @@
                 });
                 return downSampleByUserId(reportingUserWithUserID);
               } else {
-                var localTimeData = downSampleByHour(response.data.data, isSnapshot);
+                var localTimeData = downSampleByHour(response.data.data, isAbc, isSnapshot);
                 return fillEmptyData(
                   (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.toDate())),
                   'h', localTimeData, hourFormat, false);
@@ -285,7 +289,7 @@
                 });
                 return downSampleByUserId(reportingUserWithUserID);
               } else {
-                var localTimeData = downSampleByHour(response.data.data);
+                var localTimeData = downSampleByHour(response.data.data, isAbc);
                 return fillEmptyData(
                   (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.toDate())),
                   'h', localTimeData, hourFormat, false);
@@ -306,7 +310,7 @@
                 });
                 return downSampleByUserId(reportingUserWithUserID);
               } else {
-                var localTimeData = downSampleByDay(response.data.data);
+                var localTimeData = downSampleByDay(response.data.data, isAbc);
                 return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
                   'd', localTimeData, dayFormat, true);
               }
@@ -326,7 +330,7 @@
                 });
                 return downSampleByUserId(reportingUserWithUserID);
               } else {
-                var localTimeData = downSampleByWeek(response.data.data);
+                var localTimeData = downSampleByWeek(response.data.data, isAbc);
                 return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
                   'w', localTimeData, dayFormat, true);
               }
@@ -346,7 +350,7 @@
                 });
                 return downSampleByUserId(reportingUserWithUserID);
               } else {
-                var localTimeData = downSampleByMonth(response.data.data);
+                var localTimeData = downSampleByMonth(response.data.data, isAbc);
                 return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
                   'M', localTimeData, monthFormat, false);
               }
@@ -363,6 +367,9 @@
     }
 
     function getQueryConfig(viewType, mediaType, startTimeStamp, endTimeStamp) {
+      if (mediaType === 'abc') {
+        mediaType = 'chat'; // for abc media type, it is using chat for the get URL
+      }
       return {
         params: {
           viewType: viewType,
@@ -373,8 +380,8 @@
       };
     }
 
-    function processGroupedStats(groupedStats, groupedBy, isSnapshot) {
-      if (isSnapshot) return processGroupedStatsSnapshot(groupedStats);
+    function processGroupedStats(groupedStats, groupedBy, isAbc, isSnapshot) {
+      if (isSnapshot) return processGroupedStatsSnapshot(groupedStats, isAbc);
 
       var reduceFunc;
       switch (groupedBy) {
@@ -395,34 +402,63 @@
       var downSampledStats = [];
       _.map(groupedStats, function (statsList) {
         var seggregatedData = _.partition(statsList, function (data) { return data.mediaType === 'chat'; });
-        var chatData = _.head(seggregatedData);
+        var allChatData = _.head(seggregatedData);
         var webcallData = _.last(seggregatedData);
-        var reducedList = _.reduce(statsList, reduceFunc, emptyOrgstats);
-        reducedList.avgTaskWaitTime = (reducedList.avgTaskWaitTime / convertInMinutes);
-        reducedList.avgTaskCloseTime = (reducedList.avgTaskCloseTime / convertInMinutes);
-        reducedList.avgCsatScores = roundTwoDecimalPlaces(reducedList.avgCsatScores);
-        reducedList.tasksAccepted = Math.max(reducedList.tasksOffered - reducedList.tasksMissed, 0);
+        var seggregatedChatData = _.partition(allChatData, function (data) { return data.mediaChannel === 'abc'; });
+        var abcData = _.head(seggregatedChatData);
+        var chatData = _.last(seggregatedChatData);
 
-        if (chatData.length > 0) {
-          var reducedChatList = _.reduce(chatData, reduceFunc, emptyOrgstats);
-          var reducedWebcallList = _.reduce(webcallData, reduceFunc, emptyOrgstats);
-          reducedList.numChatTasksHandled = reducedChatList.numTasksHandledState;
-          reducedList.numWebcallTasksHandled = reducedWebcallList.numTasksHandledState;
-          reducedList.avgChatTaskCloseTime = (reducedChatList.avgTaskCloseTime / convertInMinutes);
-          reducedList.avgWebcallTaskCloseTime = (reducedWebcallList.avgTaskCloseTime / convertInMinutes);
-          reducedList.avgChatCsatScores = roundTwoDecimalPlaces(reducedChatList.avgCsatScores);
-          reducedList.avgWebcallCsatScores = roundTwoDecimalPlaces(reducedWebcallList.avgCsatScores);
+        var reducedList = [];
+        if (isAbc) {
+          if (abcData.length > 0) {
+            reducedList = _.reduce(abcData, reduceFunc, emptyOrgstats);
+            setAvgCommonReducedList(reducedList);
+            setChatCommonReducedList(reducedList, reducedList);
+          }
+        } else {
+          reducedList = _.reduce(_.concat(chatData, webcallData), reduceFunc, emptyOrgstats);
+          setAvgCommonReducedList(reducedList);
+          reducedList.avgCsatScores = roundTwoDecimalPlaces(reducedList.avgCsatScores);
+
+          if (chatData.length > 0) {
+            var reducedChatList = _.reduce(chatData, reduceFunc, emptyOrgstats);
+            var reducedWebcallList = _.reduce(webcallData, reduceFunc, emptyOrgstats);
+            setChatCommonReducedList(reducedList, reducedChatList);
+            reducedList.numWebcallTasksHandled = reducedWebcallList.numTasksHandledState;
+            reducedList.avgWebcallTaskCloseTime = (reducedWebcallList.avgTaskCloseTime / convertInMinutes);
+            reducedList.avgChatCsatScores = roundTwoDecimalPlaces(reducedChatList.avgCsatScores);
+            reducedList.avgWebcallCsatScores = roundTwoDecimalPlaces(reducedWebcallList.avgCsatScores);
+          }
         }
-        downSampledStats.push(reducedList);
+        if (!_.isEmpty(reducedList)) {
+          downSampledStats.push(reducedList);
+        }
       });
 
       return downSampledStats;
     }
 
-    function processGroupedStatsSnapshot(groupedStats) {
+    function setAvgCommonReducedList(reducedList) {
+      reducedList.avgTaskWaitTime = (reducedList.avgTaskWaitTime / convertInMinutes);
+      reducedList.avgTaskCloseTime = (reducedList.avgTaskCloseTime / convertInMinutes);
+      reducedList.tasksAccepted = Math.max(reducedList.tasksOffered - reducedList.tasksMissed, 0);
+    }
+
+    function setChatCommonReducedList(reducedList, reducedChatList) {
+      reducedList.numChatTasksHandled = reducedChatList.numTasksHandledState;
+      reducedList.avgChatTaskCloseTime = (reducedChatList.avgTaskCloseTime / convertInMinutes);
+    }
+
+    function processGroupedStatsSnapshot(groupedStats, isAbc) {
       var downSampledStats = [];
       _.map(groupedStats, function (statsList) {
-        var reducedList = _.reduce(statsList, reduceOrgSnapshotStatsByHour, emptyOrgstats);
+        var newList = [];
+        if (isAbc) {
+          newList = _.filter(statsList, function (data) { return data.mediaType === 'chat' && data.mediaChannel === 'abc'; });
+        } else {
+          newList = _.filter(statsList, function (data) { return !(data.mediaType === 'chat' && data.mediaChannel === 'abc'); });
+        }
+        var reducedList = _.reduce(newList, reduceOrgSnapshotStatsByHour, emptyOrgstats);
         reducedList.numWorkingTasks = Math.max(0, reducedList.numWorkingTasks);
         reducedList.numPendingTasks = Math.max(0, reducedList.numPendingTasks);
         downSampledStats.push(reducedList);
@@ -431,35 +467,32 @@
       return downSampledStats;
     }
 
-    function downSampleByHour(data, isSnapshot) {
+    function downSampleByHour(data, isAbc, isSnapshot) {
       var statsGroupedByHour = _.groupBy(data, function (stats) {
         return moment(stats.createdTime).toDate().getHours();
       });
-      return processGroupedStats(statsGroupedByHour, 'hour', isSnapshot);
+      return processGroupedStats(statsGroupedByHour, 'hour', isAbc, isSnapshot);
     }
 
-    function downSampleByDay(data) {
+    function downSampleByDay(data, isAbc) {
       var statsGroupedByDay = _.groupBy(data, function (stats) {
         return moment(stats.createdTime).toDate().getDay();
       });
-
-      return processGroupedStats(statsGroupedByDay, 'day');
+      return processGroupedStats(statsGroupedByDay, 'day', isAbc);
     }
 
-    function downSampleByWeek(data) {
+    function downSampleByWeek(data, isAbc) {
       var statsGroupedByWeek = _.groupBy(data, function (stats) {
         return moment(stats.createdTime).week();
       });
-
-      return processGroupedStats(statsGroupedByWeek, 'week');
+      return processGroupedStats(statsGroupedByWeek, 'week', isAbc);
     }
 
-    function downSampleByMonth(data) {
+    function downSampleByMonth(data, isAbc) {
       var statsGroupedByMonth = _.groupBy(data, function (stats) {
         return moment(stats.createdTime).toDate().getMonth();
       });
-
-      return processGroupedStats(statsGroupedByMonth, 'month');
+      return processGroupedStats(statsGroupedByMonth, 'month', isAbc);
     }
 
     function updateWebcallDataPresent(reducedUserVal, dataObj) {

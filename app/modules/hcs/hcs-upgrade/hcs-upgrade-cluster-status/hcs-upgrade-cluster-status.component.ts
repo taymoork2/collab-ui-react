@@ -1,6 +1,7 @@
 import { HcsUpgradeService, IHcsClusterTask, IHcsCluster, INodeTaskStatus, IClusterStatusGridRow, INodeTaskGridRow } from 'modules/hcs/hcs-shared';
 import { Notification } from 'modules/core/notifications';
 import { GridService } from 'modules/core/csgrid';
+import { Duration } from 'moment-timezone';
 
 export class UpgradeClusterStatusComponent implements ng.IComponentOptions {
   public controller = UpgradeClusterStatusCtrl;
@@ -151,14 +152,22 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
       const clusterStatusGridRow: IClusterStatusGridRow = {
         orderNumber: nodeTask.order,
         nodeDetails: nodeDetail,
-        previousUpgradeTime: previousTime ? `${previousTime.hours()}:${previousTime.minutes()}:${previousTime.seconds()}` : '',
+        previousUpgradeTime: this.formatDuration(previousTime),
         startTime: nodeTask.started ? this.$filter('date')(nodeTask.started, 'dd MMM y HH:mm', 'UTC') : '',
         nodeStatus: nodeTask.status,
-        elapsedTime: elapsedTime ? `${elapsedTime.hours()}:${elapsedTime.minutes()}:${elapsedTime.seconds()}` : '',
+        elapsedTime: this.formatDuration(elapsedTime),
       };
       this.clusterGridData.push(clusterStatusGridRow);
     });
     this.gridOptions.data = this.clusterGridData;
     this.showGrid = true;
+  }
+
+  private formatDuration(duration?: Duration): string {
+    if (duration === undefined) {
+      return '';
+    }
+    const daysToHours = duration.days() * 24;
+    return duration ? `${duration.hours() + daysToHours}:${_.toString(duration.minutes()).length > 1 ? duration.minutes() : '0' + duration.minutes()}:${_.toString(duration.seconds()).length > 1 ? duration.seconds() : '0' + duration.seconds()}` : '';
   }
 }

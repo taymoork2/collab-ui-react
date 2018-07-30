@@ -15,6 +15,7 @@
     var MEDIA_TYPE_CALLBACK = 'callback';
     var MEDIA_TYPE_VOICE = 'voice';
     var MEDIA_TYPE_WEBCALL = 'webcall';
+    var MEDIA_TYPE_APPLEBUSINESSCHAT = 'abc';
 
     vm.showChartWithoutBreakdown = {
       taskIncoming: EMPTY,
@@ -102,7 +103,7 @@
     }
 
     vm.filtersUpdate = filtersUpdate;
-    var mediaTypes = [MEDIA_TYPE_ALL_TASKS, MEDIA_TYPE_CHAT, MEDIA_TYPE_CALLBACK, MEDIA_TYPE_VOICE];
+    var mediaTypes = [MEDIA_TYPE_ALL_TASKS, MEDIA_TYPE_CHAT, MEDIA_TYPE_APPLEBUSINESSCHAT, MEDIA_TYPE_CALLBACK, MEDIA_TYPE_VOICE];
     setMediaTypeOptions(mediaTypes);
 
     function setMediaTypeOptions(mediaTypes) {
@@ -211,20 +212,29 @@
       var mediaDescription = (vm.mediaTypeSelected.name === 'all') ? _.split(vm.mediaTypeSelected.label, ' ')[1]
         : vm.mediaTypeSelected.label;
       var taskTimeMediaDesc = mediaDescription.substring(0, mediaDescription.length - 1);
+      var mediaDescriptionLowercase = _.toLower(mediaDescription);
+      var taskTimeMediaDescLowercase = _.toLower(taskTimeMediaDesc);
+      var taskTimeDescription = 'taskTime.desc';
+      // For ABC reports, we want to keep it uppercase
+      if (vm.mediaTypeSelected.name === MEDIA_TYPE_APPLEBUSINESSCHAT) {
+        mediaDescriptionLowercase = mediaDescription;
+        taskTimeMediaDescLowercase = taskTimeMediaDesc;
+        taskTimeDescription = 'taskTime.abcDesc';
+      }
 
       vm.taskIncomingDescription = $translate.instant('taskIncoming.desc', {
         time: vm.timeSelected.description,
-        mediaType: _.toLower(mediaDescription),
+        mediaType: mediaDescriptionLowercase,
       });
 
       vm.taskOfferedDescription = $translate.instant('taskOffered.desc', {
         time: vm.timeSelected.description,
-        mediaType: _.toLower(mediaDescription),
+        mediaType: mediaDescriptionLowercase,
       });
 
-      vm.taskTimeDescription = $translate.instant('taskTime.desc', {
+      vm.taskTimeDescription = $translate.instant(taskTimeDescription, {
         time: vm.timeSelected.description,
-        mediaType: _.toLower(taskTimeMediaDesc),
+        mediaType: taskTimeMediaDescLowercase,
       });
 
       vm.averageCsatDescription = $translate.instant('averageCsat.desc', {
@@ -232,7 +242,7 @@
       });
 
       vm.taskAggregateDescription = $translate.instant('taskAggregate.desc', {
-        mediaType: _.toLower(mediaDescription),
+        mediaType: mediaDescriptionLowercase,
       });
 
       vm.taskIncomingTitle = $translate.instant('taskIncoming.title', {
@@ -253,21 +263,21 @@
 
       vm.taskIncomingBreakdownDescription = $translate.instant('taskIncoming.breakdownDescription', {
         time: vm.timeSelected.description,
-        mediaType: _.toLower(mediaDescription),
+        mediaType: mediaDescriptionLowercase,
       });
 
       vm.taskTimeBreakdownDescription = $translate.instant('taskTime.breakdownDescription', {
         time: vm.timeSelected.description,
-        mediaType: _.toLower(taskTimeMediaDesc),
+        mediaType: taskTimeMediaDescLowercase,
       });
 
       vm.taskAggregateBreakdownDescription = $translate.instant('taskAggregate.breakdownDescription', {
-        mediaType: _.toLower(mediaDescription),
+        mediaType: mediaDescriptionLowercase,
       });
 
       vm.averageCsatBreakdownDescription = $translate.instant('averageCsat.breakdownDescription', {
         time: vm.timeSelected.description,
-        mediaType: _.toLower(mediaDescription),
+        mediaType: mediaDescriptionLowercase,
       });
     }
 

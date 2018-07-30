@@ -25,6 +25,7 @@ module.exports = {
     'https://cdn.mxpnl.com',
     'https://rpbtqlkhsn006.webex.com',
     'wss://mercury-connection-a.wbx2.com',
+    'https://api.segment.io', // Segment Analytics
   ],
   defaultSrc: [
     '\'self\'',
@@ -73,6 +74,7 @@ module.exports = {
     'https://api.mixpanel.com', // Mixpanel
     'https://cdn.mxpnl.com', // Mixpanel
     'https://buy.ciscospark.com', // Digital River
+    'https://cdn.segment.com', // Segment Analytics
   ],
   // valid sources for sources for stylesheets
   styleSrc: [

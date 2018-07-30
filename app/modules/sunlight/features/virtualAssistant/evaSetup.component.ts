@@ -16,6 +16,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   public maxEmailLength = 63;
   public validateEmailChars = /^([A-Za-z0-9-._~/|?%^&{}!#$'`*=]+)$/;
   public emailForm: ng.IFormController;
+  public emailAddress;
 
   public template = {
     templateId: '',
@@ -112,8 +113,8 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
       this.isEditFeature = true;
       this.template.templateId = this.$stateParams.template.id;
       this.template.configuration.pages.name.nameValue = this.$stateParams.template.name;
-      const emailAddress = this.$stateParams.template.email;
-      this.template.configuration.pages.evaEmail.value = emailAddress.substring(0, emailAddress.indexOf('@'));
+      this.emailAddress = this.$stateParams.template.email;
+      this.template.configuration.pages.evaEmail.value = this.emailAddress.substring(0, this.emailAddress.indexOf('@'));
       this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id = this.$stateParams.template.defaultSpaceId;
       this.template.ownerId = this.$stateParams.template.ownerId;
       this.template.ownerDetails = this.$stateParams.template.ownerDetails;
@@ -229,8 +230,6 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
 
   public submitFeature(): void {
     const name = this.template.configuration.pages.name.nameValue.trim();
-    const emailPrefix = this.template.configuration.pages.evaEmail.value.trim();
-    const email = `${emailPrefix}@sparkbot.io`;
     this.creatingTemplate = true;
     const avatarDataUrl = this.template.configuration.pages.vaAvatar.fileValue;
     const defaultSpaceId = this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id;
@@ -241,9 +240,12 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
         const owner = this.EvaService.getEvaOwner(this.template);
         this.Notification.warning(this.EvaService.evaServiceCard.editDeleteWarning, { owner });
       } else {
-        this.updateFeature(this.template.templateId, name, this.orgId, email, defaultSpaceId, avatarDataUrl);
+        // just send original email since you can't update it
+        this.updateFeature(this.template.templateId, name, this.orgId, this.emailAddress, defaultSpaceId, avatarDataUrl);
       }
     } else {
+      const emailPrefix = this.template.configuration.pages.evaEmail.value.trim();
+      const email = `${emailPrefix}@webex.bot`;
       this.createFeature(name, this.orgId, email, defaultSpaceId, avatarDataUrl);
     }
   }

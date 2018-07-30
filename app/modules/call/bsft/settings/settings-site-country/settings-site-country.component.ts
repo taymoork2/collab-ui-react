@@ -4,13 +4,16 @@ class BsftSiteCountryCtrl implements ng.IComponentController {
   public messages: any = {};
   public countryList = [{
     name: 'United States',
-    abbreviation: 'us',
+    abbreviation: 'US',
   }];
+  public countryPlaceholder;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
   ) {
+    this.countryPlaceholder = this.$translate.instant('broadCloud.site.selectCountry');
+
     this.messages = {
       required: this.$translate.instant('common.invalidRequired'),
     };

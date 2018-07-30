@@ -439,6 +439,8 @@
         messaging: null,
         conferencing: null,
         communications: null,
+        communicationsSPCA: null,
+        communicationsSPSTD: null,
         roomSystems: null,
         sparkConferencing: null,
         webexEEConferencing: null,
@@ -492,6 +494,8 @@
       // havent figured out what this is doing yet...
       dataObj.sparkConferencing = initializeService(dataObj.licenseList, Config.offerCodes.CF, serviceEntry);
       dataObj.communications = initializeService(dataObj.licenseList, Config.offerCodes.CO, serviceEntry);
+      dataObj.communicationsSPCA = initializeService(dataObj.licenseList, Config.offerCodes.SPCA, serviceEntry);
+      dataObj.communicationsSPSTD = initializeService(dataObj.licenseList, Config.offerCodes.SPSTD, serviceEntry);
       dataObj.webexEventCenter = initializeService(dataObj.licenseList, Config.offerCodes.EC, serviceEntry);
       dataObj.webexEEConferencing = initializeService(dataObj.licenseList, Config.offerCodes.EE, serviceEntry);
       dataObj.webexMeetingCenter = initializeService(dataObj.licenseList, Config.offerCodes.MC, serviceEntry);

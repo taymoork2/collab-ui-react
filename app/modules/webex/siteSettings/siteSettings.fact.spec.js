@@ -111,7 +111,7 @@ describe('WebExSiteSettingsFact Test', function () {
     expect(siteSettingsObj.siteSettingCardObjs[1].pageObjs).toBeDefined();
     expect(siteSettingsObj.siteSettingCardObjs[1].subSectionObjs).toBeDefined();
     expect(siteSettingsObj.siteSettingCardObjs[1].id).toEqual('MC');
-    expect(siteSettingsObj.siteSettingCardObjs[1].label).toEqual('Meeting Center');
+    expect(siteSettingsObj.siteSettingCardObjs[1].label).toEqual('Webex Meeting Center');
     expect(siteSettingsObj.siteSettingCardObjs[1].comment).toEqual(null);
     expect(siteSettingsObj.siteSettingCardObjs[1].pageObjs).toEqual(null);
     expect(siteSettingsObj.siteSettingCardObjs[1].subSectionObjs).toEqual([]);

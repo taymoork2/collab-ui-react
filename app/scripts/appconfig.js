@@ -19,11 +19,19 @@
 
         // sidepanel helper
         function isStateInSidepanel($state) {
-          var rootStateName = $state.current.name.split('.')[0];
-          var rootState = $state.get(rootStateName);
-          var rootStateIsSidepanel = rootState.parent === 'sidepanel';
-          return $state.current.parent === 'sidepanel' || (rootStateIsSidepanel && $state.includes(rootState));
+          return isCurrentStateInSidepanel($state.$current);
         }
+
+        function isCurrentStateInSidepanel(state) {
+          if (state) {
+            if (state.name === 'sidepanel') {
+              return true;
+            }
+            return isCurrentStateInSidepanel(state.parent);
+          }
+          return false;
+        }
+
 
         /* @ngInject */
         function SidePanelLargeOpen($window) {
@@ -3014,6 +3022,22 @@
               title: 'deviceConfiguration.configureDeviceTitle',
             },
           })
+          .state('deviceAlerts', {
+            parent: 'modalDialog',
+            views: {
+              'modal@': {
+                template: '<device-alerts-modal ui-view dismiss="$dismiss()"></device-alerts-modal>',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'device-alerts-modal';
+                  },
+                },
+              },
+            },
+            params: {
+              searchObject: {},
+            },
+          })
           .state('device-overview.emergencyServices', {
             parent: 'device-overview',
             views: {
@@ -4281,6 +4305,18 @@
             template: require('modules/huron/lines/lineList.tpl.html'),
             controller: 'LinesListCtrl',
             controllerAs: 'linesListCtrl',
+          })
+          .state('bsft-numbers', {
+            parent: 'hurondetails',
+            url: '/services/bsft-numbers',
+            template: '<bsft-number-list></bsft-number-list>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/call/bsft/numbers'));
+                }, 'bsft-numbers');
+              }),
+            },
           })
           .state('externalNumberDelete', {
             parent: 'modalDialog',
@@ -5935,14 +5971,14 @@
             parent: 'modal',
             params: {
               mode: null,
-              caseId: null,
+              matter: null,
             },
             views: {
               'modal@': {
-                template: '<legal-hold-custodians-manage dismiss="$dismiss()" case-id="$resolve.caseId" mode="$resolve.mode"></legal-hold-custodians-manage>',
+                template: '<legal-hold-custodians-manage dismiss="$ctrl.cancelModal()" matter="$resolve.matter" mode="$resolve.mode"></legal-hold-custodians-manage>',
                 resolve: {
-                  caseId: /* @ngInject */ function ($stateParams) {
-                    return $stateParams.caseId;
+                  matter: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.matter;
                   },
                   mode: /* @ngInject */ function ($stateParams) {
                     return $stateParams.mode;

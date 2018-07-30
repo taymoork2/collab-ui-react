@@ -17,6 +17,9 @@ export enum OfferName {
   TSP = 'TSP',         // Telephony Service Provider
   CCASP = 'CCASP',     // Cloud Connected Audio - Service Partners
   CCAUser = 'CCAUser', // Cloud Connected Audio - User
+  SPCA = 'SPCA', //Broadcloud common area offer
+  SPSTD = 'SPSTD', // Broadcloud standard offer
+  BCALL = 'BCALL', // Broadcloud trial offer
 }
 
 export enum AdvancedMeetingOfferName {

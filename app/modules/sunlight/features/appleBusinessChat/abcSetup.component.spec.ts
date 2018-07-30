@@ -115,6 +115,7 @@ describe('Care ABC Setup Component', () => {
         businessId: 'myBusinessId',
       });
 
+      this.$state.isAppleBusinessChatOnSiteFileStorageEnable = true;
       controller = this.controller;
       return controller;
     };
@@ -382,6 +383,24 @@ describe('Care ABC Setup Component', () => {
       expect(controller.template.configuration.pages.abcCvaSelection.configuredCVAs).toEqual([]);
       controller.Notification.errorWithTrackingId(error, 'abcService.getCustomerVirtualAssistantListError');
     });
+    it('should allow next page if CVA is disabled, or enabled and all storage fields are populated', () => {
+      controller.toggleCVA = false;
+      expect(controller.isStorageValid()).toEqual(true);
+      controller.toggleCVA = true;
+      expect(controller.isStorageValid()).toEqual(false);
+      controller.template.configuration.pages.abcCvaSelection.selectedCVA.id = 'someId';
+      controller.template.configuration.pages.abcCvaSelection.storageUrl = 'http://abc.com';
+      controller.template.configuration.pages.abcCvaSelection.storageToken = 'someToken';
+      expect(controller.isStorageValid()).toEqual(true);
+      controller.template.configuration.pages.abcCvaSelection.selectedCVA.id = undefined;
+      expect(controller.isStorageValid()).toEqual(false);
+      controller.template.configuration.pages.abcCvaSelection.selectedCVA.id = 'someId';
+      controller.template.configuration.pages.abcCvaSelection.storageUrl = 'abc';
+      expect(controller.isStorageValid()).toEqual(false);
+      controller.template.configuration.pages.abcCvaSelection.storageUrl = 'http://abc.com';
+      controller.template.configuration.pages.abcCvaSelection.storageToken = '';
+      expect(controller.isStorageValid()).toEqual(false);
+    });
   });
 
   describe('Summary Page', function () {
@@ -475,7 +494,24 @@ describe('Care ABC Setup Component', () => {
 
       const featureNameObj = { featureName: 'careChatTpl.appleBusinessChat.featureText.name' };
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
+      expect(controller.customErrorMessage).toBeFalsy();
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String), featureNameObj);
+    });
+
+    it('should display custom error message when failure contains an error type', function () {
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      const failedDataWithErrorType = _.assign({}, failedData, { data: { type: 'invalidInput.duplicateId' } });
+      deferred.reject(failedDataWithErrorType);
+      controller.isEditFeature = true;
+
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      const featureNameObj = { featureName: 'careChatTpl.appleBusinessChat.featureText.name' };
+      expect(controller.saveTemplateErrorOccurred).toBeTruthy();
+      expect(controller.customErrorMessage).toEqual(this.$translate.instant('careChatTpl.virtualAssistant.invalidInput.duplicateId'));
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedDataWithErrorType, jasmine.any(String), featureNameObj);
     });
   });
 });

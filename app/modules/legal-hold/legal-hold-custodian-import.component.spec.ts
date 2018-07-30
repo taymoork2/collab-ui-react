@@ -23,6 +23,20 @@ type Test = atlas.test.IComponentTest<LegalHoldCustodianImportController, {
 
 describe('Component: legalHoldCustodianImport', () => {
 
+  const importResult =  {
+    success: [
+      {
+        emailAddress: 'test@test.com',
+        userId: '12345',
+      },
+      {
+        emailAddress: 'test@test2.com',
+        userId: '123453',
+      },
+    ],
+    error: [],
+  };
+
   beforeEach(function (this: Test) {
     this.components = {
       crUsersTileTotals: this.spyOnComponent('crUsersTileTotals'),
@@ -193,21 +207,15 @@ describe('Component: legalHoldCustodianImport', () => {
         });
       expect(promise).toBeResolved();
       expect(this.controller.resultStatus).toBe(ImportResultStatus.SUCCESS);
-      expect(this.$scope.onConversionCompleted).toHaveBeenCalledWith([ '12345', '12345' ]);
+      expect(this.$scope.onConversionCompleted).toHaveBeenCalledWith(['12345', '12345']);
     });
   });
 
   describe('displaying results', () => {
     beforeEach(initComponent);
     it('should display results table and stats and hide progress and file upload', function (this: Test) {
-      this.controller.result = {
-        success: _.map('test@test.com, test@gmail.com'.split(','), (email) => {
-          return { emailAddress: email };
-        }),
-        error: [],
-      };
-
-      this.controller.displayResults();
+      this.controller.result = _.cloneDeep(importResult);
+      this.controller.displayResults([], ImportMode.ADD);
       this.$timeout.flush();
       this.$scope.$digest();
       expect(this.controller.currentStep).toBe(ImportStep.RESULT);
@@ -226,6 +234,21 @@ describe('Component: legalHoldCustodianImport', () => {
       this.$scope.$digest();
       expect(this.components.crUsersTileTotals.bindings[0].updatedTotal).toBe(0);
       expect(this.components.crUsersTileTotals.bindings[0].errorTotal).toBe(2);
+    });
+
+    it('should update results with data from displayResults params', function (this: Test) {
+      this.controller.result = _.cloneDeep(importResult);
+      this.controller.displayResults([], ImportMode.REMOVE);
+      this.$timeout.flush();
+      this.$scope.$digest();
+      expect(this.components.crUsersTileTotals.bindings[0].updatedTotal).toBe(2);
+      expect(this.components.crUsersTileTotals.bindings[0].errorTotal).toBe(0);
+      this.controller.result = _.cloneDeep(importResult);
+      this.controller.displayResults([importResult.success[1].userId], ImportMode.REMOVE);
+      this.$timeout.flush();
+      this.$scope.$digest();
+      expect(this.components.crUsersTileTotals.bindings[0].updatedTotal).toBe(1);
+      expect(this.components.crUsersTileTotals.bindings[0].errorTotal).toBe(1);
     });
   });
 });

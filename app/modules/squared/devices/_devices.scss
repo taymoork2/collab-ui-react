@@ -50,6 +50,12 @@
   }
 }
 
+.remove-device-modal-body {
+  .cs-input-group--centered {
+    align-items: center;
+  }
+}
+
 .none_found {
   @include vr-spacing(pt, 7);
 

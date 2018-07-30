@@ -24,7 +24,9 @@ require('./_setup-wizard.scss');
   var callSettingsSetupLocationTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/locationSetup.html');
   var callSettingsSetupSiteTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceSetup.html');
   var bsftSettingsSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftSetup.html');
-  var bsftPstnSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftPstn.html');
+  var bsftLicenseAllocationTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftLicenseAllocation.html');
+  var bsftNumberSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftNumber.html');
+  var bsftAssignNumberTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftAssignNumber.html');
 
   var careSettingsTemplatePath = require('ngtemplate-loader?module=Core!./careSettings/careSettings.tpl.html');
 
@@ -34,7 +36,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, ApiCacheManagementService, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService, BsftCustomerService) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, ApiCacheManagementService, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService, RialtoService) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var isITDecouplingFlow = false;
     var shouldRemoveSSOSteps = false;
@@ -295,15 +297,25 @@ require('./_setup-wizard.scss');
         template: bsftSettingsSetupTemplatePath,
       };
 
-      var bsftPstn = {
-        name: 'bsftPstn',
-        template: bsftPstnSetupTemplatePath,
+      var bsftLicenseAllocation = {
+        name: 'bsftLicenseAllocation',
+        template: bsftLicenseAllocationTemplatePath,
+      };
+
+      var setupNumberBsft = {
+        name: 'setupNumberBsft',
+        template: bsftNumberSetupTemplatePath,
+      };
+
+      var assignNumberBsft = {
+        name: 'assignNumberBsft',
+        template: bsftAssignNumberTemplatePath,
       };
 
       if (showCallSettings()) {
         $q.all({
           customer: $scope.isCustomerPresent,
-          bsft: BsftCustomerService.getBsftCustomerStatus(Authinfo.getOrgId()),
+          bsft: RialtoService.getCustomer(Authinfo.getOrgId()),
         }).then(function (response) {
           if (response.customer && hasPendingCallLicenses) {
             SetupWizardService.activateAndCheckCapacity().catch(function (error) {
@@ -324,7 +336,7 @@ require('./_setup-wizard.scss');
 
           if (!response.customer && hasPendingCallLicenses) {
             steps.push(pickCountry);
-          } else if (!response.customer) {
+          } else if (!response.customer && Authinfo.isSquaredUC()) {
             var org = SetupWizardService.getOrg();
             CustomerCommonService.save({}, {
               uuid: org.id,
@@ -335,10 +347,9 @@ require('./_setup-wizard.scss');
           }
 
           if (supportsHI1776 || Authinfo.isBroadCloud()) {
-            if (!response.bsft.rialtoCustomerId) {
-              steps.push(setupBsft);
+            if (!response.bsft.rialtoId) {
+              steps.push(setupBsft, bsftLicenseAllocation, setupNumberBsft, assignNumberBsft);
             }
-            steps.push(bsftPstn);
           } else {
             if (supportsHI1484) {
               steps.push(setupLocation);

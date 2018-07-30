@@ -197,7 +197,14 @@
                 msgLicenses.push(service);
                 break;
               case Config.licenseTypes.COMMUNICATION:
-                service = new ServiceFeature($translate.instant('onboardModal.paidComm'), accountIndex + 1, 'commRadio', license);
+                var subType = _.split(license.licenseId, '_', 1);
+                if (subType[0] === 'SPSTD') {
+                  service = new ServiceFeature($translate.instant('common.licenses.standard'), accountIndex + 1, 'commStandardRadio', license);
+                } else if (subType[0] === 'SPCA') {
+                  service = new ServiceFeature($translate.instant('common.licenses.places'), accountIndex + 1, 'commPlacesRadio', license);
+                } else {
+                  service = new ServiceFeature($translate.instant('onboardModal.paidComm'), accountIndex + 1, 'commRadio', license);
+                }
                 commLicenses.push(service);
                 // store the partner for Communication license
                 authData.commPartnerOrgId = license.partnerOrgId;
@@ -382,6 +389,14 @@
             .value();
         });
 
+        // In the case we want to restrict to a child state
+        var childStateAllowedByRole = _.some(roles, function (role) {
+          return _.chain(Config.roleStates)
+            .get(role)
+            .includes(state)
+            .value();
+        });
+
         // check if the state is part of the restricted list for this view
         if (_.includes(Config.restrictedStates[view], state)) {
           // If a state is usually restricted by view, but is allowed by user/device admin roles,
@@ -408,13 +423,13 @@
         }
 
         // if the state is in the allowed list of one or the user's role, all good
-        if (stateAllowedByARole) {
+        if (stateAllowedByARole || childStateAllowedByRole) {
           return true;
         }
 
         // if the state is in the allowed list of one of the user's service, and the user is not
-        // a User_Admin or Device_Admin, all good
-        if (!this.isUserOrDeviceAdmin()) {
+        // a User_Admin, Device_Admin or Provision_Admin, all good
+        if (!this.isUserOrDeviceAdmin() && !this.isProvisionAdmin()) {
           var stateAllowedByAService = _.some(services, function (service) {
             return _.chain(Config.serviceStates)
               .get(service.ciName)
@@ -488,6 +503,9 @@
       },
       isPartnerUser: function () {
         return this.hasRole('PARTNER_USER');
+      },
+      isProvisionAdmin: function () {
+        return this.hasRole('Provision_Admin');
       },
       isSquaredTeamMember: function () {
         return this.hasRole('WX2_User');

@@ -1,13 +1,15 @@
-import devicesReduxModule from './devicesRedux';
-import csdmSearchModule from './services';
-import devicesBulkModule from './bulk';
-import configurationModule from './configuration';
+import devicesReduxModuleName from './devicesRedux';
+import csdmSearchModuleName from './services';
+import devicesBulkModuleName from './bulk';
+import configurationModuleName from './configuration';
+import alertsModuleName from './alerts';
 export default angular
   .module('Csdm', [
     'Squared',
-    devicesReduxModule,
-    csdmSearchModule,
-    devicesBulkModule,
-    configurationModule,
+    devicesReduxModuleName,
+    csdmSearchModuleName,
+    devicesBulkModuleName,
+    configurationModuleName,
+    alertsModuleName,
   ])
   .name;

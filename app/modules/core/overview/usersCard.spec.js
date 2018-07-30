@@ -128,32 +128,57 @@ describe('OverviewUsersCard', function () {
         expect(this.UserListService.listUsersAsPromise).toHaveBeenCalled();
         expect(this.card.usersOnboarded).toBe(10);
       });
+    });
 
-      it('should set "usersOnboarded" property as appropriate if "UserListService.listUsersAsPromise()" rejects', function () {
+    describe('large org or onboarding errors:', function () {
+      beforeEach(function () {
         this.listUsersData403 = {
           status: 403,
           data: {
             Errors: [{
-              errorCode: '200045',
+              errorCode: '100106',
             }],
           },
         };
+      });
 
-        this.listUsersData503 = {
-          status: 503,
+      it('should set "usersOnboarded" property as appropriate if "UserListService.listUsersAsPromise()" rejects', function () {
+        spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({
           data: {
-            Errors: [{
-              errorCode: '400143',
-            }],
+            estimatedUserSize: 3001,
           },
-        };
+        }));
+
+        this.UserListService.listUsersAsPromise.and.returnValue(this.$q.reject(this.listUsersData403));
+        this.card = this.OverviewUsersCard.createCard();
+        this.$rootScope.$apply();
+        expect(this.card.usersOnboarded).toBe(3001);
+
+        this.UserListService.listUsersAsPromise.and.returnValue(this.$q.reject({ status: 503 }));
+        this.card = this.OverviewUsersCard.createCard();
+        this.$rootScope.$apply();
+
+        expect(this.card.isOnboardingError).toBe(true);
+        expect(this.card.usersOnboardedError).toBe('overview.cards.users.onboardError');
+      });
+
+      it('should set onboarding error if "getOrg" does not return an estimatedUserSize', function () {
+        spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({
+          data: { },
+        }));
+
         this.UserListService.listUsersAsPromise.and.returnValue(this.$q.reject(this.listUsersData403));
         this.card = this.OverviewUsersCard.createCard();
         this.$rootScope.$apply();
 
-        expect(this.card.usersOnboarded).toBe('3000+');
+        expect(this.card.isOnboardingError).toBe(true);
+        expect(this.card.usersOnboardedError).toBe('overview.cards.users.onboardError');
+      });
 
-        this.UserListService.listUsersAsPromise.and.returnValue(this.$q.reject(this.listUsersData503));
+      it('should set onboarding error if "getOrg" returns in error', function () {
+        spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.reject({ }));
+
+        this.UserListService.listUsersAsPromise.and.returnValue(this.$q.reject(this.listUsersData403));
         this.card = this.OverviewUsersCard.createCard();
         this.$rootScope.$apply();
 

@@ -107,12 +107,19 @@
         </div>
         <div class="sub-section" ng-show="!trial.callTrial.paid && trial.hasCallEntitlement">
           <h5 class="sub-section__label" translate="subscriptions.call"></h5>
-          <input type="checkbox" cs-input
+          <input ng-if="!trial.supportsBsftTrial"
+            type="checkbox" cs-input
             ng-model="trial.callTrial.enabled"
             id="callTrial" name="callTrial"
             ng-disabled="trial.preset.call"
             cs-input-label="{{::'trials.call' | translate}}"
             ng-change="trial.updateCountryList()">
+          <input ng-if="trial.supportsBsftTrial"
+            type="checkbox" cs-input
+            ng-model="trial.bcallTrial.enabled"
+            id="bcallTrial" name="bcallTrial"
+            ng-disabled="trial.preset.broadCloudFlex"
+            cs-input-label="{{::'trials.broadCloudFlex' | translate}}">
         </div>
         <div class="sub-section" ng-if="trial.showCare && (!trial.careTrial.paid)">
           <h5 translate="subscriptions.care"></h5>

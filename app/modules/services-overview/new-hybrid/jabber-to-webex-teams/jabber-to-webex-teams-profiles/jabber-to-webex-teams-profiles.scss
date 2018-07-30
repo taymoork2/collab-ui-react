@@ -1,0 +1,34 @@
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+jabber-to-webex-teams-profiles {
+
+  .content-container {
+    margin-top: 2.5rem;
+  }
+  button.btn-add {
+    margin-bottom: .5rem;
+  }
+
+  .cs-card.cs-card--large>article header {
+    padding-top: .85rem;
+    padding-bottom: .75rem;
+    p {
+      padding-left: 0;
+    }
+
+    .header-with-right-icon {
+      align-items: start;
+    }
+  }
+
+  .actions-menu.open .dropdown-menu {
+    top: 1.25rem;
+    right: 0;
+    padding: 0;
+    text-align: left;
+  }
+
+  .dropdown-menu.top {
+    top: auto;
+    bottom: auto;
+  }
+}

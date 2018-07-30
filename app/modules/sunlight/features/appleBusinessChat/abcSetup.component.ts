@@ -63,6 +63,8 @@ class AbcSetupCtrl extends CommonSetupCtrl {
             id: undefined,
             name: '',
           },
+          storageUrl: '',
+          storageToken: '',
           configuredCVAs: [<any>{}],
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.APPLE_BUSINESS_CHAT.eventNames.ABC_CVA_SELECTION_PAGE,
@@ -83,11 +85,25 @@ class AbcSetupCtrl extends CommonSetupCtrl {
     },
   };
 
+  protected toggleCVA = false;
+
+  protected ERROR_TYPES = Object.freeze({
+    ERROR_STORAGE_URL: 'errorStorageUrl',
+    ERROR_STORAGE_PROTOCOL: 'errorStorageProtocol',
+    ERROR_STORAGE_TOKEN: 'errorStorageToken',
+    ERROR_NONE: 'none',
+  });
+
+  protected errorValidation = this.ERROR_TYPES.ERROR_NONE;
+
+  private HTTP_PROTOCOL = 'http://';
+  private HTTPS_PROTOCOL = 'https://';
+
   /* @ngInject*/
   constructor(
     public $element: ng.IRootElementService,
     public $scope: ng.IScope,
-    public $state: ng.ui.IStateService,
+    public $state,
     public $stateParams: ng.ui.IStateParamsService,
     public $modal: IToolkitModalService,
     public $translate: ng.translate.ITranslateService,
@@ -198,7 +214,7 @@ class AbcSetupCtrl extends CommonSetupCtrl {
         this.unsetFocus();
         return this.isNamePageValid();
       case 'abcCvaSelection':
-        return true;
+        return this.isStorageValid();
       case 'abcStatusMessages':
         return this.isStatusMessagesValid();
       case 'abcSummary':
@@ -213,6 +229,7 @@ class AbcSetupCtrl extends CommonSetupCtrl {
     const controller = this;
     controller.animation = 'slide-right';
     controller.saveTemplateErrorOccurred = false;
+    controller.customErrorMessage = '';
     controller.templateButtonText = this.$translate.instant('common.finish');
     controller.retryButtonDisabled = false;
     controller.$timeout(function () {
@@ -270,6 +287,86 @@ class AbcSetupCtrl extends CommonSetupCtrl {
     return businessIdValue !== '';
   }
 
+  /**
+   *  Once URL/token validation is available on MM, the API needs to be wired to this component, and
+   *  validation turned on.
+   */
+  protected turnValidationOn(): boolean {
+    return false;
+  }
+
+  /**
+   *  Determines that CVA screen should collect external storage information: URL and access token
+   * @returns {boolean}
+   */
+  protected isCvaOnSiteStorage(): boolean {
+    return this.$state.isAppleBusinessChatOnSiteFileStorageEnable;
+  }
+
+  /**
+   *  Validation button to be activated when MM API is available.
+   */
+  public clickedValidateButton(): void {
+    this.errorValidation = this.ERROR_TYPES.ERROR_NONE;
+    if (this.template.configuration.pages.abcCvaSelection.storageUrl.length === 0) {
+      this.errorValidation = this.ERROR_TYPES.ERROR_STORAGE_URL;
+    } else if (this.template.configuration.pages.abcCvaSelection.storageToken.length === 0) {
+      this.errorValidation = this.ERROR_TYPES.ERROR_STORAGE_TOKEN;
+    }
+  }
+
+  /**
+   *  Minimum storage URL validation to assure protocol is 'http', or 'https'.
+   */
+  protected checkStorageUrlInput(): void {
+    // If there is an error, save it - it might need to be restored if things validate ok.
+    const saveErrorValidation = this.errorValidation === this.ERROR_TYPES.ERROR_STORAGE_PROTOCOL ? this.ERROR_TYPES.ERROR_NONE : this.errorValidation;
+    const url = this.template.configuration.pages.abcCvaSelection.storageUrl;
+    // If URL is present, then, it should not indicate an error until the size of the string is at least 'https://'.
+    // Obviously, the string must start with 'http://' or 'https://'
+    if (!_.isEmpty(url) &&
+      url.length > this.HTTPS_PROTOCOL.length &&
+      url.toLowerCase().indexOf(this.HTTP_PROTOCOL) !== 0 &&
+      url.toLowerCase().indexOf(this.HTTPS_PROTOCOL) !== 0) {
+      this.errorValidation = this.ERROR_TYPES.ERROR_STORAGE_PROTOCOL;
+      return;
+    }
+    // If we got here, the storageUrl is ok, but it is conceivable another error was present when this method fired.
+    // SO... do not obliterate the error because this method evaluated ok.
+    this.errorValidation = saveErrorValidation;
+  }
+
+  /**
+   *  Is storage URL field in error?
+   * @returns {boolean}
+   */
+  protected isStorageUrlError(): boolean {
+    return this.errorValidation === this.ERROR_TYPES.ERROR_STORAGE_URL || this.errorValidation === this.ERROR_TYPES.ERROR_STORAGE_PROTOCOL;
+  }
+
+  /**
+   *  Is token field in error?
+   * @returns {boolean}
+   */
+  protected isStorageTokenError(): boolean {
+    return this.errorValidation === this.ERROR_TYPES.ERROR_STORAGE_TOKEN;
+  }
+
+  /**
+   *  Can this form move forward?
+   *  This is only valid if option CVA configuration is OFF, OR all fields contain elements.
+   * @returns {boolean}
+   */
+  public isStorageValid(): boolean {
+    if (this.toggleCVA && this.isCvaOnSiteStorage()) {
+      return _.get(this.template.configuration.pages.abcCvaSelection.selectedCVA, 'id', '').length > 0 &&
+        !_.isEmpty(this.template.configuration.pages.abcCvaSelection.storageUrl) &&
+        this.template.configuration.pages.abcCvaSelection.storageUrl.length > this.HTTPS_PROTOCOL.length &&
+        !_.isEmpty(this.template.configuration.pages.abcCvaSelection.storageToken);
+    }
+    return true;
+  }
+
   private loadCvaList(): void {
     const controller = this;
     this.CvaService.listConfigs().then(function (result) {
@@ -283,7 +380,16 @@ class AbcSetupCtrl extends CommonSetupCtrl {
     });
   }
 
+  /**
+   *  Obtain CVA from stored configuration and populate fields
+   */
   private setSelectedCva(): void {
+    this.toggleCVA = false;
+    this.template.configuration.pages.abcCvaSelection.selectedCVA.name = '';
+    this.template.configuration.pages.abcCvaSelection.selectedCVA.id = undefined;
+    this.template.configuration.pages.abcCvaSelection.storageUrl = '';
+    this.template.configuration.pages.abcCvaSelection.storageToken = '';
+
     //show selected CVA on edit
     if (this.isEditFeature) {
       const selectedCva = _.find(this.template.configuration.pages.abcCvaSelection.configuredCVAs, {
@@ -292,6 +398,13 @@ class AbcSetupCtrl extends CommonSetupCtrl {
       if (selectedCva) {
         this.template.configuration.pages.abcCvaSelection.selectedCVA.name = selectedCva.name;
         this.template.configuration.pages.abcCvaSelection.selectedCVA.id = selectedCva.id;
+
+        // If collecting URL and token for storage, then, transfer the data in.
+        if (this.isCvaOnSiteStorage()) {
+          this.toggleCVA = true;
+          this.template.configuration.pages.abcCvaSelection.storageUrl = this.$stateParams.template.attachmentStorageUrl;
+          this.template.configuration.pages.abcCvaSelection.storageToken = this.$stateParams.template.attachmentStorageAccessToken;
+        }
       }
     }
   }
@@ -299,14 +412,25 @@ class AbcSetupCtrl extends CommonSetupCtrl {
   public submitFeature(): void {
     const businessId = this.template.configuration.pages.abcBusinessId.value.trim();
     const name = this.template.configuration.pages.name.nameValue.trim();
-    const cvaId = this.template.configuration.pages.abcCvaSelection.selectedCVA.id;
+
+    // Decide what to send to storage depending on feature flag and toggle values
+    const sendStorage = this.isCvaOnSiteStorage() && this.toggleCVA;
+    const sendId = !this.isCvaOnSiteStorage() || this.toggleCVA;
+
+    const cva = {
+      id: sendId ? this.template.configuration.pages.abcCvaSelection.selectedCVA.id : undefined,
+      storageUrl: sendStorage ? this.template.configuration.pages.abcCvaSelection.storageUrl : undefined,
+      storageToken: sendStorage ? this.template.configuration.pages.abcCvaSelection.storageToken : undefined,
+    };
+
     const waitingMessage = this.template.configuration.pages.abcStatusMessages.waitingMessage.trim();
     const leftChatMessage = this.template.configuration.pages.abcStatusMessages.leftChatMessage.trim();
     this.creatingTemplate = true;
+
     if (this.isEditFeature) {
-      this.updateFeature(businessId, name, this.orgId, waitingMessage, leftChatMessage, cvaId);
+      this.updateFeature(businessId, name, this.orgId, waitingMessage, leftChatMessage, cva);
     } else {
-      this.createFeature(businessId, name, this.orgId, waitingMessage, leftChatMessage, cvaId);
+      this.createFeature(businessId, name, this.orgId, waitingMessage, leftChatMessage, cva);
     }
   }
 
@@ -317,15 +441,15 @@ class AbcSetupCtrl extends CommonSetupCtrl {
    * @param orgId
    * @param cvaId optional
    */
-  private updateFeature(businessId: string, name: string, orgId: string, waitingMessage: string, leftChatMessage: string, cvaId?: string): void {
+  private updateFeature(businessId: string, name: string, orgId: string, waitingMessage: string, leftChatMessage: string, cva?: any): void {
     const controller = this;
-    controller.service.updateAbcConfig(businessId, name, orgId, waitingMessage, leftChatMessage, cvaId)
+    controller.service.updateAbcConfig(businessId, name, orgId, waitingMessage, leftChatMessage, cva)
       .then(function () {
         controller.handleFeatureUpdate();
         controller.writeMetrics();
       })
       .catch(function (response) {
-        controller.handleFeatureError();
+        controller.handleFeatureError(response);
         controller.Notification.errorWithTrackingId(response, 'careChatTpl.virtualAssistant.messages.updateConfigFailureText', {
           featureName: controller.$translate.instant('careChatTpl.appleBusinessChat.featureText.name'),
         });
@@ -339,15 +463,15 @@ class AbcSetupCtrl extends CommonSetupCtrl {
    * @param orgId
    * @param cvaId optional
    */
-  private createFeature(businessId: string, name: string, orgId: string, waitingMessage: string, leftChatMessage: string, cvaId?: string): void {
+  private createFeature(businessId: string, name: string, orgId: string, waitingMessage: string, leftChatMessage: string, cva: any): void {
     const controller = this;
-    controller.service.addAbcConfig(businessId, name, orgId, waitingMessage, leftChatMessage, cvaId)
+    controller.service.addAbcConfig(businessId, name, orgId, waitingMessage, leftChatMessage, cva)
       .then(function () {
         controller.handleFeatureCreation();
         controller.writeMetrics();
       })
       .catch(function (response) {
-        controller.handleFeatureError();
+        controller.handleFeatureError(response);
         controller.Notification.errorWithTrackingId(response, 'careChatTpl.virtualAssistant.messages.createConfigFailureText', {
           featureName: controller.$translate.instant('careChatTpl.appleBusinessChat.featureText.name'),
         });

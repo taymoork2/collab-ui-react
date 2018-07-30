@@ -3,7 +3,7 @@ import { IToolkitModalService } from 'modules/core/modal';
 import { LegalHoldService, GetUserBy } from './legal-hold.service';
 import { Notification } from 'modules/core/notifications';
 import { ICustodian, IImportComponentApi, IImportResult } from './legal-hold.interfaces';
-import { ImportMode, ImportStep, ImportResultStatus, Events } from './legal-hold.enums';
+import { ImportMode, ImportStep, ImportResultStatus, Events, CustodianErrors } from './legal-hold.enums';
 
 export class LegalHoldCustodianImportController implements ng.IComponentController {
 
@@ -181,7 +181,10 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
       this.resetFile();
       return false;
     }
-    this.csvEmailsArray = this.$.csv.toArrays(this.file);
+    //algendel: '\n' is added as a workaround for this bug: https://github.com/evanplaice/jquery-csv/issues/72
+    // toArrays() cuts off last record without new line on single columns csv
+    this.csvEmailsArray = this.$.csv.toArrays(this.file + '\n');
+    this.csvEmailsArray = _.uniq(this.csvEmailsArray);
     if (_.isEmpty(this.csvEmailsArray) || !_.isArray(this.csvEmailsArray[0])) {
       return this.returnValidationResult(false, this.$translate.instant('legalHold.custodianImport.errorCsvBadFormat'));
     }
@@ -217,8 +220,7 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
     if (_.indexOf(this.csvEmailsArray[0], this.CSV_IMPORT_HEADER) > -1) {
       this.csvEmailsArray.shift();
     }
-    const emailsArray = _.flatten(this.csvEmailsArray);
-    const chunkedArray = _.chunk(emailsArray, LegalHoldCustodianImportController.DEFAULTS.importChunkSize);
+    const chunkedArray = this.cleanAndChunkUserArray(this.csvEmailsArray, LegalHoldCustodianImportController.DEFAULTS.importChunkSize);
     this.totalChunks = chunkedArray.length;
     return this.LegalHoldService.convertUsersChunk(chunkedArray, GetUserBy.EMAIL)
       .then((result) => {
@@ -231,6 +233,13 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
         };
         this.setResults(false, result, errorResponse);
       });
+  }
+
+  private cleanAndChunkUserArray(userArray: string[], chunkSize: number): string[][] {
+    return _.chain(userArray).flatten().uniq()
+      .without('')
+      .chunk(chunkSize)
+      .value() as string[][];
   }
 
   private setResults(isSuccess: boolean, result: IImportResult, errorResponse?): void {
@@ -272,7 +281,9 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
     return this.resultStatus === ImportResultStatus.CANCELED;
   }
 
-  public displayResults(): void {
+  public displayResults(failedUserIds: string[], mode: ImportMode): void {
+    //update error and success with the results from the add/remove users
+    this.updateResults(failedUserIds, mode);
     this.errorData = this.getErrorsForDisplay();
     this.csvErrorData = _.map(this.errorData, (record) => {
       const newRecord = {
@@ -285,6 +296,18 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
     this.$timeout(() => {
       this.currentStep = ImportStep.RESULT;
     }, 1000);
+  }
+
+  private updateResults(failedUserIds: string[], mode: ImportMode): void {
+    if (this.result === undefined) {
+      return;
+    }
+    const error = (mode === ImportMode.ADD) ? CustodianErrors.IN_MATTER : CustodianErrors.NOT_IN_MATTER;
+    const errorUsers = _.remove(this.result.success, (custodian) => _.includes(failedUserIds, custodian.userId));
+    if (!_.isEmpty(errorUsers)) {
+      _.forEach(errorUsers, (user) => user.error = this.$translate.instant(`legalHold.custodianImport.${error}`));
+      this.result.error = [...this.result.error, ...errorUsers];
+    }
   }
 
   public getTemplate(): string[][] {

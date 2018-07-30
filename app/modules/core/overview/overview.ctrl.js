@@ -44,6 +44,8 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
     PstnService,
     ServiceDescriptorService,
     SetupWizardService,
+    SipAddressMigrationNotificationService,
+    SipAddressService,
     SsoCertificateExpirationNotificationService,
     SsoCertificateService,
     SubscriptionWithUnsyncedLicensesNotificationService,
@@ -97,6 +99,16 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
     if (_.toLower($location.search().updateSsoCertificateNow) === 'true') {
       $location.search('updateSsoCertificateNow', null);
       updateSsoCertificateNow = true;
+    }
+
+    // Hide license/onboarding card for Provision Admins
+    if (Authinfo.isProvisionAdmin()) {
+      _.remove(vm.cards, {
+        name: 'overview.cards.licenses.title',
+      });
+      _.remove(vm.cards, {
+        name: 'overview.cards.users.onboardTitle',
+      });
     }
 
     $q.all({
@@ -284,6 +296,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
         checkForUnsyncedSubscriptionLicenses();
         checkForSsoCertificateExpiration(response.isAtlasSsoCertificateUpdateToggled);
         checkForDirConnectorUpgrade(response.isAtlasDirectoryConnectorUpgradeStopNotificationToggled);
+        checkForSipAddressMigration();
       }).catch(function (response) {
         Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
       });
@@ -414,6 +427,19 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
       if (!isAtlasDirectoryConnectorUpgradeStopNotificationToggled) {
         pushNotification(DirConnectorUpgradeNotificationService.createNotification());
       }
+    }
+
+    function checkForSipAddressMigration() {
+      // TODO - To extract the following logic into the new SipCloudDomainService
+      ServiceDescriptorService.isServiceEnabled('squared-fusion-ec').then(function (cscEnabled) {
+        if (cscEnabled) {
+          SipAddressService.loadSipAddressModel().then(function (sipAddressModel) {
+            if (sipAddressModel.atlasJ9614SipUriRebranding && !sipAddressModel.hasDomainMigrated()) {
+              pushNotification(SipAddressMigrationNotificationService.createNotification());
+            }
+          });
+        }
+      });
     }
 
     function getTOSStatus() {

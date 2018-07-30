@@ -4,6 +4,7 @@ import userManage from './userManage';
 import userTaskManagerModal from './user-task-manager';
 import './_users.scss';
 import sharedModuleName from './shared';
+import addExternalAdminModuleName from './add-external-admin';
 
 export default angular
   .module('core.users', [
@@ -12,5 +13,6 @@ export default angular
     userManage,
     userTaskManagerModal,
     sharedModuleName,
+    addExternalAdminModuleName,
   ])
   .name;

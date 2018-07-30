@@ -43,7 +43,7 @@ export class AddResourceSectionService {
   public hasMfQosFeatureToggle: boolean = false;
   public qosOrgState: boolean = false;
 
-  private getClusterList() {
+  public getClusterList() {
     return this.HybridServicesClusterService.getAll()
       .then((clusters) => {
         return this.clusters = _.filter(clusters, {

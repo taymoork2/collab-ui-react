@@ -14,7 +14,7 @@ describe('Service: DigitalRiverService', () => {
 
     this.cookie = 'cookie';
     this.subId = 'abc+123';
-    this.webexToken = 'webexToken=abc+123;domain=ciscospark.com;secure';
+    this.webexToken = 'webexToken=abc+123;domain=webex.com;secure';
 
     spyOn(this.$document, 'prop');
     this.$httpBackend.whenGET(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/abc+123').respond(200, this.subId);

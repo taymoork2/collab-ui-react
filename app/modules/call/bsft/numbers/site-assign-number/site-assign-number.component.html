@@ -1,0 +1,30 @@
+<div ng-form="$ctrl.form">
+  <label class="sub-section__label" ><strong translate="broadCloud.numbers.locationNumber"></strong></label>
+  <div class="row">
+    <div class="columns medium-6 collapse-both">
+      <cs-select
+        name="mainNumber"
+        ng-model="$ctrl.mainNumber"
+        options="$ctrl.numberOptions"
+        filter="true"
+        placeholder="$ctrl.placeholder"
+        required="true"
+        ng-change="$ctrl.onNumberChanged()">
+      </cs-select>
+    </div>
+  </div>
+  <label class="sub-section__label"><strong translate="broadCloud.numbers.vmNumber"></strong></label>
+  <div class="row">
+    <div class="columns medium-6 collapse-both bsft-number_desc">
+        <cs-select
+          name="siteVoiceMailNumber"
+          ng-model="$ctrl.vmNumber"
+          options="$ctrl.numberOptions"
+          filter="true"
+          placeholder="$ctrl.placeholder"
+          required="true"
+          ng-change="$ctrl.onVMNumberChanged()">
+        </cs-select>
+      </div>
+  </div>
+</div>

@@ -114,9 +114,9 @@ describe('Manage Users - Manual -', function () {
       utils.click(manageUsersPage.buttons.save);
 
       // make sure users were added as expected
-      utils.waitForText(manageUsersPage.importStatus.newUsers, '' + allUsers.length);
-      utils.waitForText(manageUsersPage.importStatus.updatedUsers, '0');
-      utils.waitForText(manageUsersPage.importStatus.errorUsers, '0');
+      utils.waitForText(manageUsersPage.manual.results.newTotal, '' + allUsers.length);
+      utils.waitForText(manageUsersPage.manual.results.updatedTotal, '0');
+      utils.waitForText(manageUsersPage.manual.results.errorTotal, '0');
 
       utils.click(manageUsersPage.buttons.finish);
     });

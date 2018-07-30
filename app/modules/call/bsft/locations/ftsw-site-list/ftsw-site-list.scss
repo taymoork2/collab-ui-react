@@ -1,0 +1,9 @@
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+.ftsw-site-list-container {
+  .info-header {
+    margin-bottom: rem-calc(16);
+    .add-location-button {
+      float: right;
+    }
+  }
+}

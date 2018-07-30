@@ -10,9 +10,16 @@
 </div>
 
 <!-- body -->
-<div class="modal-body">
+<div class="modal-body remove-device-modal-body">
   <p>
     <span>{{ rdc.getDeleteConfText() }}</span>
+    <input cs-input type="checkbox"
+           id="deleteConfigCheckbox"
+           cs-input-label="{{::'spacesPage.deleteDeviceConfigText' | translate}}"
+           cs-input-group-size="cs-input-group--centered"
+           ng-model="rdc.deleteConfig"
+           ng-if="rdc.deleteConfigurationOptionAvailable"
+    />
   </p>
 </div>
 

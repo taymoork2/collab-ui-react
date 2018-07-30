@@ -1,6 +1,6 @@
 export enum MatterState {
-  ACTIVE = 'active',
-  RELEASED = 'released',
+  ACTIVE = 'ACTIVE',
+  RELEASED = 'RELEASED',
 }
 
 export enum ImportMode {
@@ -9,10 +9,12 @@ export enum ImportMode {
   REMOVE = 'remove',
 }
 
-export enum CustodianImportErrors {
+export enum CustodianErrors {
   CANCELED = 'errorCanceledByUser',
   DIFF_ORG = 'errorDifferentOrg',
   NOT_FOUND = 'errorUserNotFound',
+  IN_MATTER = 'errorAlreadyInMatter',
+  NOT_IN_MATTER= 'errorNotInMatter',
   UNKNOWN = 'errorUnknown',
 }
 

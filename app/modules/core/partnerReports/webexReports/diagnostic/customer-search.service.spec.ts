@@ -216,4 +216,36 @@ describe('Service: customerSearchService', () => {
     const requestUrl = this.CustomerSearchService.getRequestUrl(`v2/meetings/${this.conferenceID}/voip-session-detail`);
     expect(requestUrl).toBe(`${this.UrlConfig.getDiagnosticUrl()}v2/meetings/${this.conferenceID}/voip-session-detail`);
   });
+
+  it('should get correct request url of RoleChange api in customer view', function (this: Test) {
+    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(true);
+    const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
+    const requestUrl = this.CustomerSearchService.getRequestUrl(`v3/meetings/${this.conferenceID}/rolechange`);
+    expect(requestUrl).toBe(`${this.UrlConfig.getDiagnosticUrl()}v3/meetings/${this.conferenceID}/rolechange?customer_orgid=${mockData}`);
+  });
+
+  it('should get correct request url of RoleChange api in partner view', function (this: Test) {
+    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(false);
+    const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
+    const requestUrl = this.CustomerSearchService.getRequestUrl(`v3/meetings/${this.conferenceID}/rolechange`);
+    expect(requestUrl).toBe(`${this.UrlConfig.getDiagnosticUrl()}v3/meetings/${this.conferenceID}/rolechange`);
+  });
+
+  it('should get correct request url of SharingSessionDetail api in customer view', function (this: Test) {
+    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(true);
+    const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
+    const requestUrl = this.CustomerSearchService.getRequestUrl(`v2/meetings/${this.conferenceID}/sharing-session-detail`);
+    expect(requestUrl).toBe(`${this.UrlConfig.getDiagnosticUrl()}v2/meetings/${this.conferenceID}/sharing-session-detail?customer_orgid=${mockData}`);
+  });
+
+  it('should get correct request url of SharingSessionDetail api in partner view', function (this: Test) {
+    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(false);
+    const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
+    const requestUrl = this.CustomerSearchService.getRequestUrl(`v2/meetings/${this.conferenceID}/sharing-session-detail`);
+    expect(requestUrl).toBe(`${this.UrlConfig.getDiagnosticUrl()}v2/meetings/${this.conferenceID}/sharing-session-detail`);
+  });
 });

@@ -5,9 +5,9 @@
       <div ng-if="$ctrl.showLinkToNodesPage()" class="cluster-nodes-link">
         <a href ng-click="$ctrl.openNodes($ctrl.cluster.targetType, $ctrl.cluster.id)">
           <span translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></span>
-          <span class="badge badge-{{$ctrl.cluster.extendedProperties.alarmsBadgeCss}}" ng-if="$ctrl.cluster.extendedProperties.alarms !== 'none'" translate="hercules.alarms.alarms"></span>
-          <span class="badge warning" ng-if="$ctrl.cluster.extendedProperties.maintenanceMode === 'on'" translate="hercules.fusion.list.maintenance"></span>
-          <span class="badge info" ng-if="$ctrl.cluster.extendedProperties.hasUpgradeAvailable" translate="hercules.fusion.list.upgrade"></span>
+          <span class="badge badge--outline {{$ctrl.cluster.extendedProperties.alarmsBadgeCss}}" ng-if="$ctrl.cluster.extendedProperties.alarms !== 'none'" translate="hercules.alarms.alarms"></span>
+          <span class="badge badge--outline" ng-if="$ctrl.cluster.extendedProperties.maintenanceMode === 'on'" translate="hercules.fusion.list.maintenance"></span>
+          <span class="badge badge--outline info" ng-if="$ctrl.cluster.extendedProperties.hasUpgradeAvailable" translate="hercules.fusion.list.upgrade"></span>
         </a>
       </div>
     </header>

@@ -24,6 +24,7 @@ export interface IApplicationUsage {
   appClientId: string;
   appPrivacyUrl: string;
   appCompanyUrl: string;
+  appSupportUrl: string;
   appContactName: string;
   appContactEmail: string;
   appUserAdoption: number;
@@ -65,6 +66,23 @@ export interface IListOptions {
   count?: number;
 }
 
+export enum UserQueryType {
+  ID = 'id',
+  EMAIL = 'username',
+}
+
+export interface IUserInfo {
+  username: string;
+  id: string;
+}
+
+export interface ITokenMethods {
+  createtoken: Function;
+  createdtoken: Function;
+  edittoken: Function;
+  removedtoken: Function;
+}
+
 export interface IIntegrationsManagementService {
   listIntegrations(options?: IListOptions): ng.IPromise<IApplicationUsage[]>;
   getIntegration(appId: string): ng.IPromise<IApplicationUsage>;
@@ -78,4 +96,6 @@ export interface IIntegrationsManagementService {
   hasCustomPolicyByAction(action: PolicyAction): ng.IPromise<boolean>;
   revokeTokensForIntegration(clientId: string): ng.IPromise<void>;
   listAdoptedUsersForIntegration(clientId: string): ng.IPromise<string[]>;
+  getUsers(searchType: UserQueryType, idsOrEmails: string[]): ng.IPromise<IUserInfo[]>;
+  getUsersBulk(getUserBy: UserQueryType, idsOrEmails: string[]): IPromise<IUserInfo[]>;
 }

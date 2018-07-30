@@ -333,6 +333,7 @@ export class ProvisioningController {
     pendingDefs.push({
       field: 'queueReceived',
       displayName: this.$translate.instant('provisioningConsole.queueReceived'),
+      type: 'date',
     }, {
       field: 'assignedTo',
       displayName: this.$translate.instant('provisioningConsole.assignedTo'),
@@ -345,9 +346,11 @@ export class ProvisioningController {
     completedDefs.push({
       field: 'queueReceived',
       displayName: this.$translate.instant('provisioningConsole.queueReceived'),
+      type: 'date',
     }, {
       field: 'queueCompleted',
       displayName: this.$translate.instant('provisioningConsole.queueCompleted'),
+      type: 'date',
     }, {
       field: 'completedBy',
       displayName: this.$translate.instant('provisioningConsole.completedBy'),

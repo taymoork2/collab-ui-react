@@ -2,11 +2,10 @@ import { LegalHoldService } from './legal-hold.service';
 import { Notification } from 'modules/core/notifications';
 import { Authinfo } from 'modules/core/scripts/services/authinfo';
 import { ImportMode, Events } from './legal-hold.enums';
-import { IImportComponentApi } from './legal-hold.interfaces';
-import { Matter } from './matter.model';
+import { IImportComponentApi, IMatterJsonDataForDisplay, IUserUpdateResult } from './legal-hold.interfaces';
 
 export class LegalHoldCustodiansManageController implements ng.IComponentController {
-  public caseId: string;
+  public matter: IMatterJsonDataForDisplay;
   public mode: ImportMode;
   public isFileValid: boolean;
   public isDone: boolean;
@@ -17,6 +16,8 @@ export class LegalHoldCustodiansManageController implements ng.IComponentControl
 
   /* @ngInject */
   constructor(
+    private $previousState,
+    private $state: ng.ui.IStateService,
     private $rootScope: ng.IRootScopeService,
     private Authinfo: Authinfo,
     private Notification: Notification,
@@ -34,7 +35,8 @@ export class LegalHoldCustodiansManageController implements ng.IComponentControl
   }
 
   public cancelModal(): void {
-    this.dismiss();
+    this.$previousState.forget('modalMemo');
+    this.$state.go('legalhold.detail', { matter: this.matter });
   }
 
   public cancel() {
@@ -42,13 +44,14 @@ export class LegalHoldCustodiansManageController implements ng.IComponentControl
   }
 
   public updateCustodians(custodianList: string[]): ng.IPromise<void> {
-    const promise: ng.IPromise<Matter> = (this.mode === ImportMode.ADD) ?
-      this.LegalHoldService.addUsersToMatter(this.Authinfo.getOrgId(), this.caseId, custodianList)
-      : this.LegalHoldService.removeUsersFromMatter(this.Authinfo.getOrgId(), this.caseId, custodianList);
-    return promise.then(() => {
+    const promise: ng.IPromise<IUserUpdateResult> = (this.mode === ImportMode.ADD) ?
+      this.LegalHoldService.addUsersToMatter(this.Authinfo.getOrgId(), this.matter.caseId, custodianList)
+      : this.LegalHoldService.removeUsersFromMatter(this.Authinfo.getOrgId(), this.matter.caseId, custodianList);
+    return promise.then(updateResult => {
       this.isDone = true;
-      this.importComponentApi.displayResults();
-      this.$rootScope.$emit(Events.CHANGED, [this.caseId] );
+      this.matter.numberOfCustodians = updateResult.userListSize;
+      this.importComponentApi.displayResults(updateResult.failList, this.mode);
+      this.$rootScope.$emit(Events.CHANGED, [this.matter.caseId] );
     })
       .catch((result) => {
         this.Notification.errorResponse(result);
@@ -60,7 +63,7 @@ export class LegalHoldCustodiansManageComponent implements ng.IComponentOptions 
   public controller = LegalHoldCustodiansManageController;
   public template = require('./legal-hold-custodians-manage.tpl.html');
   public bindings = {
-    caseId: '<',
+    matter: '<',
     mode: '<',
     dismiss: '&',
   };

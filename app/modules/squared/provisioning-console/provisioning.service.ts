@@ -39,9 +39,7 @@ export class ProvisioningService {
     return this.$http.get<IOrder[]>(this.getOrdersBaseUrl + status, { params: { start: start, end: end, filterType: filterType } }).then((response) => {
       return _.each(_.get(response, 'data.orderList'), (order) => {
         order.orderReceived = this.formatDate(order.orderReceived);
-        if (featureToggleFlag) {
-          order.queueReceived = this.formatDate(order.queueReceived);
-        } else {
+        if (!featureToggleFlag) {
           order.lastModified = this.formatDate(order.lastModified);
         }
       });

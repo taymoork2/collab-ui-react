@@ -1,5 +1,7 @@
-import { IFeaturesInReport, IJoinMeetingRecord, IMediaInfoInReport, IMediaInReport, IMeetingSummaryInReport, IParticipantInReport, IParticipantsInName, IQualityInReport, ISessionInReport } from './meeting-export.interface';
-import { IDataStorage, IJoinTime, IWebexOneMeeting, ISessionDetail, IUniqueParticipant, Platforms, SearchStorage } from './searchService';
+import { IDataRecord, IFeaturesInReport, IJoinMeetingRecord, IMediaInfoInReport, IMediaInReport, IMeetingSummaryInReport, IParticipantInReport, IParticipantsInName, IQualityInReport, IRoleChangeRecord, IRoleChangeSessionInReport, ISessionInReport, ISharingRecord, ISharingSessionInReport, ITeleSessionInReport } from './meeting-export.interface';
+import { IDataStorage, IJoinTime, IWebexOneMeeting, ISessionDetail, IUniqueParticipant, Platforms } from './searchService';
+import { SearchStorage } from 'modules/core/partnerReports/webexReports/diagnostic/partner-meeting.enum';
+import { ISharingDetail, IRoleData } from 'modules/core/partnerReports/webexReports/diagnostic/partner-search.interfaces';
 import { WebexReportsUtilService } from 'modules/core/partnerReports/webexReports/diagnostic/webex-reports-util.service';
 
 export enum MediaType {
@@ -93,10 +95,12 @@ export class MeetingExportService {
     const participantsInName: IParticipantsInName = {};
     const uniqueParticipants: IUniqueParticipant[] = <IUniqueParticipant[]>dataStoreService.getStorage(SearchStorage.UNIQUE_PARTICIPANTS);
     const joinMeetingTimes: IJoinTime[] = <IJoinTime[]>dataStoreService.getStorage(SearchStorage.JOIN_MEETING_TIMES);
+    const sharingSessions: ISharingDetail[] = <ISharingDetail[]>dataStoreService.getStorage(SearchStorage.SHARING_SESSION_DETAIL);
+    const roleChangeSessions: IRoleData[] = <IRoleData[]>dataStoreService.getStorage(SearchStorage.ROLE_CHANGE_SESSION_DETAIL);
 
     _.forEach(uniqueParticipants, (uniqueParticipant: IUniqueParticipant) => {
       const userName = uniqueParticipant.userName;
-      const session: ISessionInReport = this.mkSessionInReport(uniqueParticipant);
+      const session: ISessionInReport = this.mkTeleSessionInReport(uniqueParticipant);
 
       _.forEach(uniqueParticipant.participants, (participant) => {
         const joinMeetingRecord: IJoinMeetingRecord = this.mkJoinMeetingRecord(participant, joinMeetingTimes, session, dataStoreService);
@@ -108,6 +112,10 @@ export class MeetingExportService {
           'User Id': uniqueParticipant.userId,
           Sessions: [session],
         };
+        const sharingSession = this.mkSharingSessionInReport(uniqueParticipant, sharingSessions);
+        const roleChangeSession = this.mkRoleChangeSessionInReport(uniqueParticipant, roleChangeSessions);
+        participantsInName[userName].Sessions.push(sharingSession);
+        participantsInName[userName].Sessions.push(roleChangeSession);
       } else {
         const participantInRpt: IParticipantInReport = participantsInName[userName];
         participantInRpt.Sessions.push(session);
@@ -117,8 +125,8 @@ export class MeetingExportService {
     return participantsInName;
   }
 
-  private mkSessionInReport(uniqueParticipant: IUniqueParticipant): ISessionInReport {
-    let session: ISessionInReport = {
+  private mkTeleSessionInReport(uniqueParticipant: IUniqueParticipant): ISessionInReport {
+    let session: ITeleSessionInReport = {
       'Session Type': '',
       Platform: '',
       Browser: '',
@@ -138,6 +146,64 @@ export class MeetingExportService {
       session = _.omit(session, 'Device');
     }
     return session;
+  }
+
+  private mkSharingSessionInReport(uniqueParticipant: IUniqueParticipant, sharingSessions: ISharingDetail[]): ISessionInReport {
+    const resultSession: ISharingSessionInReport = {
+      'Session Type': 'Sharing',
+      'Sharing Records': [],
+    };
+    const sharingRecord: ISharingRecord = {
+      'Client Type': '',
+      'Sharing Event': '',
+      'Node Id': '',
+      'Start Time': '',
+      'End Time': '',
+      Duration: '',
+    };
+    const sharingData = _.filter(sharingSessions, sharingSession => {
+      return sharingSession.userName === uniqueParticipant.userName;
+    });
+    resultSession['Sharing Records'] = this.mkDataRecords(sharingRecord, sharingData);
+
+    return resultSession;
+  }
+
+  private mkRoleChangeSessionInReport(uniqueParticipant: IUniqueParticipant, roleChangeSessions: IRoleData[]): ISessionInReport {
+    const resultSession: IRoleChangeSessionInReport = {
+      'Session Type': 'Role Change',
+      'Role Change Records': [],
+    };
+
+    const roleChangeRecord: IRoleChangeRecord = {
+      'Role Type': '',
+      TimeStamp: '',
+      'From Node Id': '',
+      'From User Name': '',
+      'To Node Id': '',
+    };
+    const roleChangeData = _.filter(roleChangeSessions, roleChangeSession => {
+      return roleChangeSession.toUserName === uniqueParticipant.userName;
+    });
+    resultSession['Role Change Records'] = this.mkDataRecords(roleChangeRecord, roleChangeData);
+
+    return resultSession;
+  }
+
+  private mkDataRecords<T extends IDataRecord>(dataTemplate: T, dataStore: object[]): T[] {
+    const records: T[] = [];
+    _.forEach(dataStore, (item) => {
+      const record = _.assignIn({}, dataTemplate);
+      _.forOwn(record, (initialValue: any, key: string) => {
+        const normalKey = this.normalizeKey(key);
+        if (_.isEmpty(initialValue)) {
+          const newValue = this.searchByKey(normalKey, item, true);
+          record[key] = newValue ? newValue : initialValue;
+        }
+      });
+      records.push(record);
+    });
+    return records;
   }
 
   private mkJoinMeetingRecord(participant, joinMeetingTimes, session, dataStoreService: WebexReportsUtilService): IJoinMeetingRecord {

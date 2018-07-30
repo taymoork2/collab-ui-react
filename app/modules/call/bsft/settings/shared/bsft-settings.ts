@@ -41,10 +41,13 @@ export class BsftSettings implements IBsftSettings {
     });
     this.site = _.isNull(bsftSettings.site) ? new Site() : new Site({
       name: _.get(bsftSettings.site, 'name'),
+      uuid: _.get(bsftSettings.site, 'uuid'),
       timeZone: _.get(bsftSettings.site, 'timeZone'),
       numbers: _.get(bsftSettings.site, 'numbers'),
-      emergencyAddress: _.get(bsftSettings.site, 'emergencyAddress'),
+      address: _.get(bsftSettings.site, 'address'),
       contact: _.get(bsftSettings.site, 'contact'),
+      defaultLocation: _.get(bsftSettings.site, 'defaultLocation'),
+      licenses: _.get(bsftSettings.site, 'licenses'),
     });
   }
 }

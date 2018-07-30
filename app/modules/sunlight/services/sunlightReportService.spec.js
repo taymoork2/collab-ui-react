@@ -95,7 +95,7 @@ describe(' sunlightReportService', function () {
       },
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
-      expect(response.data.data.length).toBe(2);
+      expect(response.data.data.length).toBe(3);
       expect(response.data.metadata.jobName).toBe('org_stats_15min');
     });
     $httpBackend.flush();
@@ -123,7 +123,7 @@ describe(' sunlightReportService', function () {
       },
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
-      expect(response.data.data.length).toBe(3);
+      expect(response.data.data.length).toBe(4);
       expect(response.data.metadata.jobName).toBe('org_stats_hourly');
     });
     $httpBackend.flush();
@@ -145,7 +145,7 @@ describe(' sunlightReportService', function () {
       },
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
-      expect(response.data.data.length).toBe(2);
+      expect(response.data.data.length).toBe(3);
       expect(response.data.metadata.jobName).toBe('org_stats_daily');
     });
     $httpBackend.flush();
@@ -319,6 +319,89 @@ describe(' sunlightReportService', function () {
       _.each(response, function (reportData) {
         expect(moment(reportData.createdTime, 'MMM', true).isValid()).toBe(true);
       });
+    });
+    $httpBackend.flush();
+  });
+
+  // ABC stuff
+  xit('should get ReportingData for org for time selected today for mediaType abc', function () {
+    sunlightReportService.getReportingData('org_stats', 0, 'abc').then(function (response) {
+      var startTimeStamp = moment().startOf('day');
+      var endTimeStamp = moment().add(1, 'hours').startOf('hour');
+      var duration = moment.duration(endTimeStamp.diff(startTimeStamp));
+      var hours = duration.asHours();
+      expect(response.length).toBe(hours);
+      _.each(response, function (reportData) {
+        expect(moment(reportData.createdTime, 'HH:mm', true).isValid()).toBe(true);
+      });
+      var abcData = _.find(response, function (reportData) {
+        return reportData.mediaChannel === 'abc';
+      });
+      expect(abcData).toBeDefined();
+      expect(abcData.numTasksHandledState).toBeDefined();
+      expect(abcData.numTasksHandledState).toEqual(4);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should get ReportingData for org for time selected yesterday for mediaType abc', function () {
+    sunlightReportService.getReportingData('org_stats', 1, 'abc').then(function (response) {
+      expect(response.length).toBe(24);
+      _.each(response, function (reportData) {
+        expect(moment(reportData.createdTime, 'HH:mm', true).isValid()).toBe(true);
+      });
+      var abcData = _.find(response, function (reportData) {
+        return reportData.mediaChannel === 'abc';
+      });
+      expect(abcData).toBeDefined();
+      expect(abcData.numTasksHandledState).toBeDefined();
+      expect(abcData.numTasksHandledState).toEqual(4);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should get ReportingData for org for time selected last week for mediaType abc', function () {
+    sunlightReportService.getReportingData('org_stats', 2, 'abc').then(function (response) {
+      expect(response.length).toBe(7);
+      _.each(response, function (reportData) {
+        expect(moment(reportData.createdTime, 'MMM DD', true).isValid()).toBe(true);
+      });
+      var abcData = _.find(response, function (reportData) {
+        return reportData.mediaChannel === 'abc';
+      });
+      // abc record should not be there because it is excluded
+      expect(abcData).toBeUndefined();
+    });
+    $httpBackend.flush();
+  });
+
+  it('should get ReportingData for org for time selected last month for mediaType abc', function () {
+    sunlightReportService.getReportingData('org_stats', 3, 'abc').then(function (response) {
+      expect(response.length).toBe(4);
+      _.each(response, function (reportData) {
+        expect(moment(reportData.createdTime, 'MMM DD', true).isValid()).toBe(true);
+      });
+      var abcData = _.find(response, function (reportData) {
+        return reportData.mediaChannel === 'abc';
+      });
+      // abc record should not be there because it is excluded
+      expect(abcData).toBeUndefined();
+    });
+    $httpBackend.flush();
+  });
+
+  it('should get ReportingData for org for time selected last 3 months for mediaType abc', function () {
+    sunlightReportService.getReportingData('org_stats', 4, 'abc').then(function (response) {
+      expect(response.length).toBe(3);
+      _.each(response, function (reportData) {
+        expect(moment(reportData.createdTime, 'MMM', true).isValid()).toBe(true);
+      });
+      var abcData = _.find(response, function (reportData) {
+        return reportData.mediaChannel === 'abc';
+      });
+      expect(abcData).toBeDefined();
+      expect(abcData.numTasksHandledState).toBeDefined();
+      expect(abcData.numTasksHandledState).toEqual(4);
     });
     $httpBackend.flush();
   });

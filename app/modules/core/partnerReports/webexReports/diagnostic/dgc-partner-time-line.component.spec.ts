@@ -20,7 +20,7 @@ describe('Component: DgcPartnerTimeLine', () => {
     selectAll: () => { return mockNode; },
     style: () => { return mockNode; },
     append: () => { return mockNode; },
-    text: () => { return mockNode; },
+    text: (value) => { mockNode.values['text'] = value; return mockNode; },
     on: (name, fn) => { mockNode.values[name] = fn; return mockNode; },
     html: () => { return mockNode; },
     classed: () => { return mockNode; },
@@ -138,6 +138,17 @@ describe('Component: DgcPartnerTimeLine', () => {
     mockData.values['mouseover']({}, 1);
     mockData.values['mouseout']();
     expect(mockData.values['class']).toContainText('icon');
+  });
+
+  it('should show activity point: Host', function () {
+    const mockData = _.clone(mockNode);
+    spyOn(d3, 'select').and.returnValue(mockData);
+    const bindings = { sourceData: this.sourceData };
+    initComponent.call(this, bindings);
+    this.controller.drawActivityPoints([{ toNodeId: '544234' }]);
+    mockData.values['mouseover']({}, 1);
+    mockData.values['mouseout']();
+    expect(mockData.values['text']).toBe('H');
   });
 
   describe('updateStartPoints():', () => {

@@ -265,6 +265,7 @@ export class CvaService {
       item.color = feature.color;
       item.icons = feature.icons;
       item.templates = [];
+      item.abcUsage = [];
       item.filterValue = service.CareFeatureList.filterConstants.virtualAssistant;
       return item;
     });

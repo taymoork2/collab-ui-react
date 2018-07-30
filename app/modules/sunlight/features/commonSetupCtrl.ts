@@ -20,6 +20,7 @@ export class CommonSetupCtrl implements ng.IComponentController {
   public creatingTemplate = false;
   public templateButtonText = this.$translate.instant('common.finish');
   public saveTemplateErrorOccurred = false;
+  public customErrorMessage = '';
   public cancelModalText = {};
   public nameForm: ng.IFormController;
   public currentState = '';
@@ -202,7 +203,11 @@ export class CommonSetupCtrl implements ng.IComponentController {
   }
 
   public displayGenericErrorMessage(): boolean {
-    return this.saveTemplateErrorOccurred && !this.creatingTemplate;
+    return this.saveTemplateErrorOccurred && _.isEmpty(this.customErrorMessage) && !this.creatingTemplate;
+  }
+
+  public displayCustomErrorMessage(): boolean {
+    return this.saveTemplateErrorOccurred && !_.isEmpty(this.customErrorMessage) && !this.creatingTemplate;
   }
 
   /**
@@ -211,6 +216,7 @@ export class CommonSetupCtrl implements ng.IComponentController {
   public handleUserAccessForEditError(): void {
     this.creatingTemplate = false;
     this.saveTemplateErrorOccurred = false;
+    this.customErrorMessage = '';
     this.userHasAccess = false;
     this.templateButtonText = this.$translate.instant('common.finish');
   }
@@ -244,8 +250,10 @@ export class CommonSetupCtrl implements ng.IComponentController {
   /**
    * handle create/edit error.
    */
-  public handleFeatureError(): void {
+  public handleFeatureError(response?: ng.IHttpResponse<any>): void {
     this.creatingTemplate = false;
+    const errorType = _.get(response, 'data.type');
+    this.customErrorMessage = errorType ? this.$translate.instant(`careChatTpl.virtualAssistant.${errorType}`) : '';
     this.saveTemplateErrorOccurred = true;
     this.templateButtonText = this.$translate.instant('common.retry');
   }

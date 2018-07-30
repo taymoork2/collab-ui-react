@@ -77,6 +77,7 @@
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
     vm.webexTrial = vm.trialData.trials.webexTrial;
     vm.callTrial = vm.trialData.trials.callTrial;
+    vm.bcallTrial = vm.trialData.trials.bcallTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.sparkBoardTrial = vm.trialData.trials.sparkBoardTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
@@ -143,6 +144,7 @@
       hasEnabledMeetingTrial: hasEnabledMeetingTrial,
       hasEnabledWebexTrial: hasEnabledWebexTrial,
       hasEnabledCallTrial: hasEnabledCallTrial,
+      hasEnabledBcallTrial: hasEnabledBcallTrial,
       hasEnabledRoomSystemTrial: hasEnabledRoomSystemTrial,
       hasEnabledSparkBoardTrial: hasEnabledSparkBoardTrial,
       hasEnabledCareTrial: hasEnabledCareTrial,
@@ -302,7 +304,7 @@
     }
 
     function hasUserServices() {
-      var services = [vm.callTrial, vm.meetingTrial, vm.webexTrial, vm.messageTrial];
+      var services = [vm.callTrial, vm.meetingTrial, vm.webexTrial, vm.messageTrial, vm.bcallTrial];
       var result = _.some(services, {
         enabled: true,
       });
@@ -627,6 +629,12 @@
       return hasEnabled(trial.enabled, preset.call);
     }
 
+    function hasEnabledBcallTrial(vmBcallTrial, vmPreset) {
+      var trial = vmBcallTrial || vm.bcallTrial;
+      var preset = vmPreset || vm.preset;
+      return hasEnabled(trial.enabled, preset.bcall);
+    }
+
     function hasEnabledRoomSystemTrial(vmRoomSystemTrial, vmPreset) {
       var trial = vmRoomSystemTrial || vm.roomSystemTrial;
       var preset = vmPreset || vm.preset;
@@ -651,6 +659,7 @@
         hasEnabledMeetingTrial(vm.meetingTrial, vmPreset) ||
         hasEnabledWebexTrial(vm.webexTrial, vmPreset) ||
         hasEnabledCallTrial(vm.callTrial, vmPreset) ||
+        hasEnabledBcallTrial(vm.bcallTrial, vmPreset) ||
         hasEnabledRoomSystemTrial(vm.roomSystemTrial, vmPreset) ||
         hasEnabledSparkBoardTrial(vm.sparkBoardTrial, vmPreset) ||
         hasEnabledCareTrial(vm.careTrial, vmPreset);
@@ -779,6 +788,7 @@
         meeting: hasOfferType(Config.trials.message, Config.offerTypes.meeting, Config.offerTypes.meetings),
         webex: hasOfferType(Config.trials.meeting, Config.offerTypes.meetings, Config.offerTypes.webex),
         call: hasOfferType(Config.trials.call, Config.offerTypes.call),
+        broadCloudFlex: hasOfferType(Config.offerTypes.bcall),
         roomSystems: hasOfferType(Config.offerTypes.roomSystems),
         roomSystemsValue: _.get(findOffer(Config.offerTypes.roomSystems), 'licenseCount', 0),
         sparkBoard: hasOfferType(Config.offerTypes.sparkBoard),

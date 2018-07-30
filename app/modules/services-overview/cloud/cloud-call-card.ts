@@ -7,7 +7,7 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
 
   private _buttons: ICardButton[] = [{
     name: 'servicesOverview.cards.call.buttons.numbers',
-    routerState: this.Authinfo.isBroadCloud() ? 'bclines' : 'huronlines',
+    routerState: this.Authinfo.isBroadCloud() ? 'bsft-numbers' : 'huronlines',
     buttonClass: 'btn-link',
   }];
 

@@ -59,7 +59,9 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     vm.openNewCareFeatureModal = openNewCareFeatureModal;
     vm.spacesInUseText = spacesInUseText;
     vm.templatesInUseText = templatesInUseText;
+    vm.cvaUsageCountText = cvaUsageCountText;
     vm.generateHtmlPopover = generateHtmlPopover;
+    vm.generateABCHtmlPopover = generateABCHtmlPopover;
     vm.setFilter = setFilter;
     vm.hasMessage = Authinfo.isMessageEntitled();
     vm.hasCall = Authinfo.isSquaredUC();
@@ -228,6 +230,8 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
             feature.id = cva.id;
             item.features = [];
             item.features.push(feature);
+            // CVA also needs list of ABC features using it
+            cva.abcUsage.push(item.name);
           }
         }
       });
@@ -260,6 +264,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
       _.forEach(listOfCvaFeatures, function (item) {
         var popoverMainHeader = $translate.instant('careChatTpl.featureCard.cvaPopoverMainHeader');
         item.templatesHtmlPopover = generateTemplateCountHtmlPopover(popoverMainHeader, item);
+        item.abcHtmlPopover = generateABCHtmlPopover(item);
       });
 
       // Generate the template and spaces html popover for EVA
@@ -282,6 +287,23 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
       _.forEach(templatesList, function (template) {
         htmlString += '<li>' + template + '</li>';
+      });
+
+      htmlString += '</ul></div>';
+      return htmlString;
+    }
+
+    function generateABCHtmlPopover(feature) {
+      var abcList = _.get(feature, 'abcUsage', []);
+      abcList = _.sortBy(abcList, function (abcFeature) { return abcFeature.toLowerCase(); });
+      var abcHeader = $translate.instant('careChatTpl.featureCard.popoverABCHeader', {
+        numOfABC: abcList.length,
+      });
+
+      var htmlString = '<div class="feature-card-popover"><h3 class="sub-header">' + abcHeader + '</h3><ul class="spaces-list">';
+
+      _.forEach(abcList, function (abcFeatureName) {
+        htmlString += '<li>' + abcFeatureName + '</li>';
       });
 
       htmlString += '</ul></div>';
@@ -558,6 +580,15 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
       return $translate.instant('careChatTpl.featureCard.templatesInUseText', {
         numOfTemplates: numOfTemplates,
+      });
+    }
+
+    function cvaUsageCountText(feature) {
+      var numOfTemplates = _.get(feature, 'templates.length', 0);
+      var numABC = _.get(feature, 'abcUsage.length', 0);
+
+      return $translate.instant('careChatTpl.featureCard.inUseText', {
+        count: numOfTemplates + numABC,
       });
     }
 

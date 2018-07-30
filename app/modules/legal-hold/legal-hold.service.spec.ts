@@ -27,8 +27,8 @@ describe('Service: LegalHoldService', () => {
     );
 
     this.matterList = _.cloneDeep(getJSONFixture('core/json/legalHold/matters.json'));
-    this.matterUrl = 'https://retention-integration.wbx2.com/retention/api/v1/admin/onhold/matter?operationType=';
-    this.matterUsersUrl = 'https://retention-integration.wbx2.com/retention/api/v1/admin/onhold/users?operationType=';
+    this.matterUrl = 'https://retention-intb.ciscospark.com/retention/api/v1/admin/onhold/matter?operationType=';
+    this.matterUsersUrl = 'https://retention-intb.ciscospark.com/retention/api/v1/admin/onhold/users?operationType=';
     this.getUserUrl = 'https://atlas-intb.ciscospark.com/admin/api/v1/user?email=';
     this.userserviceUser = {
       id: '123',
@@ -41,6 +41,11 @@ describe('Service: LegalHoldService', () => {
       }],
       orgId: '12345',
     };
+
+    this.updateUsersResult = {
+      failList: ['123', 345],
+      userListSize: 3,
+    },
 
     spyOn(this.Authinfo, 'getUserId').and.returnValue('user123');
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
@@ -122,9 +127,13 @@ describe('Service: LegalHoldService', () => {
         caseId: 'case123',
         usersUUIDList: ['uu123', 'uu124'],
       };
-      spyOn(this.LegalHoldService, 'readMatter').and.returnValue(this.matterList[0]);
-      this.$httpBackend.expectPOST(`${this.matterUsersUrl}${Actions.ADD_USERS}`, expParams).respond(200, this.matterList);
-      expect(this.LegalHoldService.addUsersToMatter('123', 'case123', ['uu123', 'uu124'])).toBeResolvedWith(this.matterList[0]);
+      const expUserUpdateResult = {
+        userListSize: 3,
+        failList: ['uu123', 'uu124'],
+      };
+      spyOn(this.LegalHoldService, 'readMatter').and.returnValue(this.$q.resolve(Matter.matterFromResponseData(this.matterList[0])));
+      this.$httpBackend.expectPOST(`${this.matterUsersUrl}${Actions.ADD_USERS}`, expParams).respond(200, this.updateUsersResult);
+      expect(this.LegalHoldService.addUsersToMatter('123', 'case123', ['uu123', 'uu124'])).toBeResolvedWith(jasmine.objectContaining({ failList: expUserUpdateResult.failList }));
     });
 
     it('should remove users from matter', function (this: Test) {
@@ -133,9 +142,13 @@ describe('Service: LegalHoldService', () => {
         caseId: 'case123',
         usersUUIDList: ['uu123', 'uu124'],
       };
-      spyOn(this.LegalHoldService, 'readMatter').and.returnValue(this.matterList[0]);
-      this.$httpBackend.expectPOST(`${this.matterUsersUrl}${Actions.REMOVE_USERS}`, expParams).respond(200, this.matterList);
-      expect(this.LegalHoldService.removeUsersFromMatter('123', 'case123', ['uu123', 'uu124'])).toBeResolved();
+      const expUserUpdateResult = {
+        userListSize: 3,
+        failList: ['uu123', 'uu124'],
+      };
+      spyOn(this.LegalHoldService, 'readMatter').and.returnValue(this.$q.resolve(this.matterList[0]));
+      this.$httpBackend.expectPOST(`${this.matterUsersUrl}${Actions.REMOVE_USERS}`, expParams).respond(200, this.updateUsersResult);
+      expect(this.LegalHoldService.removeUsersFromMatter('123', 'case123', ['uu123', 'uu124'])).toBeResolvedWith( jasmine.objectContaining({ failList: expUserUpdateResult.failList }));
     });
 
     it('should get matter id listing for a user', function (this: Test) {
@@ -184,12 +197,15 @@ describe('Service: LegalHoldService', () => {
   describe('Convert user chunk function', () => {
     let userArr;
     beforeEach(function () {
-      userArr =  [['validUser@test.com', '12345'], ['validUser@test.com', '12345'], ['12345', '12345'], ['validUser@test.com']];
+      userArr =  [['validUser@test.com', '12345'], ['validUser@test.com', '12345'], ['12345', '12345'], ['validUser2@test.com']];
       spyOn(this.LegalHoldService, 'getCustodian').and.callFake(function () {
-        if (arguments[2] === 'validUser@test.com') {
-          return this.$q.resolve({ userId: '12345' });
-        } else {
-          return this.$q.reject({ error: 'someError' });
+        switch (arguments[2]) {
+          case 'validUser@test.com':
+            return this.$q.resolve({ userId: '12345' });
+          case 'validUser2@test.com':
+            return this.$q.resolve({ userId: '123456' });
+          default:
+            return this.$q.reject({ error: 'someError' });
         }
       });
     });
@@ -201,7 +217,7 @@ describe('Service: LegalHoldService', () => {
         .catch(fail);
       this.$rootScope.$apply();
     });
-    it('should interrup user conversion proccess, should reject and reset the cancel flag when cancelImport is called', function () {
+    it('should interrupt user conversion proccess, should reject and reset the cancel flag when cancelImport is called', function () {
       this.LegalHoldService.cancelConvertUsers();
       this.LegalHoldService.convertUsersChunk(userArr, GetUserBy.ID)
         .then(fail)

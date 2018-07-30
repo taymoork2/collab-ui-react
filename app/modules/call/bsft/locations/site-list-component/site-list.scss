@@ -1,0 +1,39 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+.site-list-container {
+  .licenses-info {
+    .license-detail {
+      color: $color-green-base;
+      margin-right: rem-calc(8);
+    }
+    .license-detail-info {
+      margin-right: rem-calc(16);
+    }
+  }
+  .cs-card--medium.header-background.hoverable article {
+    height: 92px;
+    &.hover,
+    &:focus {
+      .license-section,
+      .license-section .license-count {
+        color: $color-white;
+      }
+    }
+    header {
+      .icon-star {
+        padding: .5rem .5rem .5rem 0;
+        color: #f0a309;
+      }
+      .license-section {
+        .license-count {
+          color: $color-blue-base;
+          .license-name {
+            margin-left: rem-calc(8);
+            color: $gray-dark-4;
+          }
+        }
+      }
+    }
+  }
+}

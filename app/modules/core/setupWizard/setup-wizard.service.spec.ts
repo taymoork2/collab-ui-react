@@ -352,7 +352,8 @@ describe('Service: SetupWizard Service', function () {
     it ('should return results from the api', function () {
       this.$httpBackend.expectGET(`${this.UrlConfig.getAdminServiceUrl()}subscriptions/orderDetail?externalSubscriptionId=Sub-os090944`).respond(200, this.centerDetails);
       this.SetupWizardService.getExistingConferenceServiceDetails('Sub-os090944').then((result) => {
-        expect(result).toEqual(this.centerDetails);
+        const details = { externalSubscriptionId: 'Sub-os090944', ...this.centerDetails };
+        expect(result).toEqual(details);
       });
       this.$httpBackend.flush();
     });

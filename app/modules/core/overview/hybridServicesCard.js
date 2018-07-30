@@ -65,6 +65,7 @@
                 });
                 card.serviceList.push({
                   serviceId: 'squared-fusion-cal',
+                  alarmClass: HybridServicesClusterService.processClustersToAggregateAlarms('squared-fusion-cal', response.clusterList.value),
                   cssClass: HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(HybridServicesClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', response.clusterList.value)),
                   setup: statusInFMS && statusInFMS.enabled,
                 });
@@ -75,6 +76,7 @@
                 });
                 card.serviceList.push({
                   serviceId: 'squared-fusion-uc',
+                  alarmClass: HybridServicesClusterService.processClustersToAggregateAlarms('squared-fusion-uc', response.clusterList.value),
                   cssClass: HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(HybridServicesClusterService.processClustersToAggregateStatusForService('squared-fusion-uc', response.clusterList.value)),
                   setup: statusInFMS && statusInFMS.enabled,
                 });
@@ -85,6 +87,7 @@
                 });
                 card.serviceList.push({
                   serviceId: 'spark-hybrid-impinterop',
+                  alarmClass: HybridServicesClusterService.processClustersToAggregateAlarms('spark-hybrid-impinterop', response.clusterList.value),
                   cssClass: HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(HybridServicesClusterService.processClustersToAggregateStatusForService('spark-hybrid-impinterop', response.clusterList.value)),
                   setup: statusInFMS && statusInFMS.enabled,
                 });
@@ -95,6 +98,7 @@
                 });
                 card.serviceList.push({
                   serviceId: 'squared-fusion-media',
+                  alarmClass: HybridServicesClusterService.processClustersToAggregateAlarms('squared-fusion-media', response.clusterList.value),
                   cssClass: HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(HybridServicesClusterService.processClustersToAggregateStatusForService('squared-fusion-media', response.clusterList.value)),
                   setup: statusInFMS && statusInFMS.enabled,
                 });
@@ -105,6 +109,7 @@
                 });
                 card.serviceList.push({
                   serviceId: 'spark-hybrid-datasecurity',
+                  alarmClass: HybridServicesClusterService.processClustersToAggregateAlarms('spark-hybrid-datasecurity', response.clusterList.value),
                   cssClass: HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(HybridServicesClusterService.processClustersToAggregateStatusForService('spark-hybrid-datasecurity', response.clusterList.value)),
                   setup: statusInFMS && statusInFMS.enabled,
                 });
@@ -115,6 +120,7 @@
                 });
                 card.serviceList.push({
                   serviceId: 'contact-center-context',
+                  alarmClass: HybridServicesClusterService.processClustersToAggregateAlarms('contact-center-context', response.clusterList.value),
                   cssClass: HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(HybridServicesClusterService.processClustersToAggregateStatusForService('contact-center-context', response.clusterList.value)),
                   setup: statusInFMS && statusInFMS.enabled,
                 });
@@ -133,6 +139,7 @@
               _.each(card.serviceList, function (service) {
                 service.UIstateLink = getUIStateLink(service.serviceId);
                 service.healthStatus = service.cssClass;
+                service.alarms = service.alarmClass;
               });
             }
           });

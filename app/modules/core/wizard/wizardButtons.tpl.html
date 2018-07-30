@@ -1,43 +1,39 @@
-<div class="wizard-main-btns">
-  <!--
-    currently ng-include templates loaded through ngtemplate-loader
-    TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
-  -->
-  <div ng-if="wizard.current.step.buttons" ng-include="wizard.current.step.buttons">
-  </div>
-  <div ng-if="wizard.hasDefaultButtons()">
-    <div class="pull-right">
-      <button type="button"
-        class="skip-btn btn btn--link btn--none"
-        ng-click="wizard.nextTab()"
-        ng-if="wizard.showSkipTabBtn"
-        translate="firstTimeWizard.skipBtn">
-      </button>
-      <button type="button"
-        class="btn"
-        ng-if="(!wizard.isFirstStep() || !wizard.isFirstTab()) && !(wizard.isLastTab() && wizard.isLastStep() && !wizard.willNotProvision() && !wizard.isMeetingSetupTabOnly())"
-        ng-click="wizard.previousStep()"
-        translate="common.back">
-      </button>
-      <button type="button"
-        class="btn btn--link btn--none"
-        ng-if="wizard.isFirstTab() && wizard.isFirstTime() && wizard.showDoItLater"
-        ng-click="wizard.loadOverview()"
-        translate="firstTimeWizard.doLater">
-      </button>
-      <button type="button" class="btn"
-        ng-if="wizard.isLastTab() && wizard.isFirstStep() && wizard.showDoNotProvision && !wizard.isSingleTab()"
-        ng-click="wizard.doNotProvisionAndProceedNext()"
-        translate="common.doNotProvision">
-      </button>
-      <button cs-btn type="button"
-        id="wizardNext"
-        loading="wizard.wizardNextLoad"
-        class="btn btn--primary"
-        ng-click="wizard.proceedNext()"
-        ng-disabled="wizard.isNextDisabled">
-        {{wizard.nextText}}
-      </button>
-    </div>
-  </div>
+<!--
+  currently ng-include templates loaded through ngtemplate-loader
+  TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+-->
+<div ng-if="wizard.current.step.buttons" ng-include="wizard.current.step.buttons">
+</div>
+<div ng-if="wizard.hasDefaultButtons()" class="wizard-default-buttons">
+  <button type="button"
+    class="skip-btn btn btn--link btn--none"
+    ng-click="wizard.nextTab()"
+    ng-if="wizard.showSkipTabBtn"
+    translate="firstTimeWizard.skipBtn">
+  </button>
+  <button type="button"
+    class="btn"
+    ng-if="(!wizard.isFirstStep() || !wizard.isFirstTab()) && !(wizard.isLastTab() && wizard.isLastStep() && !wizard.willNotProvision() && !wizard.isMeetingSetupTabOnly())"
+    ng-click="wizard.previousStep()"
+    translate="common.back">
+  </button>
+  <button type="button"
+    class="btn btn--link btn--none"
+    ng-if="wizard.isFirstTab() && wizard.isFirstTime() && wizard.showDoItLater"
+    ng-click="wizard.loadOverview()"
+    translate="firstTimeWizard.doLater">
+  </button>
+  <button type="button" class="btn"
+    ng-if="wizard.isLastTab() && wizard.isFirstStep() && wizard.showDoNotProvision && !wizard.isSingleTab()"
+    ng-click="wizard.doNotProvisionAndProceedNext()"
+    translate="common.doNotProvision">
+  </button>
+  <button cs-btn type="button"
+    id="wizardNext"
+    loading="wizard.wizardNextLoad"
+    class="btn btn--primary"
+    ng-click="wizard.proceedNext()"
+    ng-disabled="wizard.isNextDisabled">
+    {{wizard.nextText}}
+  </button>
 </div>

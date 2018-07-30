@@ -74,6 +74,12 @@ var manageUsersPage = function () {
     errors: {
       autoAssignTemplateEnabledCannotOnboardExistingUser: element(by.cssContainingText('.error-msg p', 'The Auto-Assign Template is enabled. You can only modify existing users')),
     },
+
+    results: {
+      newTotal: element(by.css('.new-users .total')),
+      updatedTotal: element(by.css('.updated-users .total')),
+      errorTotal: element(by.css('.error-users .total')),
+    },
   };
 
   // Bulk Modify Users
@@ -99,12 +105,12 @@ var manageUsersPage = function () {
   this.importStatus = {
     statusDisplay: element(by.css('.user-csv-results')),
     title: element(by.css('.modal-body h5:first-of-type')),
-    progressPercentage: element(by.css('.csv-process-content .progressbar-progress')),
-    progressFileName: element(by.css('.csv-process-content .csv-filename')),
-    newUsers: element(by.css('.new-users .total')),
-    updatedUsers: element(by.css('.updated-users .total')),
-    errorUsers: element(by.css('.error-users .total')),
-    uploadComplete: element(by.css('.user-csv-results .upload-complete .progressbar-label span.progressbar-label:first-child')),
+    progressPercentage: element(by.css('.progressbar-progress')),
+    progressFileName: element(by.css('.progressbar-filename')),
+    newUsers: element(by.css('cr-total-tile:nth-child(1) .total-tile__value')),
+    updatedUsers: element(by.css('cr-total-tile:nth-child(2) .total-tile__value')),
+    errorUsers: element(by.css('cr-total-tile:nth-child(3) .total-tile__value')),
+    uploadComplete: element(by.css('.csv-upload-results__description:last-of-type')),
   };
 
   this.autoAssignTemplate = {

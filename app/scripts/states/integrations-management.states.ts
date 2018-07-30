@@ -46,7 +46,7 @@ export default function configureStates($stateProvider: ng.ui.IStateProvider) {
     .state('integrations-management.overview.detail', {
       views: {
         'side-panel-container': {
-          template: '<cs-sp-container><cs-sp-section>detail placeholder</cs-sp-section></cs-sp-container>',
+          template: '<integrations-management-detail integration="$resolve.integration"><integrations-management-detail>',
         },
       },
       resolve: {

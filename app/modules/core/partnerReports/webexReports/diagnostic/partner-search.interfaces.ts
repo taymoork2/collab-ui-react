@@ -158,3 +158,13 @@ export interface IVersion {
   osVersion: string;
   browserVersion: string;
 }
+
+export interface ISharingDetail {
+  sharingEvent: string;
+  startTime: string;
+  endTime: string;
+  clientType: string;
+  duration: number;
+  nodeId: string;
+  userName: string;
+}

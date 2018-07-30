@@ -72,11 +72,17 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(_this.getOrgJson, 200);
     });
+    spyOn(this.Orgservice, 'getAdminOrgAsPromise').and.returnValue(this.$q.resolve({
+      data: {
+        isOnBoardingEmailSuppressed: false,
+      },
+    }));
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(this.currentUser.meta.organizationID);
     this.isCiscoSpy = spyOn(this.Authinfo, 'isCisco').and.returnValue(false);
 
     spyOn(this.FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasUserAddExternalAdminGetStatus').and.returnValue(this.$q.resolve(true));
 
     this.$httpBackend.whenGET(/.*\/v1\/Users\/me.*/g).respond(200);
 
@@ -116,6 +122,22 @@ describe('UserListCtrl: Ctrl', function () {
         on: {
           rowSelectionChanged: _.noop,
         },
+      },
+      grid: {
+        columns: [
+          {
+            field: 'userRole',
+            colDef: {
+              visable: true,
+            },
+          },
+          {
+            field: 'action',
+            colDef: {
+              visable: true,
+            },
+          },
+        ],
       },
     });
 
@@ -496,6 +518,20 @@ describe('UserListCtrl: Ctrl', function () {
       expect(this.controller.canShowResendInvite(this.user)).toBeTruthy();
     });
 
+    it('should return false if isEmailSuppressed is true', function () {
+      this.user.userStatus = 'pending';
+      expect(this.controller.isEmailSuppressed).toBe(false);
+      expect(this.controller.canShowResendInvite(this.user)).toBe(true);
+
+      this.Orgservice.getAdminOrgAsPromise.and.returnValue(this.$q.resolve({
+        data: {
+          isOnBoardingEmailSuppressed: true,
+        },
+      }));
+      initController.apply(this);
+      expect(this.controller.canShowResendInvite(this.user)).toBe(false);
+    });
+
     it('should return false if org is dirsynch', function () {
       this.$scope.dirsyncEnabled = true;
       expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
@@ -505,6 +541,36 @@ describe('UserListCtrl: Ctrl', function () {
       expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
       this.user.userStatus = 'batman';
       expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
+    });
+  });
+
+  describe('canShowAddExtAdmin', function () {
+    beforeEach(function () {
+      initController.apply(this);
+    });
+
+    it('should return false if not on External Admins tab', function () {
+      spyOn(this.Authinfo, 'hasRole').and.returnValue(true);
+      spyOn(this.Authinfo, 'isProvisionAdmin').and.returnValue(false);
+      this.$scope.activeFilter = 'administrators';
+
+      expect(this.$scope.canShowAddExtAdmin()).toBe(false);
+    });
+
+    it('should return false if user is not a full admin', function () {
+      spyOn(this.Authinfo, 'hasRole').and.returnValue(false);
+      spyOn(this.Authinfo, 'isProvisionAdmin').and.returnValue(true);
+      this.$scope.activeFilter = 'partners';
+
+      expect(this.$scope.canShowAddExtAdmin()).toBe(false);
+    });
+
+    it('should return true if all conditions are met', function () {
+      spyOn(this.Authinfo, 'hasRole').and.returnValue(true);
+      spyOn(this.Authinfo, 'isProvisionAdmin').and.returnValue(false);
+      this.$scope.activeFilter = 'partners';
+
+      expect(this.$scope.canShowAddExtAdmin()).toBe(true);
     });
   });
 });

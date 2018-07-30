@@ -1,0 +1,53 @@
+<div ng-form="$ctrl.form">
+  <div class="row full service-setup">
+    <div class="cs-input-group cs-input-radio bsft-radio">
+      <input
+        cs-input
+        type="radio"
+        ng-model="$ctrl.portedTypeRadio"
+        value="prev"
+        id="prevPorted"
+        name="prevPorted"
+        ng-change="$ctrl.setPortingNumberType('prev')"
+        cs-input-label="{{::'broadCloud.numbers.prevPorted' | translate}}">
+      <span class="bsft-margin" translate="broadCloud.numbers.prevPortedHint"></span>
+      <input
+        cs-input
+        type="radio"
+        ng-model="$ctrl.portedTypeRadio"
+        id="bsftPorted"
+        name="bsftPorted"
+        value="bsft"
+        ng-change="$ctrl.setPortingNumberType('bsft')"
+        cs-input-label="{{::'broadCloud.numbers.bcProvided' | translate}}">
+      <span class="bsft-margin" translate="broadCloud.numbers.bcProvidedHint"></span>
+    </div>
+  </div>
+  <label class="sub-section__label" ng-class="{'bsft-number_subheading':$ctrl.isPrevPorted}"><strong translate="broadCloud.numbers.phoneNumber"></strong></label>
+  <form name="$ctrl.textForm" novalidate
+    ng-class="{'error':  $ctrl.textForm && $ctrl.textForm.numberPorting.$invalid && $ctrl.textForm.numberPorting.$dirty && $ctrl.textForm.numberPorting.$touched}">
+    <div class="bsft-number__textarea">
+      <textarea
+        type="text"
+        name="numberPorting"
+        ng-model="$ctrl.texttoken"
+        ng-change="$ctrl.onChange()"
+        class="form-control optional-row"
+        placeholder="{{'broadCloud.numbers.addNumbers'| translate}}">
+      </textarea>
+    </div>
+    <div class="pull-left">
+    <div class="cs-input__messages" ng-messages="$ctrl.textForm.numberPorting.$error" role="alert" ng-if='$ctrl.textForm.numberPorting.$touched'>
+      <div id="invalid" class="message" ng-message="invalid" translate="broadCloud.numbers.invalid"></div>
+      <div id="duplicate" class="message" ng-message="duplicate" translate="broadCloud.numbers.duplicate"></div>
+      <div id="maxlimit" class="message" ng-message="maxlimit" translate="broadCloud.numbers.addlimit"></div>
+      <div id="minlimit" class="message" ng-message="minlimit" translate="broadCloud.numbers.minlimit"></div>
+    </div>
+    </div>
+    <label class="bsft-number__margin" translate="broadCloud.numbers.numberHint"></label>
+  </form>
+  <div class="bsft__number_subheading">
+    <button class="btn" ng-disabled="$ctrl.texttoken.length===0" ng-click="$ctrl.clear()" translate="common.clear"></button>
+    <button class="btn btn--people"  ng-disabled="$ctrl.texttoken.length===0 || $ctrl.isInvalid" ng-click="$ctrl.addNumbers()" translate="common.add" focus-on></button>
+  </div>
+</div>

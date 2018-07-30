@@ -59,7 +59,7 @@ export class DigitalRiverService {
   }
 
   private setDRCookie(authToken: string) {
-    this.$document.prop('cookie', `${this.DIGITAL_RIVER_COOKIE}=${authToken};domain=ciscospark.com;secure`);
+    this.$document.prop('cookie', `${this.DIGITAL_RIVER_COOKIE}=${authToken};domain=webex.com;secure`);
     return authToken;
   }
 }

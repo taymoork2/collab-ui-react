@@ -330,6 +330,28 @@ export class HybridServicesClusterService {
     return this.HybridServicesClusterStatesService.getServiceStatusDetails(connectors).name;
   }
 
+  public processClustersToAggregateAlarms(serviceId: HybridServiceId, clusterList: IExtendedClusterFusion[]) {
+    const connectorType = this.HybridServicesUtilsService.serviceId2ConnectorType(serviceId);
+    const connectors = _.chain(clusterList)
+      .map(cluster => cluster.connectors)
+      .flatten<IExtendedConnector>()
+      .filter(connector => connector.connectorType === connectorType)
+      .value();
+    if (connectors.length === 0) {
+      return false;
+    }
+    return _.some(connectors, connector => {
+      if (!_.isUndefined(connector.extendedProperties)) {
+        if (connector.extendedProperties.alarms !== 'none' && connector.maintenanceMode === 'off') {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+    });
+  }
+
   public provisionConnector(clusterId: string, connectorType: ConnectorType): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/provisioning/actions/add/invoke?connectorType=${connectorType}`;
     return this.$http.post<''>(url, null)
@@ -392,7 +414,7 @@ export class HybridServicesClusterService {
               ...cluster,
               extendedProperties: {
                 alarms: alarms,
-                alarmsBadgeCss: 'danger',
+                alarmsBadgeCss: 'warning',
                 allowedRedirectTarget: allowList[0],
                 hasUpgradeAvailable: hasUpgradeAvailable,
                 isUpgradeUrgent: isUpgradeUrgent,
@@ -409,7 +431,7 @@ export class HybridServicesClusterService {
           ...cluster,
           extendedProperties: {
             alarms: alarms,
-            alarmsBadgeCss: 'danger',
+            alarmsBadgeCss: 'warning',
             allowedRedirectTarget: undefined,
             hasUpgradeAvailable: hasUpgradeAvailable,
             isUpgradeUrgent: isUpgradeUrgent,
@@ -474,7 +496,7 @@ export class HybridServicesClusterService {
       ...connector,
       extendedProperties: {
         alarms: alarms,
-        alarmsBadgeCss: 'danger',
+        alarmsBadgeCss: 'warning',
         state: this.HybridServicesClusterStatesService.getConnectorStateDetails(connector),
         hasUpgradeAvailable: relevantProvisioning && this.hasConnectorUpgradeAvailable(connector, relevantProvisioning), // TODO: add unit tests
         isUpgradeUrgent: relevantProvisioning && this.isConnectorUpgradeUrgent(connector, relevantProvisioning), // TODO: add unit tests
@@ -674,6 +696,12 @@ export class HybridServicesClusterService {
     } else {
       return 'off';
     }
+  }
+
+  public getQosStateForConnector(connector: IConnector): boolean {
+    // `connector.connectorStatus.isQosOn` is the latest mode received via an heartbeat
+    const fromHeartbeat = (connector.maintenanceMode !== 'on' && _.get<IConnector, boolean>(connector, 'connectorStatus.isQosOn'));
+    return fromHeartbeat;
   }
 
   private getUpgradeState(connectors: IExtendedConnector[]): 'upgraded' | 'upgrading' {

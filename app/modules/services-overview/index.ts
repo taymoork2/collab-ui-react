@@ -1,5 +1,6 @@
 import './services-overview.scss';
 
+// TODO (mipark2): redo import statements for .../{active,inactive}/* components
 import { CardCapacityBarComponent } from 'modules/services-overview/new-hybrid/card-capacity-bar/card-capacity-bar.component';
 import { EnableUsersModalComponent } from 'modules/services-overview/new-hybrid/enable-users-modal/enable-users-modal.component';
 import { EPTActiveCardComponent } from 'modules/services-overview/new-hybrid/active/ept-active-card.component';
@@ -30,6 +31,12 @@ import { HcsActiveCardComponent } from 'modules/services-overview/new-hybrid/act
 import { HcsInactiveCardComponent } from 'modules/services-overview/new-hybrid/inactive/hcs-inactive-card.component';
 import { HcsUpgradeActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hcs-upgrade-active-card.component';
 import { HcsLicenseActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hcs-license-active-card.component';
+
+import jabberToWebexTeamsInactiveCardModuleName from 'modules/services-overview/new-hybrid/inactive/jabber-to-webex-teams-inactive-card';
+import jabberToWebexTeamsActiveCardModuleName from 'modules/services-overview/new-hybrid/active/jabber-to-webex-teams-active-card';
+import jabberToWebexTeamsPrerequisitesModalModuleName from 'modules/services-overview/new-hybrid/prerequisites-modals/jabber-to-webex-teams-prerequisites-modal';
+import jabberToWebexTeamsAddProfileModalModuleName from 'modules/services-overview/new-hybrid/jabber-to-webex-teams-add-profile-modal';
+
 import userOverviewServiceModule from 'modules/core/users/userOverview';
 
 export default angular
@@ -53,6 +60,10 @@ export default angular
     require('modules/hercules/services/uss.service').default,
     require('modules/services-overview/new-hybrid/card-users-summary').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq').default,
+    jabberToWebexTeamsInactiveCardModuleName,
+    jabberToWebexTeamsActiveCardModuleName,
+    jabberToWebexTeamsPrerequisitesModalModuleName,
+    jabberToWebexTeamsAddProfileModalModuleName,
     userOverviewServiceModule,
   ])
   .component('cardCapacityBar', new CardCapacityBarComponent())

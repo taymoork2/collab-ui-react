@@ -276,7 +276,8 @@
         vm.isCiscoBC = results || Authinfo.isBroadCloud();
       });
 
-      vm.commServices.services = Authinfo.getCommunicationServices() || [];
+      //sorting and reversing communication license so that standand license comes first in display.
+      vm.commServices.services = _.reverse(_.sortBy(Authinfo.getCommunicationServices(), ['name'])) || [];
       _.forEach(vm.commServices.services, function (service) {
         if (service.license.isTrial) {
           vm.trialExists = true;

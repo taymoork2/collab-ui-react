@@ -1,29 +1,34 @@
-import { BsftSettingsOptionsService, BsftSettingsOptions, BsftSettingsService, BsftSettingsData } from './shared';
-import { Notification } from 'modules/core/notifications';
 import { FtswConfigService } from 'modules/call/bsft/shared/ftsw-config.service';
+import { Site } from 'modules/call/bsft/shared/bsft-site';
+import { BsftSettingsOptionsService } from 'modules/call/bsft/settings/shared';
 
 class BsftSettingsCtrl implements ng.IComponentController {
   public ftsw: boolean;
   public uuid: string;
   public loading: boolean = false;
   public form: ng.IFormController;
-  public bsftSettingsOptions: BsftSettingsOptions;
-  public bsftSettingsData: BsftSettingsData;
+  public site = new Site();
+  public editing = false;
+  public timeZoneOptions;
+  public makeDefault: boolean;
 
   /* @ngInject */
   constructor(
-    private BsftSettingsService: BsftSettingsService,
-    private BsftSettingsOptionsService: BsftSettingsOptionsService,
-    private Notification: Notification,
     private $q: ng.IQService,
     private $scope: ng.IScope,
-    private Authinfo,
+    private Utils,
     private FtswConfigService: FtswConfigService,
+    private BsftSettingsOptionsService: BsftSettingsOptionsService,
     ) {}
 
   public $onInit(): void {
     this.loading = true;
     this.$q.resolve(this.initComponentData()).finally( () => this.loading = false);
+    this.$scope.$emit('wizardNextText', 'nextAssignLicenses');
+
+    if (this.FtswConfigService.getSites().length === 0) {
+      this.site.defaultLocation = true;
+    }
 
     if (this.ftsw) {
       this.$scope.$watch(() => {
@@ -41,79 +46,76 @@ class BsftSettingsCtrl implements ng.IComponentController {
   }
 
   private initComponentData() {
+    const editSite = this.FtswConfigService.getEditSite();
+    const currentSite = this.FtswConfigService.getCurentSite();
+    if (currentSite !== undefined) {
+      this.site = currentSite;
+    } else if (editSite) {
+      this.editing = true;
+      this.site = _.cloneDeep(editSite);
+    }
+
     return this.BsftSettingsOptionsService.getOptions()
-      .then(bsftOptions => this.bsftSettingsOptions = bsftOptions)
-      .then(() => {
-        return this.BsftSettingsService.get(this.uuid)
-          .then(bsftSettings => {
-            this.bsftSettingsData = bsftSettings;
-            this.bsftSettingsData.bsftSettings.orgId = this.Authinfo.getOrgId();
-            this.bsftSettingsData.bsftSettings.name = this.Authinfo.getOrgName();
-          })
-          .catch(error => this.Notification.processErrorResponse(error));
-      });
+      .then(bsftOptions => this.timeZoneOptions = bsftOptions.timeZoneOptions);
   }
 
   public onSiteNameChanged(name) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'name', name);
+    _.set(this.site, 'name', name);
   }
 
   public onSiteAddressChanged(address1, address2) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'address1', address1);
-    _.set(this.bsftSettingsData.bsftSettings.site, 'address2', address2);
+    _.set(this.site.address, 'address1', address1);
+    _.set(this.site.address, 'address2', address2);
   }
 
   public onSiteCityChanged(city) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'city', city);
+    _.set(this.site.address, 'city', city);
+  }
+
+  public onSiteZipcodeChanged(zipcode) {
+    _.set(this.site.address, 'zipcode', zipcode);
   }
 
   public onSiteStateChanged(state) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'state', state);
+    _.set(this.site.address, 'state', state);
   }
 
   public onSiteCountryChanged(country) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'country', country);
+    _.set(this.site.address, 'country', country);
   }
 
   public onTimeZoneChanged(timeZone) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'timeZone', timeZone);
+    _.set(this.site, 'timeZone', timeZone);
   }
 
   public onContactFirstNameChanged(firstName) {
-    _.set(this.bsftSettingsData.bsftSettings.site.contact, 'firstName', firstName);
+    _.set(this.site.contact, 'firstName', firstName);
   }
 
   public onContactLastNameChanged(lastName) {
-    _.set(this.bsftSettingsData.bsftSettings.site.contact, 'lastName', lastName);
+    _.set(this.site.contact, 'lastName', lastName);
   }
 
   public onContactPhoneNumberChanged(phoneNumber) {
-    _.set(this.bsftSettingsData.bsftSettings.site.contact, 'phoneNumber', phoneNumber);
+    _.set(this.site.contact, 'phoneNumber', phoneNumber);
   }
 
   public onContactEmailChanged(email) {
-    _.set(this.bsftSettingsData.bsftSettings.site.contact, 'email', email);
+    _.set(this.site.contact, 'email', email);
   }
 
-  public onSiteEmergencyAddressChanged(address1, address2) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'emergencyAddress.address1', address1);
-    _.set(this.bsftSettingsData.bsftSettings.site, 'emergencyAddress.address2', address2);
-  }
-
-  public onSiteEmergencyCityChanged(city) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'emergencyAddress.city', city);
-  }
-
-  public onSiteEmergencyStateChanged(state) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'emergencyAddress.state', state);
-  }
-
-  public onSiteEmergencyCountryChanged(country) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'emergencyAddress.country', country);
-  }
-
+  //use step name with 'Next' to hook in to wizard next functionality
   public setupBsftNext(): void {
-    return this.FtswConfigService.addSite(this.bsftSettingsData.bsftSettings.site);
+    if (this.makeDefault) {
+      this.site.defaultLocation = true;
+      this.FtswConfigService.removeDefault();
+    }
+
+    if (!this.site.uuid) {
+      this.site.uuid = this.Utils.getUUID();
+    }
+
+    this.FtswConfigService.setCurrentSite(this.site);
   }
 }
 

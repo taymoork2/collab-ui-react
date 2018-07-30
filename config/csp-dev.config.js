@@ -39,6 +39,7 @@ let cspDevConfig = mkCspConfig({
     'https://upgrade.int-ucmgmt.cisco.com', //HCS Upgrade
     'https://licensing.int-ucmgmt.cisco.com', //HCS License
     'https://controller.int-ucmgmt.cisco.com', //HCS Controller
+    'http://172.24.77.211:8000', //broadcloud dev and int
   ],
   fontSrc: [
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
@@ -55,6 +56,7 @@ let cspDevConfig = mkCspConfig({
     '127.0.0.1',
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
     'http://dev-admin.webex.com:8000', // manual DNS entry for local dev
+    'http://cdn.segment.com', // non-HTTPS Segment Analytics
   ],
   styleSrc: [
     'blob:', // Webpack Dev

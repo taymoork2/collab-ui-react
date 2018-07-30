@@ -1,0 +1,21 @@
+<div ng-form="$ctrl.form" class="container-fluid service-setup-container">
+  <div class="row full service-setup">
+  <h4 translate="broadCloud.numbers.addNumbers"></h4>
+  <p class="sub-section__description bsft-number_padding" translate="broadCloud.numbers.addNumberHint"></p>
+  <label class="sub-section__label bsft-number_subheading"><strong translate="broadCloud.numbers.numberType"></strong></label>
+    <ported-numbers-add
+      numbers="$ctrl.numbers"
+      on-add="$ctrl.onAdd(numbers,isBsftPorted)"
+      total-numbers="$ctrl.totalNumbers">
+    </ported-numbers-add>
+    <prev-ported-numbers ng-if="$ctrl.prevNumbers.length"
+      numbers="$ctrl.prevNumbers"
+      on-change="$ctrl.onChangePrevPortedNumbers(numbers)">
+    </prev-ported-numbers>
+    <bsft-ported-numbers ng-if="$ctrl.bsftNumbers.length"
+      numbers="$ctrl.bsftNumbers"
+      on-change="$ctrl.onChangeBsftPortedNumbers(numbers)"
+      is-prev-ported="$ctrl.prevNumbers.length > 0">
+    </bsft-ported-numbers>
+  </div>
+</div>

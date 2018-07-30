@@ -113,6 +113,7 @@
     "moreOptions": "More Actions",
     "save": "Save",
     "status": "Status",
+    "role": "Admin Role",
     "pending": "Invite Pending",
     "error": "Invitation email error",
     "administrators": "Administrators",
@@ -121,7 +122,19 @@
     "exportUserList": "Export User List",
     "importUserList": "Import User List",
     "viewLastImport": "View Last Import",
-    "partners": "Partner Administrators",
+    "externalAdmins": "External Administrators",
+    "addExternalAdmin": "Add external admin",
+    "addExternalAdministrator": "Add external administrator",
+    "addExternalAdminNote": "Note: An external administrator is someone who is not in your company and is not in the company that sold you your Webex services. To add an external administrator enter their email address, confirm it, and indicate which admistrative role they will have.",
+    "addExternalAdminEmail": "Email address of admin",
+    "addExternalAdminConfirm": "Confirm email",
+    "addExternalAdminSuccess": "The administrator was successfully added.",
+    "addExternalAdminError": "Error adding administrator.",
+    "addExternamAdminNoCi": "This user cannot be added as an administrator because they do not have any Webex services.",
+    "addExternamAdminConsumer": "This user cannot be added as an administrator because they only have a free Webex Teams account.",
+    "addExternamAdminUser": "This user is in your company and cannot be added as an external administrator. To add them as an administrator go to the Users tab, select them in the list and edit their administrator privilege in the slide-in panel",
+    "addExternamAdminAdmin": "This user is already an administrator.",
+    "addExternamAdminPartner": "This user is already eligible to access your organization without your explicit action. Please contact this administrator directly.",
     "deleteUser": "Delete User",
     "deleteUserConfText": "Are you sure you want to delete {{email}}?",
     "deleteMsgrUserConfText": "Unable to delete this user. All Jabber Messenger users must be managed from the ",
@@ -532,7 +545,6 @@
     "editServices": "Edit services",
     "editServiceTitle": "Services Enabled for {{name}}",
     "siteUris": "Webex Meetings Sites",
-    "pmrTitle": "Personal Meeting Room",
     "webex": "Webex",
     "spark": "Cisco Webex Teams",
     "calling": "Calling",
@@ -861,6 +873,8 @@
   },
   "webexReports": {
     "to": "to",
+    "connection": "Connection",
+    "data": "Data",
     "end": "End",
     "audio": "Audio",
     "video": "Video",
@@ -875,6 +889,7 @@
     "mobilePlatform": "Mobile: {{platform}}",
     "thinClient": "Thin Client",
     "phone": "Phone",
+    "audioQuality": "Audio Quality",
     "voipQuality": "VoIP Quality",
     "videoQuality": "Video Quality",
     "cmrQuality": "CMR Quality",
@@ -946,6 +961,13 @@
       "videoQuality": {
         "good": "If neither of the above, then the quality is Good",
         "poor": "Packet loss > 5.0% or latency > 400ms = Poor"
+      },
+      "connection": {
+        "helper": "Connection indicates the meeting client has a data connection, and shows host and sharing information.",
+        "connected": "Connected",
+        "sharing": "Sharing",
+        "host": "Host",
+        "dataNotEnabled": "Data Not Enabled"
       }
     },
     "featureHelper": {
@@ -970,6 +992,7 @@
       "conferenceDate": "Date",
       "startTime": "Start Date",
       "meetingName": "Meeting Name",
+      "meetingHost": "Meeting Host:",
       "conferenceID": "Conference ID",
       "conferenceIDTitle": "Conference ID:"
     },
@@ -1121,11 +1144,12 @@
     "threeMonthsDrilldownTitle": "in the Last Three Months",
     "threeMonthsDrilldownDescription": "During the last three months",
     "media_type_all": "All Tasks",
-    "media_type_chat": "Chats",
+    "media_type_chat": "Web Chats",
     "media_type_callback": "Callbacks",
     "media_type_voice": "Inbound Calls",
     "media_type_webcall": "Video Calls",
     "media_type_chat_with_video": "Chat with Video",
+    "media_type_abc": "Apple Business Chats",
     "taskDataGetError": "There was an error while loading the {{dataType}} data.",
     "tableDataGetError": "There was an error while loading the detailed efficient user data.",
     "errorLoadingName": "Error Loading Name",
@@ -1247,6 +1271,7 @@
     "title": "{{mediaType}} Completion Time",
     "description": "The graph depicts the average time spent by a customer waiting for an agent and in getting their enquiries handled {{time}}. Hover over the area chart for a breakdown of average waiting time and average time taken to handle a customer enquiry during a {{interval}}.",
     "desc": "This chart represents the average time taken to complete a {{mediaType}} {{time}}. Hover over the chart to see the details.",
+    "abcDesc": "This chart represents the average time taken to complete an {{mediaType}} {{time}}. Hover over the chart to see the details.",
     "breakdownDescription": "This chart represents the breakdown of all {{mediaType}} and their average handle time {{time}}. Hover over the chart to see the details.",
     "drilldownShow": "Show most efficient users",
     "drilldownHide": "Hide most efficient users",
@@ -1698,6 +1723,7 @@
     "assigned": "Assigned",
     "authorize": "Authorize",
     "automatic": "Automatic",
+    "available": "Available",
     "back": "Back",
     "begin": "Begin",
     "cancel": "Cancel",
@@ -1770,6 +1796,10 @@
     "lastName": "Last Name",
     "learnMore": "Learn More",
     "leave": "Leave",
+    "licenses": {
+      "standard": "Standard",
+      "places": "Places"
+    },
     "loading": "Loading",
     "memberCount": "{{count}} Members",
     "members": "Members",
@@ -1934,7 +1964,7 @@
     "convert": "Convert",
     "convertUsers": "Convert Unlicensed Users",
     "unlicensedUsers": "Unlicensed Users",
-    "licensesNeedToBeRedistributed": "The license count is off for Webex Meetings sites associated with subscription {{subscriptionId}}. Please redistribute licenses among your Webex Meetings sites.",
+    "licensesNeedToBeRedistributed": "Webex licenses in subscription {{subscriptionId}} have not been completely allocated to the sites associated with this subscription. Please use the Redistribute licenses feature to reallocate the licenses among the sites.",
     "convertUsersText": "Convert employees to a licensed user who have signed up for Cisco Webex Teams on their own with a company email address.  Licensed users receive additional enterprise features, and are subject to your organization’s policies and administration.",
     "convertUsersDirSyncEnabledWarning": "Users cannot be converted while Directory Synchronization is enabled. Disable Directory Synchronization from the Settings page in order to convert users.",
     "convertError": " could not be converted. Contact support for assistance converting this user.",
@@ -1971,9 +2001,6 @@
     "setUpDevices": "Activate your devices when they arrive.",
     "setUpSharedDevices": "Activate your Cisco Webex devices when they arrive.",
     "setUpSparkBoardDevices": "Activate your Cisco Webex Boards when they arrive.",
-    "setUpPMRDescription": "The Personal Meeting Rooms feature has been added to your subscription.",
-    "setUpPMRUrl": "Setup PMR Now",
-    "setupPMRsiteNameModalTitle": "Personal Meeting Room Setup",
     "setUpHybridMediaService": "Webex Video Mesh is available. Extend cloud media to use premises-based resources for calls and meetings.",
     "getStarted": "Get Started",
     "urgentUpgrade": "An urgent upgrade is available for <a ui-sref='{{link}}'>{{connector}}</a> and it will upgrade during the next scheduled upgrade.",
@@ -2387,6 +2414,7 @@
     "reboot": "Reboot",
     "reportProblem": "Report Issue",
     "deleteDeviceConfText": "Are you sure you want to delete this device?",
+    "deleteDeviceConfigText": "Delete device configuration",
     "deletePlaceConfText": "Are you sure you want to delete this place?",
     "rebootDeviceConfText": "Are you sure you want to reboot this device?",
     "nothingHere": "No devices yet",
@@ -3245,7 +3273,9 @@
         "migrateAllModal": {
           "title": "Migrate All SIP Addresses to Webex",
           "message": "This step migrates all SIP addresses to the new Webex domain. Are you sure?"
-        }
+        },
+        "migrationNotification": "SIP addresses need to be migrated to the webex.com domain.",
+        "migrateNow": "Migrate now."
       }
     },
     "notifications": {
@@ -4472,8 +4502,10 @@
       "errorCsvMaxSizeError": "File size is above the maximum of 10 MB.",
       "errorCsvExceedsMax": "The user list exceeds the limit of {{maxUsers}}",
       "errorCanceledByUser": "Import canceled by user",
-      "errorDifferentOrg": "User belongs to a different org",
+      "errorDifferentOrg": "User belongs to a different organization",
       "errorUserNotFound": "User not found",
+      "errorAlreadyInMatter": "User is already in the matter",
+      "errorNotInMatter": "User is not in the matter",
       "errorUnknown": "Unknown error",
       "downloadTemplate": "Download CSV Template",
       "csvOnly": "CSV format only.",
@@ -4703,8 +4735,7 @@
     "userManagementViaWebex": "User management via Webex Meetings Site Administration",
     "theseWillBeYourWebExSites": "These will be your {{siteCount}} Webex Meetings sites. If you do not have any more new sites to add, simply click Next.",
     "thisWillBeYourWebExSite": "This will be your Webex Meetings site. If you do not have any more new sites to add, simply click Next.",
-    "basicMeetings": "Webex Team Meetings",
-    "advancedMeetings": "Webex Enterprise Edition",
+    "basicMeetings": "Meetings",
     "sharedLicense": "Shared Meetings License",
     "namedLicense": "Named User License",
     "namedLicenseTooltip": "Each Named User license allows 1 user to be entitled as a meeting host. Named users can hold unlimited meetings.",
@@ -4724,29 +4755,14 @@
     "freeCall": "Cisco Webex Free Calling",
     "freeCare": "None",
     "communicationsSub": "Setup calling service",
-    "setPMRSSetupTitle": "PMR Site Name Setup",
-    "setPMRSiteURL": "Site URL",
-    "setPMRSiteUrlPlaceholder": "For e.g.: Jane Smith",
     "pmrSiteURLDomain": ".webex.com",
-    "setPersonalMeetingRoomInputFieldErrorMessage": "This Site Url is not Available, please try another",
-    "setPersonalMeetingRoomSuccessMessage": "Personal Meeting Room Site Url Successfully set",
-    "personalMeetingRoomServiceErrorMessage": "Personal Meeting Room Service Error",
-    "setSipDomainLink": "What is a Cisco Webex SIP Address?",
-    "setSipDomainMsg": "Enter a subdomain",
     "setSipDomainTitle": "Cisco Webex SIP Address",
     "saveSipDomainTitle": "Save Cisco Webex SIP Address",
-    "setSipDomainCompNames": "{count, plural, =1{This subdomain} other{These subdomains}} will be reserved for you:",
-    "setSipDomainAsssignedNames": "{count, plural, =1{This subdomain is} other{These subdomains are}} reserved for you",
     "setSipDomainCheckAvailability": "Check Availability",
-    "setSipDomainPlaceholder": "enter a subdomain",
-    "setSipDomainErrorMessage": "Not available. Please try another name.",
-    "setSipDomainErrorMessageInvalidDomain": "Invalid domain, please try another name",
-    "setSipDomainSuccessMessage": "The Cisco Webex SIP Address has been successfully saved",
-    "setSipDomainConfirmText": "I acknowledge that this is a one-time setting that cannot be changed later.",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Cisco Webex Domain Management Service",
-    "currentSubdomainDescription": "The current {count, plural, =1{subdomain below is} other{subdomains below are}} being used for your company Cisco Webex SIP {count, plural, =1{Address} other{Addresses}}.",
+    "currentSubdomainDescriptionWithLink": "The current {count, plural, =1{subdomain below is} other{subdomains below are}} being used for your company <a href='{href}' target='_blank'>Cisco Webex SIP {count, plural, =1{Address} other{Addresses}}</a>.",
     "subdomainChangesDescription": "Subdomain changes may take up to 8 hours to complete.",
-    "subdomainDescription": "Select a subdomain that identifies your company. The subdomain will be used to create {count, plural, =1{a Webex SIP Address} other{Webex SIP Addresses}}.",
+    "subdomainDescriptionWithLink": "Select a subdomain that identifies your company. The subdomain will be used to create <a href='{href}' target='_blank'>{count, plural, =1{a Webex SIP Address} other{Webex SIP Addresses}}</a>.",
     "updateSubdomainMessage": "Subdomain changes may take up to 8 hours to complete. Users will no longer be able to make calls using the previous Cisco Webex SIP Address after changes are completed.",
     "subdomainUpdateConfirmation": "We recommend that you perform this step during off hours. Are you sure you want to save your changes?",
     "editCSCPartThree": "Do you still want to edit your Cisco Webex SIP Address?",
@@ -6166,6 +6182,9 @@
     "meeting": "Cisco Webex Team Meetings",
     "webex": "Cisco Webex Enterprise Edition 200 with CMR/TNU+",
     "call": "Cisco Webex Calling",
+    "broadCloudFlex": "BroadCloud Flex",
+    "broadCloudStandard": "Standard",
+    "broadCloudPlaces": "Places",
     "careDescription": "Care services require Cisco Webex Teams as a prerequisite.<br>Additionally, Cisco Webex Calling is required for voice-based interactions.",
     "sparkCare": "Care",
     "care": "Chat and Callback",
@@ -6203,13 +6222,17 @@
   "customerPage": {
     "all": "All",
     "allCustomers": "All Customers",
+    "broadCloud": {
+      "tootTipTitle": "BroadCloud Flex",
+      "licenseTypeAndValue": "{{licenseType}} QTY: {{quantity}}"
+    },
     "trial": "Trial",
     "title": "Customers",
     "customerNameHeader": "Customer Name",
     "service": "Service",
     "services": "Services",
     "message": "Message",
-    "call": "Call",
+    "call": "Calling",
     "care": "Care",
     "careLicenses": "Care Licenses",
     "webex": "Webex",
@@ -6808,10 +6831,42 @@
     },
     "qos": {
       "title": "QoS",
+      "detail": "Quality of Service",
       "fulltitle": "Extended port range for QoS",
-      "description": "Enable this setting for quality of service (QoS) on Video Mesh node traffic. This setting marks audio (EF) and video (AF41) separately. Disabling this setting reduces the required port range, but you'll lose QoS functionality. See the Ports and Protocols <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'>documentation</a> for guidance.",
+      "shortdescription": "Enabling this setting modifies the UDP port range for Video Mesh cascade media and the Quality of Service (QoS) markings for both Video Mesh cascade and SIP client media. See the <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'> Ports and Protocols documentation</a> for guidance.",
+      "documentation":"See the <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'> Ports and Protocols documentation</a> for guidance.",
+      "longdescription": "For Video Mesh cascade media, the audio and video UDP ports are extended from two UDP ports (5004, 5006) to a larger port range. Disabling this setting reduces the required port range to two UDP ports (5004, 5006) for cascade media (beneficial for firewall traversal). However, both audio and video QoS are natively marked to a single class of #AF41.",
+      "description": "Enable this setting for quality of service (QoS) on Video Mesh node traffic. This setting marks audio (#EF) and video (#AF41) separately. Disabling this setting reduces the required port range, but you'll lose QoS functionality. See the <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'> Ports and Protocols documentation</a> for guidance.",
       "success": "Extended port range for QoS setting was set successfully.",
-      "error": "Error in saving extended port range for QoS setting. Please revert the change and try again later."
+      "error": "Error in saving extended port range for QoS setting. Please revert the change and try again later.",
+      "disclaimar1": "If Quality of Service enablement is taking more than two hours, ",
+      "disclaimar2": "<a href='https://mycase.cloudapps.cisco.com/'  target='_blank'> open a new case </a>to resolve the issue and temporarily disable the setting.",
+      "pendingnodes": "review pending nodes,",
+      "cluster": "(Cluster)",
+      "nodespending": "nodes pending",
+      "qosmessages": {
+        "off" : "Off",
+        "enabling": "Enabling ...",
+        "disabling": "Disabling ...",
+        "error": "Enabled, with errors",
+        "enabled": "Enabled"
+      },
+      "qosenable": {
+        "qosenabletitle": "Enable Quality of Service",
+        "qosenableline1": "Enabling Quality of Service might take up to 2 hours if there are ongoing calls on your Video Mesh Node clusters.",
+        "qosenableline2": "After you enable this setting, the nodes do not accept new calls and are restarted when current calls end.",
+        "qosenableline3": "We recommend that you bring all nodes online before you enable Quality of Service."
+      },
+      "qosdisable": {
+        "qosdisabletitle": "Disable Quality of Service",
+        "qosdisableline1": "Disabling Quality of Service might take up to 2 hours if there are ongoing calls on your Video Mesh Node clusters.",
+        "qosdisableline2": "After you disable this setting, the nodes do not accept new calls and are restarted when current calls end."
+      },
+      "pendingnodescontent": {
+        "pendingnodestitle": "Quality of Service pending nodes",
+        "nodes": "Pending nodes",
+        "description": "Below are the nodes where enabling Quality of Service is still pending. If the update is not applied within 2 hours, <a href='https://mycase.cloudapps.cisco.com/'  target='_blank'> open a new case </a>to resolve the issue."
+      }
     },
     "report": {
       "title": "Video Mesh",
@@ -7330,6 +7385,7 @@
     "emailAllHostsBtnTitle": "Email All Hosts",
     "commonSettingsCardTitle": "Common Settings",
     "commonSettingsCardNote": "These settings apply across centers.",
+    "recordingManagementCardTitle": "Recordings",
     "indexPageLabel_EMAIL_send_email_to_all": "Email All Hosts",
     "indexPageLabel_SiteInfo_site_info": "Site Information",
     "indexPageLabel_SiteInfo_site_features": "Site Features",
@@ -7348,6 +7404,11 @@
     "indexPageLabel_CommonSettings_site_info": "Site Information",
     "indexPageLabel_CommonSettings_pda_settings": "Partner Delegated Authentication",
     "indexPageLabel_CommonSettings_ott_settings": "On-net Audio",
+    "indexPageLabel_CommonSettings_tracking_code": "Tracking Codes",
+    "indexPageLabel_CommonSettings_site_branding": "Branding",
+    "indexPageLabel_CommonSettings_siteupgrade": "Site Upgrade",
+    "indexPageLabel_RecordingManagement_recording_management": "Recording Management",
+    "indexPageLabel_RecordingManagement_recording_rules": "Rules",
     "indexPageLabel_MC_mc_options": "Site Options",
     "indexPageLabel_MC_mc_default_options": "Default Options",
     "indexPageLabel_MC_mc_scheduling_templates": "Scheduling Templates",
@@ -7394,6 +7455,11 @@
     "settingPageLabel_CommonSettings_site_info": "Site Overview",
     "settingPageLabel_CommonSettings_pda_settings": "Partner Delegated Authentication",
     "settingPageLabel_CommonSettings_ott_settings": "Webex On-net Audio",
+    "settingPageLabel_CommonSettings_tracking_code": "Tracking Codes",
+    "settingPageLabel_CommonSettings_site_branding": "Branding",
+    "settingPageLabel_CommonSettings_siteupgrade": "Site Upgrade",
+    "settingPageLabel_RecordingManagement_recording_management": "Recording Management",
+    "settingPageLabel_RecordingManagement_recording_rules": "Recording Rules",
     "settingPageLabel_MC_mc_options": "Meeting Center Settings",
     "settingPageLabel_MC_mc_default_options": "Meeting Center Settings",
     "settingPageLabel_MC_mc_scheduling_templates": "Meeting Center Settings",
@@ -8521,6 +8587,7 @@
       "appleBusinessChat": "Apple Business Chat"
     },
     "featureCard": {
+      "inUseText": "In Use: {{ count }}",
       "spacesInUseText": "Expert Spaces: {{ numOfSpaces }}",
       "templatesInUseText": "Templates: {{ numOfTemplates }}",
       "unavailableSpacesInUseText": "Usage data unavailable",
@@ -8529,7 +8596,8 @@
       "popoverDefaultSpace": "(Default Space)",
       "popoverErrorMessage": "Cannot retrieve space usage data for this Expert Virtual Assistant. Try again later.",
       "cvaPopoverMainHeader": "Customer Virtual Assistant Usage",
-      "popoverTemplatesHeader": "Customer Support Templates: {{ numOfTemplates }}"
+      "popoverTemplatesHeader": "Customer Support Templates: {{ numOfTemplates }}",
+      "popoverABCHeader": "Apple Business Chat: {{ numOfABC }}"
     },
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",
@@ -8656,10 +8724,22 @@
         "invalidChars": "Name cannot contain the following characters: <>"
       },
       "cvaSelection": {
-        "virtualAssistantPageTitle": "Customer Virtual Assistant (Optional)",
-        "virtualAssistantDesc": "Select a preconfigured Customer Virtual Assistant who provides initial automated support in your Apple Business Chat experience",
+        "virtualAssistantPageTitle": "Customer Virtual Assistant",
+        "virtualAssistantOrig": "Select a preconfigured Customer Virtual Assistant who provides initial automated support in your Apple Business Chat experience",
+        "virtualAssistantDesc": "Enable a preconfigured Customer Virtual Assistant who provides initial automated support in your Apple Business Chat experience",
         "virtualAssistantSelector": "Customer Virtual Assistant",
-        "virtualAssistantSelectText": "Select ..."
+        "virtualAssistantSelectText": "Select ...",
+        "virtualAssistantTooltip": "Create a new Customer Virtual Assistant from the Care Features page.",
+        "virtualAssistantEnableOptional": "Enable Optional Customer Virtual Assistant",
+        "virtualAssistantStorageLocationTitle": "File Storage Location",
+        "virtualAssistantStorageLocationDesc": "Specify a location to store files that customers send to the Customer Virtual Assistant.",
+        "virtualAssistantStorageLocationHelp": "Enter the URL starting with http:// or https://. Apple Business Chat customers cannot send files over 100MB.",
+        "virtualAssistantStorageError": "Cannot access storage location. Verify the URL and try again.",
+        "virtualAssistantStorageProtocolError": "URL must start with 'http://' or 'https://'.",
+        "virtualAssistantStorageToken": "Authentication Token",
+        "virtualAssistantStorageTokenHelp": "Enter the token and click <strong>Validate</strong> to test your storage location.",
+        "virtualAssistantStorageTokenError": "Invalid token. Verify token for storage location and try again.",
+        "virtualAssistantValidateButton": "Validate"
       },
       "statusMessage": {
         "title": "Status Messages",
@@ -8828,7 +8908,7 @@
         "boxStepOne": "Create more expert spaces in Cisco Webex Teams.",
         "boxStepOneTooltip": "Give each space a unique topic name that helps the {{ featureName }} match keywords from a chat to the space.",
         "boxStepTwo": "Add the Expert Virtual Assistant to the expert spaces.",
-        "boxStepTwoTooltip": "After you configure the {{ featureName }}, use the @sparkbot.io email you specified to add the assistant to your expert spaces.",
+        "boxStepTwoTooltip": "After you configure the {{ featureName }}, use the @webex.bot email you specified to add the assistant to your expert spaces.",
         "boxStepThree": "Add users to the expert spaces you create.",
         "boxStepThreeTooltip": "Add appropriate users who can answer customer questions about the expert space topics.",
         "boxStepFour": "Configure chat escalation to Cisco Webex Teams in your Customer Support Templates.",
@@ -9144,6 +9224,7 @@
       },
       "hybrid": {
         "title": "Hybrid Services",
+        "alarm": "Alarms",
         "googleCalendarError": "Could not reach the service for Google Calendar. Its status may be reported inaccurately during this session.",
         "o365CalendarError": "Could not reach the service for Office 365. Its status may be reported inaccurately during this session.",
         "herculesError": "Could not reach the service for Cisco Webex Hybrid Services.",
@@ -9401,6 +9482,7 @@
   "subscriptions": {
     "activeUsers": "Active Users",
     "advancedReporting": "Advanced Reporting",
+    "broadCloudFlex": "BroadCloud Flex",
     "call": "Calling",
     "care": "Care",
     "changePlan": "Change Plan",
@@ -9529,6 +9611,7 @@
     "id_full_admin": "Full Admin",
     "id_readonly_admin": "Read-only Admin",
     "id_user_admin": "User Admin",
+    "id_device_admin": "Device Admin",
     "user": "User",
     "ciscouc.devops": "Cisco Webex Calling Devops",
     "ciscouc.devsupport": "Cisco Webex Calling Dev Support",
@@ -9551,6 +9634,7 @@
     "PARTNER_USER": "User",
     "PARTNER_ADMIN": "Partner Admin",
     "PARTNER_SALES_ADMIN": "Partner Sales Admin",
+    "Provision_Admin": "Provision Admin",
     "CUSTOMER_PARTNER": "Customer Partner",
     "WX2_Support": "WX2 Support",
     "WX2_User": "WX2 User",
@@ -9659,11 +9743,11 @@
     "delegatedAdministration": "manages {{numManages}} organizations",
     "licenses": "Licenses",
     "licenseDisplayNames": {
-      "MC": "Meeting Center {{capacity}}",
+      "MC": "Webex Meeting Center {{capacity}}",
       "TC": "Training Center {{capacity}}",
       "MS": "Standard Webex Teams",
       "CF": "Webex Team Meetings",
-      "EE": "Enterprise Edition {{capacity}}",
+      "EE": "Webex Enterprise Edition {{capacity}}",
       "SC": "Support Center {{capacity}}",
       "EC": "Event Center {{capacity}}",
       "CO": "Advanced Cisco Webex Calling",
@@ -10330,6 +10414,12 @@
         "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:",
         "deactivateTitle": "Confirm Deactivate Enterprise Private Trunk",
         "deactivateConfirm": "You are about to deactivate Enterprise Private Trunk Service. Be aware that this action deletes all Cisco Webex remote SIP destinations configuration and disables the service for all users."
+      },
+      "jabberToWebexTeams": {
+        "title": "Jabber Service",
+        "description": "Enables Webex Teams messaging for Jabber users, to replace other Jabber messaging providers. You cannot use Jabber Service with XMPP options like IM and Presence.",
+        "add": "Add a UC Manager Profile",
+        "edit": "Edit UC Manager Profiles"
       }
     },
     "showMore": "View all",
@@ -11419,33 +11509,43 @@
         "customerExistsErrorMessage": "This customer already exists",
         "swProfileWarningMsg": {
           "addSWProfile": "Please add a Software Profile first",
-          "upgradeInProgress": "Can not change Software Profile when upgrade is in progress."
-        }
+          "upgradeInProgress": "Cannot change Software profile when upgrade is in progress."
+        },
+        "upgradeInProgress": "Cannot change customer when upgrade is in progress."
       },
       "nodeStatus": {
-        "active":"Active",
+        "aborted": "Aborted",
+        "active": "Active",
         "assignmentNeeded": "Assignment needed",
+        "agentOffline": "Agent offline",
+        "cancelled": "Cancelled",
         "compliant": "Compliant",
+        "failToCancel": "Fail to cancel",
+        "failToSchedule": "Fail to schedule",
+        "failedUpgrade": "Failed upgrade",
         "inactive": "Inactive",
         "needsAcceptance":"Needs acceptance",
         "needsAssigned":"Needs assigned",
+        "needToUpdateBatchNumber": "Update batch number",
+        "noActiveVersion": "No active version",
+        "noAgentRunning": "No agent",
+        "notAvailable": "Not available",
+        "noClusters": "No clusters",
         "operational": "Operational",
-        "agentOffline": "Agent offline",
+        "paused": "Paused",
+        "pauseError": "Pause error",
+        "posted": "Posted",
+        "started": "Started",
+        "success": "Success",
+        "swProfileNotAssigned": "No profile",
         "swProfileNotCoverAll": "Software profile incomplete",
         "swVersionMismatch": "Software mismatch",
         "swUpgradeNeeded": "Upgrade needed",
         "scheduled": "Scheduled",
-        "needToUpdateBatchNumber": "Update batch number",
         "upgradeScheduled": "Upgrade scheduled",
         "upgradeInProgress": "Upgrade in progress",
-        "failedUpgrade": "Failed upgrade",
         "unassigned": "Customer unassigned",
-        "started": "Started",
-        "swProfileNotAssigned": "No profile",
-        "success": "Success",
-        "noAgentRunning": "No agent",
-        "noClusters": "No clusters",
-        "noActiveVersion": "No active version"
+        "unknown": "Unknown"
       },
       "settings": {
         "inventoryName": {
@@ -11485,7 +11585,8 @@
       "deleteClusterModal": {
         "title": "Delete {{clusterName}}?",
         "description": "Deleting the cluster will also remove the agents from all the nodes. Are you sure?"
-      }
+      },
+      "softwareProfile": "Software profile"
     },
     "customerName": "Customer Name",
     "description": "Extend Cloud services to Hosted Cloud Solution.",
@@ -11512,6 +11613,7 @@
         "description": "You are about to delete an Agent Install File. You can not undo this action."
       },
       "description": "Create an Agent Install file (.cop file). This file will be installed on each Unified Communications instance or Prime License Manager that you want to manage with HCS features. Creation can take several minutes. When it's done, the file is available on the Agent Install File page to download and install.",
+      "duplicateFile": "Duplicate File Label",
       "duplicateProxy": "Duplicate HTTP Proxy Address",
       "enterFileName": "Enter a file label",
       "fileName": "File Label",
@@ -11577,6 +11679,7 @@
       "description": "Configure an SFTP Server to be used for upgrading software images.",
       "directory": "Directory",
       "dirPlace": "Enter Directory",
+      "duplicateSftpName": "Duplicate SFTP Server Name",
       "error": "SFTP Server creation failed",
       "loginCred": "Login Credentials",
       "name": "SFTP Server Name",
@@ -11859,12 +11962,133 @@
       "accessTooltip": "Any action doesn't impact the existing users of the integration.",
       "allUsers": "All users",
       "specificUsers": "Specific users",
+      "tokenPlaceholder": "User email",
+      "userRetrievalError": "Error Retrieving users",
       "revokeAccessDialog": {
         "title": "Revoke Access Alert",
         "message": "{count, plural, =1{# user} other{All # users}} will lose access to this integration. Do you want to revoke access?"
       },
       "saveSuccess": "Successfully saved integration access.",
       "saveError": "Error saving integration access."
+    },
+    "detail": {
+      "integrationId": "Integration ID",
+      "clientId": "Client ID",
+      "privacyPolicy": "Privacy Policy",
+      "support": "Support",
+      "developerWebsite": "Developer Website",
+      "developerNameEmail": "Developer Name and Email"
+    }
+  },
+  "broadCloud": {
+    "ftsw": {
+      "siteList": {
+        "deleteModal": {
+          "title": "Are you sure?",
+          "description": "You are about to delete a Location"
+        },
+        "infoHeader": "Add up to 10 locations. You can add more later in Control Hub after setup is complete.",
+        "licenseCount": "{{available}} of {{total}}",
+        "placesLicenseAvilable": "Places Licenses Available",
+        "standardLicenseAvailable": "Standared Licenses Available"
+      }
+    },
+    "numbers" : {
+      "addNumbers": "Add Numbers",
+      "addNumberHint": "Enter upto 25 numbers, no less than 2, comma separated. You can add more later in Control Hub after setup is complete.",
+      "numberType": "Number Type",
+      "prevPorted": "Previously Ported or Partner Provided Numbers",
+      "prevPortedHint": "Numbers you've previously ported yourself or by your Partner. It may take up to 20 minutes to appear in the system.",
+      "bcProvided": "BroadCloud Provided Numbers",
+      "bcProvidedHint": "Numbers that will be ported by BoardCloud. It may take from 3 days to a month to appear in the system.",
+      "phoneNumber": "Phone Numbers",
+      "prevPortedNumber": "Previously Ported",
+      "bcPortedNumber": "BroadCloud Ported",
+      "numberHint": "e.g. 2143335555, +12143335555",
+      "addlimit": "Exceeded max allowed phone numbers limit",
+      "minlimit": "Need at least 2 phone numbers to continue.",
+      "maxlimit": "Exceeded max allowed numbers {{max}}. Minimum limit is {{min}}",
+      "assignNumber": "Assign Numbers",
+      "assignNumberDesc": "Select which numbers you want to use for your location.",
+      "locationNumber": "Location Number",
+      "vmNumber": "Voicemail Number",
+      "invalid": "Invalid phone numbers detected",
+      "duplicate": "Duplicate phone number detected"
+    },
+    "numberList": {
+      "internalNum": "Internal Extension",
+      "phoneNumber": "Phone Number",
+      "location": "Location",
+      "assignedTo": "Assigned To",
+      "actions": "Actions",
+      "unassigned": "Unassigned",
+      "assigned": "Assigned"
+    },
+    "headers": {
+      "calling": "Calling",
+      "locations": "Locations"
+    },
+    "wizardButton": {
+      "nextAssignLicenses": "Next: Assign Licenses",
+      "nextAddNumbers": "Next: Add Numbers",
+      "nextAssignNumbers": "Next: Assign Numbers",
+      "saveLocation": "Save Location",
+      "nextEnterpriseSettings": "Next: Enterprise Settings"
+    },
+    "site": {
+      "setupDefault": "Setup Default Location",
+      "editDefault": "Edit Default Location",
+      "setup": "Setup Location",
+      "edit": "Edit Location",
+      "makeDefault": "Make this my default location",
+      "editLater": "You can also edit location information after setup is complete in Control Hub",
+      "address": "Address",
+      "address1": "Street Address",
+      "address2": "Unit, Suite, etc.",
+      "city": "City",
+      "zipcode": "Zipcode",
+      "state": "State",
+      "selectState": "Select State",
+      "country": "Country",
+      "selectCountry": "Select Country",
+      "locationContactInfo": "Location Contact Info",
+      "phoneNumber": "Phone Number"
+    },
+    "licenseAllocation": {
+      "title": "Assign Total Licenses",
+      "desc": "Enter the total number for each license type you want to assign for this location. Enter 0 if you do not want to assign any",
+      "standard": "Standard",
+      "places": "Places",
+      "remaining": "{{available}} of {{total}} remaining"
+    }
+  },
+  "jabberToWebexTeams": {
+    "prerequisitesModal": {
+      "title": "Jabber Service",
+      "description": "Jabber can discover UC Manager infrastructure using service discovery.  Please confirm how your environment is set up.",
+      "voiceServiceDomainPrereqLabel": "Webex teams domain is the same as the voice service domain.",
+      "dnsSrvRecordsPrereqLabel": "DNS SRV records are deployed for Cisco UC services.",
+      "savePrereqsSuccess": "Jabber with Webex Teams setup is complete.",
+      "savePrereqsError": "Jabber with Webex Teams settings failed to save."
+    },
+    "addProfileModal":{
+      "title": "Jabber Service",
+      "sectionTitle": "Configure a UC Manager Profile",
+      "description": "Select Voice Services Domain or UDS Server as your deployment requires.",
+      "profileName": "Profile Name",
+      "voiceServiceDomain": "Voice Services Domain",
+      "voiceServiceDomainName": "Voice Services Domain Name",
+      "udsServer": "UDS Server",
+      "udsServerAddress": "UDS Server Address",
+      "udsBackupServerAddress": "UDS Backup Server Address",
+      "allowUserEdit": "Allow users to edit server address"
+    },
+    "profileList": {
+      "title": "Jabber with Webex Teams",
+      "subtitle": "UC Manager Profiles",
+      "addProfile": "Add a Profile",
+      "deleteTitle": "Delete UC Profile",
+      "deleteBody": "You are deleting the UC profile {{templateName}}. This profile will be removed from all associated users.<br>Are you sure?"
     }
   }
 }

@@ -70,7 +70,7 @@
       },
 
       getRialtoUrl: function () {
-        return 'https://minerva.' + this.getBaseDomain() + '/api/v1/demo/rialto';
+        return 'http://172.24.77.211:8000/enterpriseportalapi/v1.0';
       },
 
       getUpgradeUrl: function () { //TBD-- add the devhost:port for local testing

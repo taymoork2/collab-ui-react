@@ -33,6 +33,7 @@ describe('Controller: OverviewCtrl', function () {
       'LinkedSitesService',
       'EvaService',
       'SsoCertificateService',
+      'SipAddressService',
       'HuntGroupCallParkMisconfigService',
       'UserListService'
     );
@@ -165,6 +166,7 @@ describe('Controller: OverviewCtrl', function () {
         LinkedSitesService: this.LinkedSitesService,
         EvaService: this.EvaService,
         SsoCertificateService: this.SsoCertificateService,
+        SipAddressService: this.SipAddressService,
         HuntGroupCallParkMisconfigService: this.HuntGroupCallParkMisconfigService,
       });
       this.$scope.$apply();
@@ -536,13 +538,27 @@ describe('Controller: OverviewCtrl', function () {
   describe('directory connector upgrade notification', function () {
     it('should be added', function () {
       this.initController();
-      var dcNotificationExists = false;
-      _.forEach(this.controller.notifications, function (notif) {
-        if (notif.name === 'dirConnectorUpgrade') {
-          dcNotificationExists = true;
-        }
+      var dcNotificationExists = _.some(this.controller.notifications, function (notification) {
+        return notification.name === 'dirConnectorUpgrade';
       });
-      expect(dcNotificationExists).toBeTruthy();
+      expect(dcNotificationExists).toBe(true);
+    });
+  });
+
+  describe('sip address migration notification', function () {
+    it('should be added', function () {
+      spyOn(this.ServiceDescriptorService, 'isServiceEnabled').and.returnValue(this.$q.resolve(true));
+      spyOn(this.SipAddressService, 'loadSipAddressModel').and.returnValue(this.$q.resolve({
+        atlasJ9614SipUriRebranding: true,
+        hasDomainMigrated: function () {
+          return false;
+        },
+      }));
+      this.initController();
+      var sipAddressMigrationNotificationExists = _.some(this.controller.notifications, function (notification) {
+        return notification.name === 'sipAddressMigration';
+      });
+      expect(sipAddressMigrationNotificationExists).toBe(true);
     });
   });
 });

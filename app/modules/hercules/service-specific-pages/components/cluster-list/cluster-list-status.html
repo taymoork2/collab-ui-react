@@ -15,11 +15,11 @@
     <span ng-hide="row.entity.extendedProperties.maintenanceMode === 'on' || row.entity.extendedProperties.maintenanceMode === 'pending'">
       <cs-statusindicator ng-model="row.entity.extendedProperties.servicesStatus.state.cssClass"></cs-statusindicator>
       <span translate="{{'servicesOverview.cardStatus.' + row.entity.extendedProperties.servicesStatus.state.name}}"></span>
-      <span class="badge badge-{{row.entity.extendedProperties.alarmsBadgeCss}}" ng-if="row.entity.extendedProperties.alarms !== 'none'" translate="hercules.alarms.alarms"></span>
+      <span class="badge badge--outline {{row.entity.extendedProperties.alarmsBadgeCss}}" ng-if="row.entity.extendedProperties.alarms !== 'none'" translate="hercules.alarms.alarms"></span>
     </span>
   </span>
-  <span ng-if="row.entity.extendedProperties.maintenanceMode === 'on'" class="badge warning" translate="hercules.nodesPage.maintenanceReady"></span>
-  <span ng-if="row.entity.extendedProperties.maintenanceMode === 'pending'" class="badge" translate="hercules.nodesPage.maintenancePending"></span>
+  <span ng-if="row.entity.extendedProperties.maintenanceMode === 'on'" class="badge badge--outline" translate="hercules.nodesPage.maintenanceReady"></span>
+  <span ng-if="row.entity.extendedProperties.maintenanceMode === 'pending'" class="badge badge--outline" translate="hercules.nodesPage.maintenancePending"></span>
   <span ng-if="row.entity.extendedProperties.servicesStatus.state.name === 'not_configured'"> | <span translate="hercules.notifications.configure-connector.action-in-grid"></span></span>
 </div>
 <div class="ui-grid-cell-contents service-status-content" ng-if="grid.appScope.$ctrl.serviceId === 'ept'" ng-class="{'selected' : row.isSelected}" ng-click="grid.appScope.goToSidepanel(row)" ng-keypress="grid.appScope.keypressSidepanel(grid, row)">
