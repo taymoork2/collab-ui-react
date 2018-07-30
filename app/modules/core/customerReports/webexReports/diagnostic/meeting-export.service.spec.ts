@@ -11,10 +11,14 @@ describe('Service: MeetingExportService', () => {
     this.WebexReportsUtilService.data = this.meetingDetails;
   });
 
-  it('should generate report in string format after calling generateMeetingReport', function () {
+  it('should generate report in string format after calling generateMeetingReport', function (this, done) {
     this.MeetingExportService.generateMeetingReport(this.WebexReportsUtilService)
-      .then(res => expect(res).toContain('Meeting Summary'))
+      .then(res => {
+        expect(res).toContain('Meeting Summary');
+        _.defer(done);
+      })
       .catch(fail);
+    this.$scope.$apply();
   });
 
   it('should return the value found of the first property that matches the given key name', function () {
@@ -41,5 +45,25 @@ describe('Service: MeetingExportService', () => {
     const mockData = 'Host Name';
     const res = this.MeetingExportService.normalizeKey(mockData);
     expect(res).toBe('hostName');
+  });
+
+  it('should contain sharing sessions in generated MeetingReport', function (this, done) {
+    this.MeetingExportService.generateMeetingReport(this.WebexReportsUtilService)
+      .then(res => {
+        expect(res).toContain('ApplicationSharing');
+        _.defer(done);
+      })
+      .catch(fail);
+    this.$scope.$apply();
+  });
+
+  it('should contain role change sessions in generated MeetingReport', function (this, done) {
+    this.MeetingExportService.generateMeetingReport(this.WebexReportsUtilService)
+      .then(res => {
+        expect(res).toContain('Role Type');
+        _.defer(done);
+      })
+      .catch(fail);
+    this.$scope.$apply();
   });
 });

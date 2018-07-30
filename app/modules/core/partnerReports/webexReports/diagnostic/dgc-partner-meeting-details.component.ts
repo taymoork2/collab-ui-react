@@ -1,4 +1,4 @@
-import { ICallType, IJoinTime, IRoleData, ISessionDetail, ISessionDetailItem, IParticipant, IUniqueParticipant } from './partner-search.interfaces';
+import { ICallType, IJoinTime, IRoleData, ISessionDetail, ISessionDetailItem, ISharingDetail, IParticipant, IUniqueParticipant } from './partner-search.interfaces';
 import { MosType, Platforms, SearchStorage, Quality, QualityRange, QualityType, QosType, RoleType, SharingEvent, TabType, TrackingEventName } from './partner-meeting.enum';
 import { Notification } from 'modules/core/notifications';
 import { CustomerSearchService } from './customer-search.service';
@@ -39,12 +39,6 @@ interface IQualitySet {
     tooltip: string,
     source: string,
   }[];
-}
-
-interface ISharingDetail {
-  sharingEvent: string;
-  startTime: string;
-  endTime: string;
 }
 
 const LATENCY_SHOWUP = 999;
@@ -190,6 +184,7 @@ class MeetingDetailsController implements ng.IComponentController {
     this.dataService.getRoleChange(this.conferenceID)
       .then((res: IRoleData[]) => {
         this.activityPoints = _.filter(res, role => { return role.roleType === RoleType.HOST; });
+        this.WebexReportsUtilService.setStorage(SearchStorage.ROLE_CHANGE_SESSION_DETAIL, res);
       });
   }
 
@@ -255,6 +250,12 @@ class MeetingDetailsController implements ng.IComponentController {
             const detail = this.parseSharingData(detailItem);
             details[item.key].push(detail);
           }
+          let sharingSessions = this.WebexReportsUtilService.getStorage(SearchStorage.SHARING_SESSION_DETAIL);
+          if (_.isUndefined(sharingSessions)) {
+            sharingSessions = [];
+          }
+          sharingSessions.push(detailItem);
+          this.WebexReportsUtilService.setStorage(SearchStorage.SHARING_SESSION_DETAIL, sharingSessions);
         });
       } else {
         retryIds.push(item.key);

@@ -31,6 +31,10 @@ export interface IMediaInReport {
   'Video'?: IMediaInfoInReport[];
 }
 
+export interface ISessionInReport {
+  'Session Type': string;
+}
+
 export interface IJoinMeetingRecord {
   'Join Time': string;
   'Leave Time': string;
@@ -38,8 +42,7 @@ export interface IJoinMeetingRecord {
   'Media': IMediaInReport;
 }
 
-export interface ISessionInReport {
-  'Session Type': string;
+export interface ITeleSessionInReport extends ISessionInReport {
   'Platform': string;
   'Browser': string;
   'Device': string;
@@ -78,4 +81,33 @@ export interface IFeaturesInReport {
 
 export interface IWindowService extends ng.IWindowService {
   webkitURL: any;
+}
+
+export interface IDataRecord {
+  [propName: string]: string;
+}
+
+export interface ISharingRecord extends IDataRecord {
+  'Client Type': string;
+  'Sharing Event': string;
+  'Node Id': string;
+  'Start Time': string;
+  'End Time': string;
+  'Duration': string;
+}
+
+export interface IRoleChangeRecord extends IDataRecord {
+  'Role Type': string;
+  'TimeStamp': string;
+  'From Node Id': string;
+  'From User Name': string;
+  'To Node Id': string;
+}
+
+export interface ISharingSessionInReport extends ISessionInReport {
+  'Sharing Records': ISharingRecord[];
+}
+
+export interface IRoleChangeSessionInReport extends ISessionInReport {
+  'Role Change Records': IRoleChangeRecord[];
 }
