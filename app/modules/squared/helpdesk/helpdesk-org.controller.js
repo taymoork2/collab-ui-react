@@ -28,11 +28,15 @@
 
     vm.initialAdminUserLimit = 3;
     vm.adminUserLimit = vm.initialAdminUserLimit;
+    vm.initialPartnerAdminUserLimit = 3;
+    vm.partnerAdminUserLimit = vm.initialPartnerAdminUserLimit;
     vm.licenseUsageReady = false;
     vm.showLicenseToggles = [];
     vm.statusPageUrl = UrlConfig.getStatusPageUrl();
     vm.showAllAdminUsers = showAllAdminUsers;
     vm.hideAllAdminUsers = hideAllAdminUsers;
+    vm.showAllPartnerAdminUsers = showAllPartnerAdminUsers;
+    vm.hideAllPartnerAdminUsers = hideAllPartnerAdminUsers;
     vm.keyPressHandler = keyPressHandler;
     vm.daysLeftText = daysLeftText;
     vm.gotoSearchUsersAndDevices = gotoSearchUsersAndDevices;
@@ -44,6 +48,7 @@
     vm.supportsExtendedInformation = false;
     vm.cardsAvailable = false;
     vm.adminUsersAvailable = false;
+    vm.partnerAdminUsersAvailable = false;
     vm.findServiceOrders = findServiceOrders;
     vm.isProPackCustomer = false;
     vm._helpers = {
@@ -135,6 +140,7 @@
       findWebExSites(org);
       findServiceOrders(vm.orgId);
       findAdminUsers(org);
+      findPartnerAdminUsers(org);
       vm.supportedBy = isTrials(org.orgSettings) ? $translate.instant('helpdesk.trials') : $translate.instant('helpdesk.ts');
       setReadOnlyLaunchButtonVisibility(org);
     }
@@ -212,6 +218,16 @@
       }, vm._helpers.notifyError);
     }
 
+    function findPartnerAdminUsers(org) {
+      HelpdeskService.partnerAdmins(org.id).then(function (users) {
+        vm.partnerAdminUsers = users;
+        vm.showAllPartnerAdminUsersText = $translate.instant('common.showAllPartnerAdminUsers', {
+          numUsers: users.length,
+        });
+        vm.partnerAdminUsersAvailable = true;
+      }, vm._helpers.notifyError);
+    }
+
     function findLicenseUsage() {
       if (vm.orgId != Config.ciscoOrgId) {
         LicenseService.getLicensesInOrg(vm.orgId, true).then(function (licenses) {
@@ -232,6 +248,14 @@
 
     function hideAllAdminUsers() {
       vm.adminUserLimit = vm.initialAdminUserLimit;
+    }
+
+    function showAllPartnerAdminUsers() {
+      vm.partnerAdminUserLimit = vm.partnerAdminUsers.length;
+    }
+
+    function hideAllPartnerAdminUsers() {
+      vm.partnerAdminUserLimit = vm.initialAdminUserLimit;
     }
 
     function keyPressHandler(event) {

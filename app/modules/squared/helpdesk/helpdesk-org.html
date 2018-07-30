@@ -186,6 +186,51 @@
           </div>
         </div>
       </div>
+
+      <div class="row" ng-if="!helpdeskOrgCtrl.partnerAdminUsersAvailable">
+        <div class="medium-12 columns">
+          <hr>
+          <h4 translate="helpdesk.partnerAdminUsers" class="light"></h4>
+          <div cs-loader class="loader-example--small"></div>
+        </div>
+      </div>
+
+
+      <div class="row" ng-if="helpdeskOrgCtrl.partnerAdminUsersAvailable">
+        <div class="medium-12 columns">
+          <hr>
+          <h4 translate="helpdesk.partnerAdminUsers"></h4>
+
+          <div ng-if="helpdeskOrgCtrl.partnerAdminUsers && helpdeskOrgCtrl.partnerAdminUsers.length > 0">
+            <div ng-repeat="user in helpdeskOrgCtrl.partnerAdminUsers | limitTo:helpdeskOrgCtrl.partnerAdminUserLimit">
+              <span>
+                <a ui-sref="helpdesk.user({user:user, id:user.id, orgId:user.orgId})">
+                  {{user.displayName | limitTo: 40}}{{user.displayName.length > 40 ? '...' : ''}}
+                </a>
+              </span>
+            </div>
+
+            <div ng-if="helpdeskOrgCtrl.partnerAdminUsers.length > helpdeskOrgCtrl.partnerAdminUserLimit" style="margin-top: 1.0rem;">
+              <span>
+                <a href ng-click="helpdeskOrgCtrl.showAllPartnerAdminUsers()">{{helpdeskOrgCtrl.showAllPartnerAdminUsersText}}</a>
+              </span>
+            </div>
+
+            <div ng-if="helpdeskOrgCtrl.partnerAdminUserLimit > helpdeskOrgCtrl.initialAdminUserLimit"
+                 style="margin-top: 1.0rem;">
+              <span>
+                <a href
+                   ng-click="helpdeskOrgCtrl.hideAllPartnerAdminUsers()"
+                   translate="common.hideAllPartnerAdminUsers"></a>
+                </span>
+            </div>
+          </div>
+
+          <div ng-if="!helpdeskOrgCtrl.partnerAdminUsers || helpdeskOrgCtrl.partnerAdminUsers.length === 0">
+            {{'helpdesk.none'| translate}}
+          </div>
+        </div>
+      </div>
       <hr>
 
       <div class="row">

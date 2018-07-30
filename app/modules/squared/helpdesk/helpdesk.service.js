@@ -10,6 +10,7 @@
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     var service = {
       usersWithRole: usersWithRole,
+      partnerAdmins: partnerAdmins,
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
       searchOrders: searchOrders,
@@ -106,6 +107,10 @@
       return _.get(res, 'data.items');
     }
 
+    function extractPartners(res) {
+      return _.get(res, 'data.partners');
+    }
+
     function extractData(res) {
       return _.get(res, 'data');
     }
@@ -137,6 +142,17 @@
         user.displayName = getCorrectedDisplayName(user);
         if (user.organization) {
           user.isConsumerUser = user.organization.id === Config.consumerOrgId;
+        }
+      });
+      return users;
+    }
+
+    function extractPartnerAdmins(res) {
+      var users = extractPartners(res);
+      _.each(users, function (user) {
+        user.displayName = getCorrectedDisplayName(user);
+        if (user.orgId) {
+          user.isConsumerUser = user.orgId === Config.consumerOrgId;
         }
       });
       return users;
@@ -183,6 +199,14 @@
       }
       return cancelableHttpGET(urlBase + 'helpdesk/organizations/' + orgId + '/users?limit=' + limit + (role ? '&role=' + encodeURIComponent(role) : ''))
         .then(extractUsers);
+    }
+
+    function partnerAdmins(orgId) {
+      if (useMock()) {
+        return deferredResolve(HelpdeskMockData.users);
+      }
+      return cancelableHttpGET(urlBase + 'helpdesk/organizations/' + orgId + '/users/partneradmins')
+        .then(extractPartnerAdmins);
     }
 
     function searchUsers(searchString, orgId, limit, role, includeUnlicensed) {

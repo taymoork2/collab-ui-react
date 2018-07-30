@@ -1745,6 +1745,7 @@
     "keywords": "Keywords",
     "help": "Help",
     "hideAllAdminUsers": "Hide administrators",
+    "hideAllPartnerAdminUsers": "Hide partner administrators",
     "history": "History",
     "id": "ID",
     "ifErrorRemains": "If the error remains, click your username, and then choose <strong>Feedback</strong> to open a case for further investigation.",
@@ -1835,6 +1836,7 @@
     "setUp": "Set Up",
     "shared": "Shared",
     "showAllAdminUsers": "Show all {{numUsers}} administrators",
+    "showAllPartnerAdminUsers": "Show all {{numUsers}} partner administrators",
     "showLess": "Show Less",
     "showMore": "Show More",
     "skip": "Skip",
@@ -9675,7 +9677,8 @@
       "MSGR": "Messenger"
     },
     "trial": "Trial",
-    "adminUsers": "Administrators",
+    "adminUsers": "Customer Administrators",
+    "partnerAdminUsers": "Partner Administrators in this Customer Org",
     "numDaysLeft": "{{days}} day(s) left",
     "licenseStatus": {
       "active": "Active",

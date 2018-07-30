@@ -20,8 +20,15 @@
     };
     if ($stateParams.user) {
       vm.userId = $stateParams.user.id;
-      vm.orgId = $stateParams.user.organization.id;
-      vm.org = $stateParams.user.organization;
+      if ($stateParams.user.organization) {
+        vm.orgId = $stateParams.user.organization.id;
+        vm.org = $stateParams.user.organization;
+      } else {
+        vm.orgId = $stateParams.user.orgId;
+        vm.org = {
+          id: $stateParams.user.orgId,
+        };
+      }
     } else {
       vm.userId = $stateParams.id;
       vm.orgId = $stateParams.orgId;
