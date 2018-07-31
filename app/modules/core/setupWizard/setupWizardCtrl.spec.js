@@ -147,7 +147,7 @@ describe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('Service Setup Wizard metrics calls to Mixpanel should be made', function () {
+    it('Service Setup Wizard metrics calls to Analytics should be made', function () {
       expect(this.Analytics.trackServiceSetupSteps).toHaveBeenCalled();
     });
   });

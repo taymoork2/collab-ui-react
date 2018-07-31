@@ -21,8 +21,6 @@ module.exports = {
     'https://*.webex.com',
     'https://*.webexconnect.com',
     'https://api.dialogflow.com', // Virtual Assistant testing dialogflow token
-    'https://api.mixpanel.com',
-    'https://cdn.mxpnl.com',
     'https://rpbtqlkhsn006.webex.com',
     'wss://mercury-connection-a.wbx2.com',
     'https://api.segment.io', // Segment Analytics
@@ -71,8 +69,6 @@ module.exports = {
     '\'sha256-5zmUxCaNKNz+kTngvNTF8srDs9p8XHdW0oh+h9q46KQ=\'', // Devices page advanced settings launch: ATLAS-2913
     'https://*.localytics.com',
     'https://*.webex.com',
-    'https://api.mixpanel.com', // Mixpanel
-    'https://cdn.mxpnl.com', // Mixpanel
     'https://buy.ciscospark.com', // Digital River
     'https://cdn.segment.com', // Segment Analytics
   ],

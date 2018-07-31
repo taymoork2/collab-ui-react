@@ -55,7 +55,7 @@
     function deleteSuccess(deleteSuccessEvent) {
       vm.deleteBtnDisabled = false;
 
-      // Writing metrics into mixpanel
+      // Writing metrics into analytics
       if (deleteSuccessEvent) {
         Analytics.trackEvent(deleteSuccessEvent);
       }
@@ -76,7 +76,7 @@
     function deleteError(response, deleteFailureEvent) {
       vm.deleteBtnDisabled = false;
 
-      // Writing metrics into mixpanel
+      // Writing metrics into analytics
       if (deleteFailureEvent) {
         Analytics.trackEvent(deleteFailureEvent);
       }

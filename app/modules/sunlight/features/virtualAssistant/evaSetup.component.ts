@@ -215,7 +215,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   }
 
   /**
-   * Writing the metrics to the mixpanel for the last page and the overall wizard
+   * Writing the metrics to analytics for the last page and the overall wizard
    */
   private writeMetrics(): void {
     const currentTimeInMillis = Date.now();
