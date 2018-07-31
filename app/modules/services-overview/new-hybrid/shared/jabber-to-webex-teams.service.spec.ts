@@ -36,7 +36,8 @@ describe('Service: JabberToWebexTeamsService:', () => {
 
     it('should POST to config templates url for backendType.voiceServerDomain', function (this: Test) {
       spyOn(this.$http, 'post').and.returnValue(this.$q.resolve());
-      const createData = { profileName: 'fake-profile-name',
+      const createData = {
+        profileName: 'fake-profile-name',
         voiceServerDomainName: 'fake-voice-server-domain',
         udsServerAddress: '', udsBackupServerAddress: '',
       };
@@ -50,7 +51,8 @@ describe('Service: JabberToWebexTeamsService:', () => {
 
     it('should POST to config templates url for backendType.udsServer', function (this: Test) {
       spyOn(this.$http, 'post').and.returnValue(this.$q.resolve());
-      const createData = { profileName: 'fake-profile-name',
+      const createData = {
+        profileName: 'fake-profile-name',
         voiceServerDomainName: '',
         udsServerAddress: 'fake-uds-server',
         udsBackupServerAddress: 'fake-uds-backupserver',
@@ -66,7 +68,8 @@ describe('Service: JabberToWebexTeamsService:', () => {
 
     it('should POST to config templates url for both backendTypes are used', function (this: Test) {
       spyOn(this.$http, 'post').and.returnValue(this.$q.resolve());
-      const createData = { profileName: 'fake-profile-name',
+      const createData = {
+        profileName: 'fake-profile-name',
         voiceServerDomainName: 'fake-voice-server-domain',
         udsServerAddress: 'fake-uds-server',
         udsBackupServerAddress: 'fake-uds-backupserver',
