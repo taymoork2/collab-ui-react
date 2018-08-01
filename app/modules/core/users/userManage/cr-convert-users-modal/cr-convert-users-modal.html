@@ -64,11 +64,20 @@
       translate="convertUsersModal.tab.pending"
       translate-value-count="{{$ctrl.getPendingUsersList().length}}">
     </span>
+    <div ng-show="$ctrl.isPotentialTabSelected() && ($ctrl.getSelectedListCount() > 0)" class="h5 convert-users__csvDownload">
+      <csv-simple-export
+        anchor-text="{{::'convertUsersModal.csv' | translate}}"
+        on-export="$ctrl.exportCSV($ctrl.POTENTIAL)"
+        filename="{{::'convertUsersModal.csvPotentialUsersFilename' | translate}}"
+        icon="icon-download"
+        tooltip-placement="none">
+      </csv-simple-export>
+    </div>
     <div ng-show="$ctrl.isPendingTabSelected() && ($ctrl.getSelectedListCount() > 0)" class="h5 convert-users__csvDownload">
       <csv-simple-export
         anchor-text="{{::'convertUsersModal.csv' | translate}}"
-        on-export="$ctrl.exportCSV()"
-        filename="{{::'convertUsersModal.csvFilename' | translate}}"
+        on-export="$ctrl.exportCSV($ctrl.PENDING)"
+        filename="{{::'convertUsersModal.csvDelayedUsersFilename' | translate}}"
         icon="icon-download"
         tooltip-placement="none">
       </csv-simple-export>

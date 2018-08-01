@@ -216,7 +216,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
     }
   }
 
-  public exportCSV(): ng.IPromise<ICsvRow[]> {
+  public exportCSV(reportType: string): ng.IPromise<ICsvRow[]> {
     return this.$q((resolve) => {
       const csv: ICsvRow[] = [];
 
@@ -224,18 +224,33 @@ export class CrConvertUsersModalController implements ng.IComponentController {
       csv.push({
         name: this.$translate.instant('convertUsersModal.tableHeader.name'),
         email: this.$translate.instant('convertUsersModal.tableHeader.email'),
-        status: this.$translate.instant('convertUsersModal.tableHeader.transient'),
+        status: (reportType === this.POTENTIAL) ?
+          this.$translate.instant('convertUsersModal.tableHeader.eligible') :
+          this.$translate.instant('convertUsersModal.tableHeader.transient'),
       });
 
       // push row data
-      _.forEach(this.getPendingUsersList(), function (o) {
-        const transientDate = new Date(_.get(o, 'meta.accountStatusSetTime.transient'));
-        csv.push({
-          name: o.displayName || '',
-          email: o.userName || '',
-          status: transientDate.toLocaleString(),
+      if (reportType === this.POTENTIAL) {
+        const immediateHeader = this.$translate.instant('convertUsersModal.status.immediate');
+        const delayedHeader = this.$translate.instant('convertUsersModal.status.delayed');
+
+        _.forEach(this.getPotentialUsersList(), function (o) {
+          csv.push({
+            name: o.displayName || '',
+            email: o.userName || '',
+            status: (o.conversionStatus === 'IMMEDIATE') ? immediateHeader : delayedHeader,
+          });
         });
-      });
+      } else {
+        _.forEach(this.getPendingUsersList(), function (o) {
+          const transientDate = new Date(_.get(o, 'meta.accountStatusSetTime.transient'));
+          csv.push({
+            name: o.displayName || '',
+            email: o.userName || '',
+            status: transientDate.toLocaleString(),
+          });
+        });
+      }
 
       resolve(csv);
     });

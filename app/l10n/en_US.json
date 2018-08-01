@@ -11905,7 +11905,8 @@
     "desc": "Convert employees to a licensed user who have signed up for Cisco Webex Teams on their own with a company email address. Licensed users receive additional enterprise features, and are subject to your organization’s policies and administration.",
     "desc2": "Users who have not activated their account will be converted immediately. Other users will be sent a conversion invite email. Users that do not take action on the conversion invite will be converted after {count, plural, =1{# day} other{# days}}.",
     "csv": "CSV",
-    "csvFilename": "users_delayed_conversion.csv",
+    "csvPotentialUsersFilename": "users_potential_conversion.csv",
+    "csvDelayedUsersFilename": "users_delayed_conversion.csv",
     "csvResultsFilename": "users_converted_results.csv",
     "tab": {
       "potential": "Potential Conversion {{count}}",
