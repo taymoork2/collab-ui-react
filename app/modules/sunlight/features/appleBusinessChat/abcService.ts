@@ -12,7 +12,7 @@ export class AbcService {
     type: 'appleBusinessChat',
     label: this.getMessageKey('featureText.type'),
     description: this.getMessageKey('featureText.selectDesc'),
-    icons: ['icon-message'],
+    icons: ['images/apple-messages-icon.png'],
     color: 'feature-abc-color',
     style: 'abc-icon',
     disabled: false,

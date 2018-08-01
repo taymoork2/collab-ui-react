@@ -17,7 +17,8 @@
         <div class="feature-icon-container">
           <label class="feature-icon-circle {{feature.color}}" ng-if="feature.icons.length !== 0"
                  ng-class="{'feature-icon-disabled': feature.disabled}" ng-repeat="ftIcon in feature.icons">
-              <i class="icon {{ftIcon}} {{feature.style}}" ng-if="ftIcon"></i>
+              <i ng-if="ftIcon && feature.type !== 'appleBusinessChat'"class="icon {{ftIcon}} {{feature.style}}"></i>
+              <img ng-if="feature.type === 'appleBusinessChat'" src={{ftIcon}} class="icon {{feature.style}}"/>
           </label>
           <label class="feature-icon-circle {{feature.color}}" ng-if="feature.id === 'AA'">
             {{feature.code | translate}}

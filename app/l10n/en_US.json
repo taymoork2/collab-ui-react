@@ -8875,10 +8875,10 @@
         "errorInvalidIconDimensions": "The dimensions of the {{ featureName }} avatar must be exactly 512 x 512 pixels."
       },
       "contextFields": {
-        "title": "Dialogflow input contexts",
-        "descStart": "Map fields to Dialogflow input contexts. ",
+        "title": "Context Service Fields",
+        "descStart": "Map Context Service fields to parameters in Dialogflow.",
         "descLearnMoreLink": "Learn more",
-        "descFinal": " about input contexts.",
+        "descFinal": " about mapping fields in Dialogflow.",
         "searchText": "Search and add fields",
         "noFields": "No additional fields to add",
         "limitReached": "Maximum fields reached",
