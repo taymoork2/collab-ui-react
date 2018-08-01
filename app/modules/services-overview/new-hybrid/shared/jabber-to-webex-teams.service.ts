@@ -15,7 +15,11 @@ export class JabberToWebexTeamsService {
   }
 
   public listUcManagerProfiles(): ng.IPromise<IUcManagerProfile[]> {
-    return this.$http.get(this.getConfigTemplatesUrl())
+    return this.$http.get(this.getConfigTemplatesUrl(), {
+      params: {
+        filter: `templateType eq "${JABBER_CONFIG_TEMPLATE_TYPE}"`,
+      },
+    })
       .then((response) => {
         return _.get(response.data, 'Resources') as IUcManagerProfile[];
       });
