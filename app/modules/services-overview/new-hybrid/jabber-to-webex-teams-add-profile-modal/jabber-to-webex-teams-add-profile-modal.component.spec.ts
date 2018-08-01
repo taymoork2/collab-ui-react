@@ -97,18 +97,44 @@ describe('Component: jabberToWebexTeamsAddProfileModal:', () => {
     });
 
     describe('checkAndFinish():', () => {
-      it('should not call finish() if the form is invalid', function (this: Test) {
+      beforeEach(function (this: Test) {
         spyOn(this.controller, 'finish');
+      });
+
+      it('should not call finish() if the form is invalid', function (this: Test) {
         this.controller.checkAndFinish();
         expect(this.controller.finish).not.toHaveBeenCalled();
       });
 
-      it('should call finish() if the form is valid', function (this: Test) {
-        spyOn(this.controller, 'finish');
+      it('should not call finish() if not hasAllPrereqsSettingsDone() and savePrereqsSettings() failed', function (this: Test) {
+        spyOn(this.JabberToWebexTeamsService, 'hasAllPrereqsSettingsDone').and.returnValue(this.$q.resolve(false));
+        spyOn(this.JabberToWebexTeamsService, 'savePrereqsSettings').and.returnValue(this.$q.reject());
         this.controller.profileData.profileName = 'test_profile_name';
         this.controller.profileData.voiceServerDomainName = 'voice.alpha.cisco.com';
-        this.$scope.$apply();
+        this.$scope.$apply(); // to synchronize the form data
         this.controller.checkAndFinish();
+        this.$scope.$apply(); // to synchronize the IPromise
+        expect(this.controller.finish).not.toHaveBeenCalled();
+      });
+
+      it('should not call finish() if not hasAllPrereqsSettingsDone() and savePrereqsSettings() OK', function (this: Test) {
+        spyOn(this.JabberToWebexTeamsService, 'hasAllPrereqsSettingsDone').and.returnValue(this.$q.resolve(false));
+        spyOn(this.JabberToWebexTeamsService, 'savePrereqsSettings').and.returnValue(this.$q.resolve());
+        this.controller.profileData.profileName = 'test_profile_name';
+        this.controller.profileData.voiceServerDomainName = 'voice.alpha.cisco.com';
+        this.$scope.$apply(); // to synchronize the form data
+        this.controller.checkAndFinish();
+        this.$scope.$apply(); // to synchronize the IPromise
+        expect(this.controller.finish).toHaveBeenCalled();
+      });
+
+      it('should call finish() if the form is valid and hasAllPrereqsSettingsDone()', function (this: Test) {
+        spyOn(this.JabberToWebexTeamsService, 'hasAllPrereqsSettingsDone').and.returnValue(this.$q.resolve(true));
+        this.controller.profileData.profileName = 'test_profile_name';
+        this.controller.profileData.voiceServerDomainName = 'voice.alpha.cisco.com';
+        this.$scope.$apply(); // to synchronize the form data
+        this.controller.checkAndFinish();
+        this.$scope.$apply(); // to synchronize the IPromise
         expect(this.controller.finish).toHaveBeenCalled();
       });
     });

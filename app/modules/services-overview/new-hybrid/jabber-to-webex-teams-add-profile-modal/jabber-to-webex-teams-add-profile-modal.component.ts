@@ -67,10 +67,12 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
   public finishDisable: boolean = true;
   public BackendTypes = BackendTypes;
   public addProfileForm: ng.IFormController;
+  public savingProfile = false;
 
   /* @ngInject */
   constructor(
     private $rootScope: ng.IRootScopeService,
+    private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private $window: ng.IWindowService,
     private Analytics,
@@ -87,7 +89,20 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
     if (!this.addProfileForm.$valid) {
       return;
     }
-    this.finish();
+    this.savingProfile = true;
+    this.JabberToWebexTeamsService.hasAllPrereqsSettingsDone()
+      .then((isDone) => {
+        if (!isDone) {
+          return this.JabberToWebexTeamsService.savePrereqsSettings({ allPrereqsDone: false });
+        }
+      })
+      .then(() => {
+        this.finish();
+      }).catch((response) => {
+        this.Notification.errorResponse(response, 'jabberToWebexTeams.prerequisitesModal.savePrereqsError');
+      }).finally(() => {
+        this.savingProfile = false;
+      });
   }
 
   public finish(): void {
@@ -97,8 +112,8 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
       ucManagerProfiles.push(this.profileData);
       this.$window.sessionStorage.setItem('spark14176.ucManagerProfiles', JSON.stringify(ucManagerProfiles));
       this.$rootScope.$emit(EventNames.PROFILES_UPDATED);
-      this.dismissModal();
       this.Notification.success('common.OK');
+      this.$state.go('services-overview', {}, { reload: true });
     }).catch(( reason: any ) => {
       this.Notification.errorResponse(reason);
     });

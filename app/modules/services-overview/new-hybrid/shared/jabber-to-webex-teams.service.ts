@@ -71,7 +71,7 @@ export class JabberToWebexTeamsService {
       // - as of 2018-07-23, because CI endpoint stores config property values as strings only, we
       //   convert string to number
       const { totalResults } = response.data;
-      return _.parseInt(totalResults) === 1;
+      return _.parseInt(totalResults) >= 1;
     }).catch(() => {
       return false;
     });
