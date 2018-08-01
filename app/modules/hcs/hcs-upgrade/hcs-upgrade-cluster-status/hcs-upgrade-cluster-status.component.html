@@ -22,6 +22,10 @@
           <i class="icon icon-circle status-indicator warning"></i>
           <span class="h6">{{::'hcs.clusterDetail.nodeStatus.upgradeInProgress' | translate}}</span>
         </span>
+        <span ng-switch-when="paused">
+            <i class="icon icon-circle status-indicator warning"></i>
+            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.paused' | translate}}</span>
+        </span>
         <span ng-switch-when="posted">
             <i class="icon icon-circle status-indicator warning"></i>
             <span class="h6">{{::'hcs.clusterDetail.nodeStatus.upgradeInProgress' | translate}}</span>

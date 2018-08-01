@@ -2,6 +2,7 @@ import { HcsSetupModalService, HcsSetupModalSelect, ISoftwareProfile } from 'mod
 import { CardUtils } from 'modules/core/cards';
 import { IToolkitModalService } from 'modules/core/modal';
 import { HcsUpgradeService } from 'modules/hcs/hcs-shared';
+import { Notification } from 'modules/core/notifications';
 
 interface IHeaderTab {
   title: string;
@@ -25,6 +26,7 @@ export class HcsUpgradeSwprofileListCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     public $modal: IToolkitModalService,
     private HcsUpgradeService: HcsUpgradeService,
+    private Notification: Notification,
   ) {}
 
   public $onInit() {
@@ -40,9 +42,11 @@ export class HcsUpgradeSwprofileListCtrl implements ng.IComponentController {
 
   public listSwProfile(): void {
     this.loading = true;
-    this.HcsUpgradeService.listSoftwareProfiles().then(data => {
-      this.swprofileList = _.get(data, 'softwareProfiles');
-      this.currentList = this.swprofileList;
+    this.HcsUpgradeService.listSoftwareProfiles().then(swProfilesObject => {
+      this.swprofileList = _.sortBy(swProfilesObject.softwareProfiles, swProflile => swProflile.name.toLowerCase());
+      if (_.size(this.swprofileList) > 0) {
+        this.currentList = this.swprofileList;
+      }
     }).finally(() => this.loading = false);
   }
 
@@ -85,7 +89,15 @@ export class HcsUpgradeSwprofileListCtrl implements ng.IComponentController {
   }
 
   public deleteSwProfileService(uuid: string): void {
-    this.HcsUpgradeService.deleteSoftwareProfile(uuid).then(() => this.listSwProfile());
+    this.HcsUpgradeService.deleteSoftwareProfile(uuid)
+      .then(() => this.listSwProfile())
+      .catch((err) => {
+        if (err.status === 409) {
+          this.Notification.error('hcs.softwareProfiles.deletionFailure');
+        } else {
+          this.Notification.errorResponse(err);
+        }
+      });
   }
 
   public editSwProfile(swprofile: ISoftwareProfile): void {

@@ -1,7 +1,8 @@
-import { HcsUpgradeService, HcsSetupModalService, HcsSetupModalSelect } from 'modules/hcs/hcs-shared';
+import { HcsUpgradeService, HcsSetupModalService, HcsSetupModalSelect, ISftpServer } from 'modules/hcs/hcs-shared';
 import { SftpServer } from 'modules/hcs/hcs-setup/hcs-setup-sftp';
 import { CardUtils } from 'modules/core/cards';
 import { IToolkitModalService } from 'modules/core/modal';
+import { Notification } from 'modules/core/notifications';
 
 interface IHeaderTab {
   title: string;
@@ -13,8 +14,8 @@ export class HcsUpgradeSftpListCtrl implements ng.IComponentController {
   public tabs: IHeaderTab[] = [];
   public back: boolean = true;
   public backState: string = 'partner-services-overview';
-  public sftpList: SftpServer[];
-  public currentSftpList: SftpServer[];
+  public sftpList: ISftpServer[];
+  public currentSftpList: ISftpServer[];
   public loading: boolean = true;
 
   /* @ngInject */
@@ -25,6 +26,7 @@ export class HcsUpgradeSftpListCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     public CardUtils: CardUtils,
     public $modal: IToolkitModalService,
+    private Notification: Notification,
   ) {}
 
   public $onInit() {
@@ -41,9 +43,11 @@ export class HcsUpgradeSftpListCtrl implements ng.IComponentController {
   public listSftpServers(): void {
     this.loading = true;
     this.HcsUpgradeService.listSftpServers()
-      .then(list => {
-        this.sftpList = _.get(list, 'sftpServers');
-        this.currentSftpList = this.sftpList;
+      .then(sftpServersObject => {
+        this.sftpList = _.sortBy(sftpServersObject.sftpServers, sftpServer => sftpServer.name.toLowerCase());
+        if (_.size(this.sftpList) > 0) {
+          this.currentSftpList = this.sftpList;
+        }
       }).finally(() => this.loading = false);
   }
 
@@ -90,7 +94,15 @@ export class HcsUpgradeSftpListCtrl implements ng.IComponentController {
   }
 
   public deleteSftpService(sftp: SftpServer) {
-    this.HcsUpgradeService.deleteSftpServer(sftp.uuid).then(() => this.listSftpServers());
+    this.HcsUpgradeService.deleteSftpServer(sftp.uuid)
+      .then(() => this.listSftpServers())
+      .catch((err) => {
+        if (err.status === 409) {
+          this.Notification.error('hcs.sftp.deletionFailure');
+        } else {
+          this.Notification.errorResponse(err);
+        }
+      });
   }
 
   public editSftp(sftp: SftpServer): void {
