@@ -22,6 +22,14 @@ export interface IConfigTemplateResponse extends IConfigTemplateRequest {
   meta: object;
 }
 
+export interface IUcManagerProfileData {
+  profileName: string;
+  voiceServerDomainName: string;
+  udsServerAddress: string;
+  udsBackupServerAddress: string;
+  allowUserEdit: boolean;
+}
+
 export interface IUcManagerProfile extends IConfigTemplateResponse {
   VoiceMailServer: string;
   CUCMServer: string;

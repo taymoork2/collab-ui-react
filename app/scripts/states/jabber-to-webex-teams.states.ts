@@ -35,15 +35,17 @@ export default function configureStates($stateProvider: ng.ui.IStateProvider) {
     .state('jabber-to-webex-teams.modal.edit-profile', {
       views: {
         'modal@': {
-          template: '<jabber-to-webex-teams-add-profile-modal profile="$resolve.profile" dismiss="$dismiss()"></jabber-to-webex-teams-add-profile-modal>',
+          template: '<jabber-to-webex-teams-add-profile-modal profile-id="$resolve.profileId" profile-data="$resolve.profileData" dismiss="$dismiss()"></jabber-to-webex-teams-add-profile-modal>',
         },
       },
       params: {
-        profile: undefined,
+        profileData: undefined,
+        profileId: undefined,
       },
       resolve: _.assignIn(
         stateParamsToResolveParams({
-          profile: undefined,
+          profileData: undefined,
+          profileId: undefined,
         })),
     })
     .state('jabber-to-webex-teams.profiles', {

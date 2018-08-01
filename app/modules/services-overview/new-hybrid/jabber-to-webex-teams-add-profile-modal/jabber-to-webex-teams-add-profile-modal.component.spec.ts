@@ -3,6 +3,7 @@ import { JabberToWebexTeamsAddProfileModalController } from './jabber-to-webex-t
 import { Analytics } from 'modules/core/analytics';
 import { Notification } from 'modules/core/notifications';
 import { JabberToWebexTeamsService } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.service';
+import { IUcManagerProfileData } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.types';
 
 type Test = atlas.test.IComponentTest<JabberToWebexTeamsAddProfileModalController, {
   $q: ng.IQService;
@@ -29,15 +30,19 @@ describe('Component: jabberToWebexTeamsAddProfileModal:', () => {
     this.$scope.hasAllPrereqsSettingsDoneSpy = spyOn(this.JabberToWebexTeamsService, 'hasAllPrereqsSettingsDone').and.returnValue(this.$q.resolve(true));
     this.$scope.savePrereqsSettingsSpy = spyOn(this.JabberToWebexTeamsService, 'savePrereqsSettings').and.returnValue(this.$q.resolve());
     this.$scope.createSpy = spyOn(this.JabberToWebexTeamsService, 'create').and.returnValue(this.$q.resolve());
+    spyOn(this.JabberToWebexTeamsService, 'updateUcManagerProfile').and.returnValue(this.$q.resolve({}));
   });
 
-  beforeEach(function (this: Test) {
+  function initComponent(this: Test) {
     this.compileComponent('jabberToWebexTeamsAddProfileModal', {
       dismiss: 'dismissSpy()',
+      profileData: 'fakeProfileData',
+      profileId: 'fakeProfileId',
     });
-  });
+  }
 
   describe('primary behaviors (view):', () => {
+    beforeEach(initComponent);
     describe('dismissing the modal:', () => {
       it('should call "dismissModal()" when modal close button is clicked', function (this: Test) {
         this.view.find('.modal-header .close').click();
@@ -47,6 +52,34 @@ describe('Component: jabberToWebexTeamsAddProfileModal:', () => {
       it('should call "dismissModal()" when cancel binding is invoked', function (this: Test) {
         this.view.find('.modal-footer .cancel').click();
         expect(this.$scope.dismissSpy).toHaveBeenCalled();
+      });
+    });
+
+    describe('editing vs adding a profile', () => {
+      describe('editing profile', () => {
+        it('should return isCreate as false, call edit backend function, and have template name as readonly when profile info is passed', function (this: Test) {
+          this.$scope.fakeProfileData = profileData;
+          this.$scope.fakeProfileId = '123';
+          initComponent.apply(this);
+          expect(this.controller.profileData.profileName).toBe(profileData.profileName);
+          const profileNameElem = this.view.find('input[name="profileName"]')[0] as HTMLInputElement;
+          expect(profileNameElem.readOnly).toBe(true);
+          expect(this.controller.isCreate).toBe(false);
+          this.controller.finish();
+          this.$scope.$apply();
+          expect(this.JabberToWebexTeamsService.updateUcManagerProfile).toHaveBeenCalled();
+        });
+      });
+      describe('adding a profile', () => {
+        it('should return isCreate as true, and call create backend function when no profile info as passed', function (this: Test) {
+          this.$scope.fakeProfileData = undefined;
+          this.$scope.fakeProfileId = undefined;
+          initComponent.apply(this);
+          expect(this.controller.isCreate).toBe(true);
+          this.controller.finish();
+          this.$scope.$apply();
+          expect(this.JabberToWebexTeamsService.create).toHaveBeenCalled();
+        });
       });
     });
 
@@ -91,6 +124,7 @@ describe('Component: jabberToWebexTeamsAddProfileModal:', () => {
   });
 
   describe('primary behaviors (controller):', () => {
+    beforeEach(initComponent);
     describe('dismissModal():', () => {
       it('should track the event', function (this: Test) {
         spyOn(this.Analytics, 'trackAddUsers');
@@ -154,4 +188,12 @@ describe('Component: jabberToWebexTeamsAddProfileModal:', () => {
       });
     });
   });
+
+  const profileData: IUcManagerProfileData = {
+    profileName: 'someName',
+    voiceServerDomainName: 'someServer',
+    udsServerAddress: 'cucm',
+    udsBackupServerAddress: 'backupCucm',
+    allowUserEdit: false,
+  };
 });

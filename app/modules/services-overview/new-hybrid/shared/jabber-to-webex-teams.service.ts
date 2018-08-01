@@ -1,4 +1,4 @@
-import { IPrereqsSettings, IPrereqsSettingsResponse, IUcManagerProfile, PREREQS_CONFIG_TEMPLATE_TYPE, PROFILE_TEMPLATE, JABBER_CONFIG_TEMPLATE_TYPE } from './jabber-to-webex-teams.types';
+import { IPrereqsSettings, IPrereqsSettingsResponse, IUcManagerProfile, JABBER_CONFIG_TEMPLATE_TYPE, PREREQS_CONFIG_TEMPLATE_TYPE, PROFILE_TEMPLATE } from './jabber-to-webex-teams.types';
 import { JabberToWebexTeamsUtil } from './jabber-to-webex-teams.util';
 
 export class JabberToWebexTeamsService {
@@ -8,7 +8,7 @@ export class JabberToWebexTeamsService {
     private $http: ng.IHttpService,
     private Authinfo,
     private UrlConfig,
-  ) {}
+  ) { }
 
   public getConfigTemplatesUrl() {
     return `${this.UrlConfig.getIdentityServiceUrl()}/organization/${this.Authinfo.getOrgId()}/v1/config/templates`;
@@ -34,6 +34,30 @@ export class JabberToWebexTeamsService {
       headers: {
         'Content-Type': 'application/json',
       },
+    });
+  }
+
+  public updateUcManagerProfile(profileId: string, options: {
+    profileName: string;
+    voiceServerDomainName: string;
+    udsServerAddress: string;
+    udsBackupServerAddress: string;
+  }): ng.IPromise<IUcManagerProfile> {
+    // TODO : the allowUserEdit need to be added after CI enable this property.
+    // ALSO, CI needs to handle setting properties to empty to remove them.
+    const url = `${this.getConfigTemplatesUrl()}/${profileId}`;
+    const { voiceServerDomainName, udsServerAddress, udsBackupServerAddress } = options;
+    const requestData = {};
+    _.assignIn(requestData, {
+      schemas: PROFILE_TEMPLATE.schemas,
+      VoiceMailServer: voiceServerDomainName,
+      CUCMServer: udsServerAddress,
+      BackupCUCMServer: udsBackupServerAddress,
+    });
+
+    return this.$http.patch(url, requestData).then((response) => {
+      const profile: IUcManagerProfile = JabberToWebexTeamsUtil.mkUcManagerProfile();
+      return _.assignIn(profile, <IUcManagerProfile>response.data);
     });
   }
 

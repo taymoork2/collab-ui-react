@@ -1,5 +1,5 @@
 import { JabberToWebexTeamsService } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.service';
-import { IUcManagerProfile, EventNames } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.types';
+import { IUcManagerProfile, IUcManagerProfileData, EventNames } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.types';
 import { IToolkitModalService, IToolkitModalSettings } from 'modules/core/modal';
 import { Notification } from 'modules/core/notifications';
 export class JabberToWebexTeamsProfilesController implements ng.IComponentController {
@@ -26,8 +26,15 @@ export class JabberToWebexTeamsProfilesController implements ng.IComponentContro
   }
 
   public editProfile(profile: IUcManagerProfile): void {
-    //algendel TODO: this needs to be updated for edit profile to pass the needed data
-    this.$state.go('jabber-to-webex-teams.modal.edit-profile', { profileData: profile });
+    const profileData: IUcManagerProfileData = {
+      profileName: profile.templateName,
+      voiceServerDomainName: profile.VoiceMailServer,
+      udsServerAddress: profile.CUCMServer,
+      udsBackupServerAddress: profile.BackupCUCMServer,
+      allowUserEdit: false,
+    };
+
+    this.$state.go('jabber-to-webex-teams.modal.edit-profile', { profileData: profileData, profileId: profile.id });
   }
 
   public addProfile(): void {
