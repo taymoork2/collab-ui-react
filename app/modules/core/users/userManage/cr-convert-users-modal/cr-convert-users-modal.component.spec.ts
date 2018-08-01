@@ -248,18 +248,22 @@ describe('Component: crConvertUsersModal:', () => {
         expect(this.controller.getPotentialUsersList().length).toBe(0);
       });
 
-      it('should have the csv-simple-export tag and exportCSV() is returning the correct data', function (this: Test) {
+      it('should have the csv-simple-export tag and exportCSV() is returning the correct data', function (this: Test, done) {
         this.FeatureToggleService.supports.and.callFake(toggle => {
           return this.$q.resolve(toggle === this.FeatureToggleService.features.atlasF7208GDPRConvertUser);
         });
         this.compileComponent('crConvertUsersModal', {});
         initFakeGridApi.call(this);
         expect(this.view.find('csv-simple-export')).toExist();
-        const promise = this.controller.exportCSV(this.controller.POTENTIAL);
-        this.$scope.$apply();
-        promise.then(csv => {
-          expect(csv.length).toBe(10);
+        this.controller.exportCSV(this.controller.POTENTIAL).then(csv => {
+          expect(csv.length).toBe(11); // include the header row
+          _.defer(done);
         });
+        this.controller.exportCSV(this.controller.PENDING).then(csv => {
+          expect(csv.length).toBe(3); // include the header row
+          _.defer(done);
+        });
+        this.$scope.$apply();
       });
 
       describe('modal UX', function (this: Test) {
