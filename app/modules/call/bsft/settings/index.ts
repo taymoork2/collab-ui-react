@@ -1,6 +1,7 @@
 import './bsft-settings.scss';
 
 import { BsftSettingsComponent } from './bsft-settings.component';
+import bsftReadOnlyModule from './bsft-read-only';
 import bsftSettingsSharedModule from './shared';
 import bsftSiteNameModule from './settings-site-name';
 import bsftSiteAddress from './settings-site-address';
@@ -19,6 +20,7 @@ export default angular
   .module('call.bsft.settings', [
     require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
+    bsftReadOnlyModule,
     bsftSharedModule,
     bsftSettingsSharedModule,
     bsftSiteNameModule,

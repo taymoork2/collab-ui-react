@@ -50,7 +50,7 @@ export class RialtoService {
   }
 
   public getSites(customerId: string) {
-    return this.rialtoServiceProviderSiteResource.query({
+    return this.rialtoServiceProviderSiteResource.get({
       customerId: customerId,
     }).$promise;
   }
