@@ -148,7 +148,7 @@
         }
       }
     }
-  
+
     .hybrid-disabled-footer {
       padding-bottom: 40px;
     }
@@ -359,6 +359,22 @@
         padding-bottom: 1.5rem;
       }
     }
+  }
+
+  .bsft-licenses.bsft-places-license {
+    position: relative;
+    right: rem-calc(8);
+  }
+
+  .bsft-licenses {
+    margin: 0px auto 16px;
+
+    .overview-count.bsft-count {
+    position: relative;
+    font-size: 2rem;
+    top: rem-calc(6);
+    margin-right: 1rem;
+  }
   }
 }
 
