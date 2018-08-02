@@ -120,6 +120,13 @@ class CrServicesPanelsController implements ng.IComponentController {
     return this.radioStates.msgRadio && !this.isContextServiceAdminAuthorized;
   }
 
+  public getCallLicenseName(offerName: string): string {
+    if (offerName === this.Config.offerTypes.spstd) {
+      return this.$translate.instant('subscriptions.broadCloudFlex');
+    }
+    return this.$translate.instant('onboardModal.paidSparkCall');
+  }
+
   public selectedSubscriptionHasBasicLicenses(subscriptionId: string): boolean {
     if (subscriptionId && subscriptionId !== this.Config.subscriptionState.trial) {
       return _.some(this.basicLicenses, function (service) {
