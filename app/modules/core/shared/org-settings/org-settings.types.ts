@@ -16,7 +16,9 @@ export enum OrgSetting {
   WHITEBOARD_FILE_SHARE_CONTROL = 'whiteboardFileShareControl',
 }
 
-export interface IOrgSettingsResponse {
+export type IOrgSettingsResponse = '' | IOrgSettings; // API can return 204 no content
+
+interface IOrgSettings {
   orgSettings: string[];
 }
 

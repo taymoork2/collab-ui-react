@@ -17,7 +17,11 @@ export class OrgSettingsService {
   public getSettings(orgId: string): ng.IPromise<object> {
     const url = this.getSettingsUrl(orgId);
     return this.$http.get<IOrgSettingsResponse>(url).then(response => {
-      return JSON.parse(response.data.orgSettings[0]);
+      const orgSettings = _.get<string>(response, 'data.orgSettings[0]');
+      if (orgSettings) {
+        return JSON.parse(orgSettings);
+      }
+      return {};
     });
   }
 
