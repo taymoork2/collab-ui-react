@@ -30,7 +30,8 @@
             </div>
             <div class="care-icon">
               <span ng-repeat="icon in careFeature.icons">
-                <i class="icon {{icon}} {{careFeature.color}} icon-lg"></i>
+                <i ng-if="careFeature.featureType !== 'appleBusinessChat'" class="icon {{icon}} {{careFeature.color}} icon-lg"></i>
+                <img ng-if="careFeature.featureType === 'appleBusinessChat'" src={{icon}} class="icon abc-icon"/>
               </span>
             </div>
           </div>

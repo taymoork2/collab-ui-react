@@ -28,6 +28,7 @@ class CareFeatureModalCtrl implements ng.IComponentController {
       label: 'common.customerSupportTemplate',
       description: 'sunlightDetails.newFeatures.selectCSTDesc',
       icons: ['icon-picture-in-picture'],
+      style: 'larger-icon',
       color: 'feature-cst-color',
       disabled: false,
     });
@@ -42,7 +43,7 @@ class CareFeatureModalCtrl implements ng.IComponentController {
         label: 'sunlightDetails.newFeatures.virtualAssistant',
         description: 'careChatTpl.virtualAssistant.featureText.selectDesc',
         icons: ['icon-bot-four'],
-        style: 'virtual-assistant-icon',
+        style: 'larger-icon',
         color: 'feature-va-color',
         disabled: false,
       });

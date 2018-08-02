@@ -40,7 +40,7 @@ describe('Apple Business Chat', () => {
     it('should open New Feature Modal when New button is clicked', function () {
       utils.click(careLandingPage.creatCTButton);
       utils.expectIsDisplayed(careFeatureLandingPage.careNewFeatureModal);
-      utils.expectIsDisplayed(careFeatureLandingPage.createVirtualAssistantTemplateButton);
+      utils.expectIsDisplayed(careFeatureLandingPage.createAppleBusinessChatButton);
     });
 
     it('should display Business Id page when Apple Business Chat is selected', function () {

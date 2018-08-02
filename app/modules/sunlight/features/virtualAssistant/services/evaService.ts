@@ -14,7 +14,7 @@ export class EvaService {
     label: this.getMessageKey('featureText.type'),
     description: this.getMessageKey('featureText.selectDesc'),
     icons: ['icon-bot-five'],
-    style: 'virtual-assistant-icon',
+    style: 'larger-icon',
     color: 'feature-va-color',
     disabled: false,
     disabledTooltip:  this.getMessageKey('featureText.disabledTooltip'),
