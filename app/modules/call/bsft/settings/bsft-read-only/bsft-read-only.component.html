@@ -1,0 +1,14 @@
+<form name="$ctrl.form" novalidate  ng-if="!$ctrl.loading" class="bsft-site-setup">
+  <div class="container-fluid service-setup-container">
+    <h4 class="title-margin" translate="broadCloud.readOnly.title"></h4>
+    <h6 class="later-margin" translate="broadCloud.readOnly.desc"></h6>
+    <div>
+      <label class="sub-section__label"><strong translate="locations.locationName"></strong></label>
+      <span>{{$ctrl.site.siteLocation}}</span>
+    </div>
+    <div>
+      <label class="sub-section__label"><strong translate="broadCloud.site.locationContactInfo"></strong></label>
+      <span>{{$ctrl.site.siteContactName}}</span>
+    </div>
+  </div>
+</form>

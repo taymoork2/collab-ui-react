@@ -12086,9 +12086,13 @@
       "locationContactInfo": "Location Contact Info",
       "phoneNumber": "Phone Number"
     },
+    "readOnly": {
+      "title": "Default Location Address",
+      "desc": "A default location already exists. You can edit or add more locations after setup is complete in Control Hub."
+    },
     "licenseAllocation": {
       "title": "Assign Total Licenses",
-      "desc": "Enter the total number for each license type you want to assign for this location. Enter 0 if you do not want to assign any",
+      "desc": "Enter the total number for each license type you want to assign for this location. Enter 0 if you do not want to assign any. You can also assign remaining licenses to other added locations after first time setup is completed.",
       "standard": "Standard",
       "places": "Places",
       "remaining": "{{available}} of {{total}} remaining"

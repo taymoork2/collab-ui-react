@@ -9,6 +9,7 @@ export class FtswConfigService {
   private ftswConfig: FtswConfig;
   private editSite: Site | undefined;
   private currentSite: Site | undefined;
+  private currentCustomer;
 
   /* @ngInject */
   constructor(
@@ -139,5 +140,13 @@ export class FtswConfigService {
 
   public getCurentSite(): Site | undefined {
     return this.currentSite;
+  }
+
+  public setCurrentCustomer(customer): void {
+    this.currentCustomer = customer;
+  }
+
+  public getCurrentCustomer() {
+    return this.currentCustomer;
   }
 }

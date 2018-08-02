@@ -27,6 +27,7 @@ require('./_setup-wizard.scss');
   var bsftLicenseAllocationTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftLicenseAllocation.html');
   var bsftNumberSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftNumber.html');
   var bsftAssignNumberTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftAssignNumber.html');
+  var bsftReadOnlyTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftReadOnly.html');
 
   var careSettingsTemplatePath = require('ngtemplate-loader?module=Core!./careSettings/careSettings.tpl.html');
 
@@ -36,7 +37,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, ApiCacheManagementService, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService, RialtoService) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, ApiCacheManagementService, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService, RialtoService, FtswConfigService) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var isITDecouplingFlow = false;
     var shouldRemoveSSOSteps = false;
@@ -312,6 +313,11 @@ require('./_setup-wizard.scss');
         template: bsftAssignNumberTemplatePath,
       };
 
+      var bsftReadOnly = {
+        name: 'bsftReadOnly',
+        template: bsftReadOnlyTemplatePath,
+      };
+
       if (showCallSettings()) {
         $q.all({
           customer: $scope.isCustomerPresent,
@@ -349,6 +355,9 @@ require('./_setup-wizard.scss');
           if (supportsHI1776 || Authinfo.isBroadCloud()) {
             if (!response.bsft.rialtoId) {
               steps.push(setupBsft, bsftLicenseAllocation, setupNumberBsft, assignNumberBsft);
+            } else {
+              FtswConfigService.setCurrentCustomer(response.bsft);
+              steps.push(bsftReadOnly);
             }
           } else {
             if (supportsHI1484) {
