@@ -71,6 +71,7 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $rootScope: ng.IRootScopeService,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
@@ -95,7 +96,9 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
   public finish(): void {
     this.savingProfile = true;
     this.JabberToWebexTeamsService.hasAllPrereqsSettingsDone().then((isDone) => {
-      if (!isDone) {
+      if (_.isNil(isDone)) {
+        return this.$q.reject();
+      } else if (!isDone) {
         return this.JabberToWebexTeamsService.savePrereqsSettings({ allPrereqsDone: false });
       }
     }).then(() => {

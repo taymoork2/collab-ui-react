@@ -145,6 +145,13 @@ describe('Component: jabberToWebexTeamsAddProfileModal:', () => {
         this.$scope.$apply();
         expect(this.JabberToWebexTeamsService.create).toHaveBeenCalled();
       });
+
+      it('should not call JabberToWebexTeamsService.create(...) if hasAllPrereqsSettingsDone() resolved as undefined', function (this: Test) {
+        this.$scope.hasAllPrereqsSettingsDoneSpy.and.returnValue(this.$q.resolve(undefined));
+        this.controller.finish();
+        this.$scope.$apply();
+        expect(this.JabberToWebexTeamsService.create).not.toHaveBeenCalled();
+      });
     });
   });
 });
