@@ -177,7 +177,8 @@
         <div class="entitle-check-grp"
              ng-show="multipleSubscriptions.showLicenses(commFeature.license.billingServiceId, commFeature.license.isTrial)"
              ng-repeat="commFeature in $ctrl.communicationFeatures"
-             ng-if="commFeature.license.licenseType !== 'advancedCommunication'">
+             ng-if="commFeature.license.licenseType !== 'advancedCommunication'
+              && commFeature.license.offerName !== 'SPCA'">
           <div class="ckbx">
             <div class="cs-checkbox-group">
               <input
@@ -187,7 +188,7 @@
                 ng-change="$ctrl.checkCommLicenseAvailability(commFeature.commRadio, commFeature)"
                 ng-model="commFeature.commRadio"
                 ng-disabled="$ctrl.hybridCallServiceAware || $ctrl.disableCommCheckbox(commFeature)"
-                cs-input-label="{{::'onboardModal.paidSparkCall' | translate}}">
+                cs-input-label="{{$ctrl.getCallLicenseName(commFeature.license.offerName)}}">
               <span class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
             </div>
             <div ng-if="$ctrl.disableCommFeatureAssignment()">
