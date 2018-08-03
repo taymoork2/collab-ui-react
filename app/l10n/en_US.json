@@ -9242,7 +9242,7 @@
         "setupMeetingService": "Set up Meeting Service"
       },
       "call": {
-        "title": "Call",
+        "title": "Calling",
         "notEnabledText": "Basic external calling and call routing features enabled for your organization."
       },
       "care": {

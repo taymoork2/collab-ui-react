@@ -6,33 +6,26 @@
 </header>
 <section>
   <div class="overview-info">
-    <section>
-      <button
-        cs-btn
-        ng-click="card.openBroadsoftPortal()"
-        type="button"
-        class="btn btn--cta"
-        loading="card.loading"
-        ng-disabled="card.disableCrossLaunch">
-        <span translate="overview.cards.broadsoft.launch"></span>
-      </button>
-    </section>
+    <div ng-repeat="license in card.licenses" class="bsft-licenses" ng-class="{'bsft-places-license' : license.id==='placesLicense'}">
+      <span class="overview-count bsft-count">{{license.count}}</span>{{license.name}}
+    </div>
+    <div translate="overview.totalUserLicenses"></div>
   </div>
 </section>
 <footer class="footer-menu ng-isolate-scope overview-footer-content-trial"
         ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }"
         ng-if="card.enabled">
   <span class="footer-content">
-  <span class="badge warning" ng-if="card.trial && (!overview.trialDaysLeft || overview.trialDaysLeft >= 0)" translate="customerPage.trial"></span>
-  <span class="badge alert" ng-if="card.trial && (overview.trialDaysLeft < 0)" translate="customerPage.expired"></span>
-  <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell" ng-show="card.showHealth" aria-label="{{::card.healthStatusAria}}">
-    <cs-statusindicator ng-model="card.healthStatus"></cs-statusindicator>
-    <span>{{card.levelText}}</span>
-  </a>
+    <span class="badge warning" ng-if="card.trial && (!overview.trialDaysLeft || overview.trialDaysLeft >= 0)" translate="customerPage.trial"></span>
+    <span class="badge alert" ng-if="card.trial && (overview.trialDaysLeft < 0)" translate="customerPage.expired"></span>
+    <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell" ng-show="card.showHealth" aria-label="{{::card.healthStatusAria}}">
+      <cs-statusindicator ng-model="card.healthStatus"></cs-statusindicator>
+      <span>{{card.levelText}}</span>
+    </a>
   </span>
-  <!-- <span class="footer-icons">
-    <a ng-if="card.settingsUrl" aria-label="{{card.name | translate}} {{'common.settings' | translate}}">
+  <span class="footer-icons">
+    <a ng-if="card.settingsUrl" aria-label="{{card.name | translate}} {{'common.settings' | translate}}" ng-click="card.openBroadsoftPortal()">
       &nbsp;<i class="icon icon-settings"></i>
     </a>
-  </span> -->
+  </span>
 </footer>
