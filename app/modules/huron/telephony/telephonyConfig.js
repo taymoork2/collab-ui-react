@@ -74,7 +74,7 @@
       },
 
       getMinervaUrl: function () {
-        return 'http://minerva.' + this.getBaseDomain() + '/api/v1';
+        return 'https://minerva.' + this.getBaseDomain() + '/api/v1';
       },
 
       getUpgradeUrl: function () { //TBD-- add the devhost:port for local testing
