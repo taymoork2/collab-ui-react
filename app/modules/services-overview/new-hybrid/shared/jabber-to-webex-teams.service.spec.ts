@@ -150,7 +150,6 @@ describe('Service: JabberToWebexTeamsService:', () => {
       }).catch(fail);
       this.$scope.$apply();
 
-
       // "totalResults" is "-1"
       _.set(fakeResolvedResult, 'data.totalResults', '-1');
       this.JabberToWebexTeamsService.hasAllPrereqsSettingsDone().then((parsedResolvedResult) => {
