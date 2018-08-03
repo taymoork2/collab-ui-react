@@ -6,9 +6,10 @@
   <div class="container-fluid service-setup-container">
     <h4 ng-if="!$ctrl.editing && $ctrl.site.defaultLocation" class="title-margin" translate="broadCloud.site.setupDefault"></h4>
     <h4 ng-if="$ctrl.editing && $ctrl.site.defaultLocation" class="title-margin" translate="broadCloud.site.editDefault"></h4>
-    <h4 ng-if="!$ctrl.editing && !$ctrl.site.defaultLocation" class="title-margin" translate="broadCloud.site.setup"></h4>
+    <h4 ng-if="!$ctrl.editing && !$ctrl.site.defaultLocation && $ctrl.ftsw" class="title-margin" translate="broadCloud.site.setup"></h4>
+    <h4 ng-if="!$ctrl.editing && !$ctrl.site.defaultLocation && !$ctrl.ftsw" class="title-margin" translate="broadCloud.site.setupLocation"></h4>
     <h4 ng-if="$ctrl.editing && !$ctrl.site.defaultLocation" class="title-margin" translate="broadCloud.site.edit"></h4>
-    <h6 class="later-margin" translate="broadCloud.site.editLater"></h6>
+    <h6 ng-if="$ctrl.ftsw" class="later-margin" translate="broadCloud.site.editLater"></h6>
     <input
       ng-if="!$ctrl.site.defaultLocation"
       cs-input

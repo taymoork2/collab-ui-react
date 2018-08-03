@@ -12084,6 +12084,8 @@
       "setupDefault": "Setup Default Location",
       "editDefault": "Edit Default Location",
       "setup": "Setup Location",
+      "setupLocation": "Location Information",
+      "add": "Add Location",
       "edit": "Edit Location",
       "makeDefault": "Make this my default location",
       "editLater": "You can also edit location information after setup is complete in Control Hub",

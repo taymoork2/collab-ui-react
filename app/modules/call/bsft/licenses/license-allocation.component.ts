@@ -5,6 +5,7 @@ class LicenseAllocationCtrl implements ng.IComponentController {
   public form: ng.IFormController;
   public site: Site;
   public licenses = {};
+  public modalInvalid: Function;
 
   /* @ngInject */
   constructor(
@@ -13,14 +14,22 @@ class LicenseAllocationCtrl implements ng.IComponentController {
     ) {}
 
   public $onInit(): void {
+    this.$scope.$watch(() => {
+      return _.get(this.form, '$invalid');
+    }, invalid => {
+      if (this.ftsw) {
+        this.$scope.$emit('wizardNextButtonDisable', !!invalid);
+      } else {
+        this.modalInvalid({
+          invalid: !!invalid,
+        });
+      }
+    });
+
     if (this.ftsw) {
       this.$scope.$emit('wizardNextText', 'nextAddNumbers');
-
-      this.$scope.$watch(() => {
-        return _.get(this.form, '$invalid');
-      }, invalid => {
-        this.$scope.$emit('wizardNextButtonDisable', !!invalid);
-      });
+    } else {
+      this.$scope.$on('bsftLicenseAllocationNext', () => this.bsftLicenseAllocationNext());
     }
 
     this.licenses['standard'] = _.find(this.getLicensesInfo('standard'), licenses => licenses.name === 'standard');
@@ -69,5 +78,6 @@ export class LicenseAllocationComponent implements ng.IComponentOptions {
   public template = require('modules/call/bsft/licenses/license-allocation.component.html');
   public bindings = {
     ftsw: '<',
+    modalInvalid: '&?',
   };
 }
