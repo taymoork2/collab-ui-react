@@ -6832,6 +6832,12 @@
       "success": "Video quality setting was set successfully.",
       "error": "Error in saving video quality setting. Please revert the change and try again later."
     },
+    "mediaEncryption": {
+      "title": "Media Encryption",
+      "description": "Enable this setting to make encryption mandatory on all media channels that pass through Video Mesh nodes in your organization. Be aware that calls may fail if on-premises devices do not support TLS and SRTP encryption.",
+      "success": "Media encryption setting was set successfully.",
+      "error": "Error in saving media encryption setting. Please revert the change and try again later."
+    },
     "qos": {
       "title": "QoS",
       "detail": "Quality of Service",

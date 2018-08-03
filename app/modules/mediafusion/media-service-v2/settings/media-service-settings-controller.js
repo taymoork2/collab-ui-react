@@ -2,11 +2,12 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsControllerV2(Analytics, hasMfQosFeatureToggle) {
+  function MediaServiceSettingsControllerV2(Analytics, hasMfMediaEncryptionFeatureToggle, hasMfQosFeatureToggle) {
     var vm = this;
     vm.config = '';
     vm.serviceType = 'mf_mgmt';
     vm.serviceId = 'squared-fusion-media';
+    vm.hasMfMediaEncryptionFeatureToggle = hasMfMediaEncryptionFeatureToggle;
     vm.hasMfQosFeatureToggle = hasMfQosFeatureToggle;
 
     vm.deactivateModalOptions = {

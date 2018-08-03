@@ -7,6 +7,7 @@ class HybridMediaInactiveCardController implements ng.IComponentController {
   public hasMfFeatureToggle: boolean = false;
   public hasMfSIPFeatureToggle: boolean = false;
   public hasMfCascadeBwConfigToggle: boolean = false;
+  public hasMfMediaEncryptionFeatureToggle: boolean = false;
   public hasMfQosFeatureToggle: boolean = false;
 
   /* @ngInject */
@@ -34,6 +35,9 @@ class HybridMediaInactiveCardController implements ng.IComponentController {
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceFirstTimeCalling).then( (supported) => {
       this.hasMfFirstTimeCallingFeatureToggle = supported;
     });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceMediaEncryption).then( (supported) => {
+      this.hasMfMediaEncryptionFeatureToggle = supported;
+    });
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceQos).then( (supported) => {
       this.hasMfQosFeatureToggle = supported;
     });
@@ -58,6 +62,7 @@ class HybridMediaInactiveCardController implements ng.IComponentController {
           hasMfCascadeBwConfigToggle: this.hasMfCascadeBwConfigToggle,
           hasMfClusterWizardFeatureToggle: this.hasMfClusterWizardFeatureToggle,
           hasMfFirstTimeCallingFeatureToggle: this.hasMfFirstTimeCallingFeatureToggle,
+          hasMfMediaEncryptionFeatureToggle: this.hasMfMediaEncryptionFeatureToggle,
           hasMfQosFeatureToggle: this.hasMfQosFeatureToggle,
         },
         type: 'modal',

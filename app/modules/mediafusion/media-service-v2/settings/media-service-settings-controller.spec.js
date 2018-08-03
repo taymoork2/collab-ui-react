@@ -13,6 +13,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
   beforeEach(inject(function ($controller) {
     controller = $controller('MediaServiceSettingsControllerV2', {
       hasMfQosFeatureToggle: true,
+      hasMfMediaEncryptionFeatureToggle: true,
     });
   }));
 

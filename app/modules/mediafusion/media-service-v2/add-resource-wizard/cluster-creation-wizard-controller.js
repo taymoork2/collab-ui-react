@@ -6,15 +6,17 @@
     .controller('ClusterCreationWizardController', ClusterCreationWizardController);
 
   /* @ngInject */
-  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, MediaServiceAuditService, QosSectionService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle) {
+  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, MediaEncryptionSectionService, MediaServiceAuditService, QosSectionService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfMediaEncryptionFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle) {
     var vm = this;
     vm.isWizard = true;
     vm.serviceId = 'squared-fusion-media';
     vm.loading = false;
     vm.isSipSettingsEnabled = true;
     vm.videoQuality = false;
+    vm.mediaEncryption = false;
     vm.qosValue = true;
     vm.videoPropertySetId = null;
+    vm.mediaEncryptionSetId = null;
     vm.qosPropertySetId = null;
     vm.closeSetupModal = closeSetupModal;
     vm.createCluster = createCluster;
@@ -31,6 +33,7 @@
     vm.clusterNameUpdated = clusterNameUpdated;
     vm.upgradeScheduleUpdated = upgradeScheduleUpdated;
     vm.videoQualityUpdated = videoQualityUpdated;
+    vm.mediaEncryptionUpdated = mediaEncryptionUpdated;
     vm.qosUpdated = qosUpdated;
     vm.releaseChannelUpdated = releaseChannelUpdated;
     vm.canGoNext = canGoNext;
@@ -39,6 +42,7 @@
     vm.hasMfCascadeBwConfigToggle = hasMfCascadeBwConfigToggle;
     vm.hasMfClusterWizardFeatureToggle = hasMfClusterWizardFeatureToggle;
     vm.hasMfFirstTimeCallingFeatureToggle = hasMfFirstTimeCallingFeatureToggle;
+    vm.hasMfMediaEncryptionFeatureToggle = hasMfMediaEncryptionFeatureToggle;
     vm.hasMfQosFeatureToggle = hasMfQosFeatureToggle;
     vm.sipSettingsUpdated = sipSettingsUpdated;
     vm.sipSettingsEnabledCheck = sipSettingsEnabledCheck;
@@ -124,7 +128,8 @@
           vm.clusterId = AddResourceSectionService.selectClusterId();
           vm.clusterDetail = AddResourceSectionService.selectedClusterDetails();
           if (!_.isUndefined(vm.videoQuality) && vm.firstTimeSetup) VideoQualitySectionService.setVideoQuality(vm.videoQuality, vm.videoPropertySetId);
-          if (vm.hasMfQosFeatureToggle && !_.isUndefined(vm.qosValue) && vm.firstTimeSetup) QosSectionService.setQos(vm.qosValue, vm.videoPropertySetId, vm.firstTimeSetup);
+          if (vm.hasMfQosFeatureToggle && !_.isUndefined(vm.qosValue) && vm.firstTimeSetup) QosSectionService.setQos(vm.qosValue, vm.qosPropertySetId, vm.firstTimeSetup);
+          if (vm.hasMfMediaEncryptionFeatureToggle && !_.isUndefined(vm.mediaEncryption) && vm.firstTimeSetup) MediaEncryptionSectionService.setMediaEncryption(vm.mediaEncryption, vm.mediaEncryptionSetId, vm.firstTimeSetup);
           if (vm.hasMfFeatureToggle && vm.sipSettingEnabled) SipRegistrationSectionService.saveSipTrunkUrl(vm.sipConfigUrl, vm.clusterId);
           if (vm.hasMfSIPFeatureToggle && vm.sipSettingEnabled) TrustedSipSectionService.saveSipConfigurations(vm.trustedsipconfiguration, vm.clusterId);
           if (vm.hasMfCascadeBwConfigToggle && !_.isUndefined(vm.cascadeBandwidth) && vm.sipSettingEnabled) ClusterCascadeBandwidthService.saveCascadeConfig(vm.clusterId, vm.cascadeBandwidth);
@@ -155,6 +160,14 @@
         vm.videoPropertySetId = response.videoPropertySetId;
       }
     }
+
+    function mediaEncryptionUpdated(response) {
+      if (!_.isUndefined(response.mediaEncryption)) {
+        vm.mediaEncryption = response.mediaEncryption;
+        vm.mediaEncryptionPropertySetId = response.mediaEncryptionPropertySetId;
+      }
+    }
+
     function qosUpdated(response) {
       if (!_.isUndefined(response.qos)) {
         vm.qosValue = response.qos;

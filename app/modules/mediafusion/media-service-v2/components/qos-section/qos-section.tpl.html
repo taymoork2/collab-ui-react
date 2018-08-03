@@ -1,7 +1,14 @@
 <setting-section setting="$ctrl.qosTitle" class="needs-border-top" ng-if="$ctrl.isWizard">
   <div class="sub-section">
-    <h5 class="sub-section__label" translate="mediaFusion.qos.fulltitle"></h5>
-    <p class="sub-section__description" translate="mediaFusion.qos.description"></p>
+    <span class="sub-section__label" translate="mediaFusion.qos.detail"></span>
+    <i class='icon icon-info-outline icon-large'
+      tabindex="0"
+      tooltip="{{::'mediaFusion.qos.longdescription' | translate}}"
+      tooltip-class="metrics-tooltip"
+      tooltip-trigger="mouseenter focus"
+      aria-label="{{::'mediaFusion.qos.longdescription' | translate}}">
+    </i>
+    <p class="sub-section__description" translate="mediaFusion.qos.shortdescription"></p>
     <cs-toggle-switch ng-model="$ctrl.enableQos" cs-change="$ctrl.setEnableQos(toggleValue)"
       toggle-id="toggleEnableQoS" name="toggleEnableQoS" size="small">
     </cs-toggle-switch>
@@ -20,8 +27,8 @@
     <p class="sub-section__description" translate="mediaFusion.qos.shortdescription"></p>
     <div>
       <i class="icon icon-circle status-indicator" ng-class="$ctrl.qosStatus"></i>
-      <span ng-show="$ctrl.connectorQosEnabledCount !== $ctrl.connectorCount && $ctrl.enableQos">{{$ctrl.qosStatusMessage}}&nbsp;&nbsp;&nbsp;{{$ctrl.connectorQosEnabledCount}}/{{$ctrl.connectorCount}} {{::'mediaFusion.qos.nodespending' | translate}}</span>
-      <span ng-show="$ctrl.connectorQosDisabledCount !== $ctrl.connectorCount && !$ctrl.enableQos">{{$ctrl.qosStatusMessage}}&nbsp;&nbsp;&nbsp;{{$ctrl.connectorQosDisabledCount}}/{{$ctrl.connectorCount}} {{::'mediaFusion.qos.nodespending' | translate}}</span>
+      <span ng-show="$ctrl.connectorQosEnabledCount !== $ctrl.connectorCount && $ctrl.enableQos">{{$ctrl.qosStatusMessage}}&nbsp;&nbsp;&nbsp;{{$ctrl.connectorQosDisabledCount}}/{{$ctrl.connectorCount}} {{::'mediaFusion.qos.nodespending' | translate}}</span>
+      <span ng-show="$ctrl.connectorQosDisabledCount !== $ctrl.connectorCount && !$ctrl.enableQos">{{$ctrl.qosStatusMessage}}&nbsp;&nbsp;&nbsp;{{$ctrl.connectorQosEnabledCount}}/{{$ctrl.connectorCount}} {{::'mediaFusion.qos.nodespending' | translate}}</span>
       <span ng-show="$ctrl.connectorQosEnabledCount === $ctrl.connectorCount && $ctrl.enableQos">{{$ctrl.qosStatusMessage}}</span>
       <span ng-show="$ctrl.connectorQosDisabledCount === $ctrl.connectorCount &&  !$ctrl.enableQos">{{$ctrl.qosStatusMessage}}</span>
       <br>

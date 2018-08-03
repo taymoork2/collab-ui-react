@@ -18,6 +18,7 @@ describe('Controller: MediaServiceControllerV2', function () {
       hasMfCascadeBwConfigToggle: true,
       hasMfClusterWizardFeatureToggle: true,
       hasMfFirstTimeCallingFeatureToggle: true,
+      hasMfMediaEncryptionFeatureToggle: true,
       hasMfQosFeatureToggle: true,
     });
   });

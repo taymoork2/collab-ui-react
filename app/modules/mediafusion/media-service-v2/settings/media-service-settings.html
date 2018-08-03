@@ -2,6 +2,7 @@
   <div class="cs-form">
     <email-notifications-section service-id="'squared-fusion-media'"></email-notifications-section>
     <video-quality-section is-wizard="false"></video-quality-section>
+    <media-encryption-section is-wizard="false" ng-if="mediaServiceSettings.hasMfMediaEncryptionFeatureToggle"></media-encryption-section>
     <qos-section is-wizard="false" ng-if="mediaServiceSettings.hasMfQosFeatureToggle"></qos-section>
     <deactivate-section service-id="'squared-fusion-media'" deactivate-modal-options="mediaServiceSettings.deactivateModalOptions"></deactivate-section>
     <documentation-section service-id="'squared-fusion-media'"></documentation-section>

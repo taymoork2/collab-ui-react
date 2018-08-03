@@ -54,7 +54,6 @@ export class QosSectionCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $log: ng.ILogService,
     private $modal: IToolkitModalService,
     private $scope: ng.IScope,
     private $timeout: ng.ITimeoutService,
@@ -244,9 +243,6 @@ export class QosSectionCtrl implements ng.IComponentController {
       this.qosStatus = '';
       this.qosStatusMessage = this.$translate.instant('mediaFusion.qos.qosmessages.off');
     }
-    this.$log.info('connectorCount' + this.connectorCount);
-    this.$log.info('connectorQosEnabledCount' + this.connectorQosEnabledCount);
-    this.$log.info('connectorQosDisabledCount' + this.connectorQosDisabledCount);
   }
 }
 

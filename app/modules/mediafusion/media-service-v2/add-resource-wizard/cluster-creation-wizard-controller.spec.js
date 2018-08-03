@@ -13,6 +13,7 @@ describe('ClusterCreationWizardController', function () {
       'HybridMediaEmailNotificationService',
       'HybridMediaReleaseChannelService',
       'HybridMediaUpgradeScheduleService',
+      'MediaEncryptionSectionService',
       'QosSectionService',
       'SipRegistrationSectionService',
       'TrustedSipSectionService',
@@ -25,6 +26,7 @@ describe('ClusterCreationWizardController', function () {
     spyOn(this.HybridMediaEmailNotificationService, 'saveEmailSubscribers').and.returnValue(this.$q.resolve({}));
     spyOn(this.HybridMediaReleaseChannelService, 'saveReleaseChannel').and.returnValue(this.$q.resolve({}));
     spyOn(this.HybridMediaUpgradeScheduleService, 'updateUpgradeScheduleAndUI').and.returnValue(this.$q.resolve({}));
+    spyOn(this.MediaEncryptionSectionService, 'setMediaEncryption').and.returnValue(this.$q.resolve({}));
     spyOn(this.QosSectionService, 'setQos').and.returnValue(this.$q.resolve({}));
     spyOn(this.SipRegistrationSectionService, 'saveSipTrunkUrl').and.returnValue(this.$q.resolve({}));
     spyOn(this.TrustedSipSectionService, 'saveSipConfigurations').and.returnValue(this.$q.resolve({}));
@@ -43,6 +45,7 @@ describe('ClusterCreationWizardController', function () {
         HybridMediaEmailNotificationService: this.HybridMediaEmailNotificationService,
         HybridMediaReleaseChannelService: this.HybridMediaReleaseChannelService,
         HybridMediaUpgradeScheduleService: this.HybridMediaUpgradeScheduleService,
+        MediaEncryptionSectionService: this.MediaEncryptionSectionService,
         QosSectionService: this.QosSectionService,
         SipRegistrationSectionService: this.SipRegistrationSectionService,
         TrustedSipSectionService: this.TrustedSipSectionService,
@@ -53,6 +56,7 @@ describe('ClusterCreationWizardController', function () {
         hasMfClusterWizardFeatureToggle: true,
         hasMfFirstTimeCallingFeatureToggle: true,
         hasMfFeatureToggle: true,
+        hasMfMediaEncryptionFeatureToggle: true,
         hasMfQosFeatureToggle: true,
         hasMfSIPFeatureToggle: true,
       });

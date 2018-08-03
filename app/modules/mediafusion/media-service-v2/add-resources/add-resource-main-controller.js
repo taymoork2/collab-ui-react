@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('AddResourceMainController', AddResourceMainController);
   /* @ngInject */
-  function AddResourceMainController($modal, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle) {
+  function AddResourceMainController($modal, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfMediaEncryptionFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle) {
     WizardSelector();
 
     function WizardSelector() {
@@ -25,6 +25,7 @@
             hasMfCascadeBwConfigToggle: hasMfCascadeBwConfigToggle,
             hasMfClusterWizardFeatureToggle: hasMfClusterWizardFeatureToggle,
             hasMfFirstTimeCallingFeatureToggle: hasMfFirstTimeCallingFeatureToggle,
+            hasMfMediaEncryptionFeatureToggle: hasMfMediaEncryptionFeatureToggle,
             hasMfQosFeatureToggle: hasMfQosFeatureToggle,
 
           },

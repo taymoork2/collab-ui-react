@@ -27,6 +27,7 @@ export class AddResourceSectionService {
   public firstTimeSetup: boolean;
   public fromClusters: boolean;
   public hostName: string;
+  public mediaEncryptionPropertySetId = null;
   public offlineNodeList: string[] = [];
   public onlineNodeList: string[] = [];
   public ovaType: string = '1';
@@ -42,6 +43,8 @@ export class AddResourceSectionService {
   public yesProceed: boolean;
   public hasMfQosFeatureToggle: boolean = false;
   public qosOrgState: boolean = false;
+  public hasMfMediaEncryptionFeatureToggle: boolean = false;
+  public mediaEncryptionOrgState: boolean = false;
 
   public getClusterList() {
     return this.HybridServicesClusterService.getAll()
@@ -106,6 +109,22 @@ export class AddResourceSectionService {
                 } else if (videoPropertySet.length === 0) {
                   this.videoPropertySetsForOrg();
                 }
+                this.mediaEncryptionFeatureToggle().then(() => {
+                  if (this.hasMfMediaEncryptionFeatureToggle) {
+                    const mediaEncryptionPropertySet = _.filter(propertySets, {
+                      name: 'mediaEncryptionPropertySet',
+                    });
+                    if (mediaEncryptionPropertySet.length > 0) {
+                      const clusterMediaEncryptionPayload = {
+                        assignedClusters: this.selectedClusterId,
+                      };
+                      // Assign it the property set with cluster list
+                      this.MediaClusterServiceV2.updatePropertySetById(mediaEncryptionPropertySet[0]['id'], clusterMediaEncryptionPayload);
+                    } else if (mediaEncryptionPropertySet.length === 0) {
+                      this.mediaEncryptionPropertySetsForOrg();
+                    }
+                  }
+                });
                 this.qosFeatureToggle().then(() => {
                   if (this.hasMfQosFeatureToggle) {
                     const qosPropertySet = _.filter(propertySets, {
@@ -168,6 +187,7 @@ export class AddResourceSectionService {
 
   private propertySetsForOrg() {
     this.videoPropertySetsForOrg();
+    this.mediaEncryptionPropertySetsForOrg();
     this.qosPropertySetsForOrg();
   }
 
@@ -229,6 +249,47 @@ export class AddResourceSectionService {
     return this.Orgservice.getOrg(_.noop, null, params)
       .then(response => {
         return _.get(response.data, 'orgSettings.isMediaFusionQosEnabled', false);
+      });
+  }
+
+  private mediaEncryptionPropertySetsForOrg() {
+    if (this.hasMfMediaEncryptionFeatureToggle) {
+      this.mediaEncryptionOrgValue().then((response) => {
+        this.mediaEncryptionOrgState = response;
+        const mediaEncryptionpayLoad = {
+          type: 'mf.group',
+          name: 'mediaEncryptionPropertySet',
+          properties: {
+            'mf.mediaEncrypted': this.mediaEncryptionOrgState,
+          },
+        };
+        return this.MediaClusterServiceV2.createPropertySet(mediaEncryptionpayLoad)
+          .then((response) => {
+            this.mediaEncryptionPropertySetId = response.data.id;
+            const mediaEncryptionclusterPayload = {
+              assignedClusters: _.map(this.clusters, 'id'),
+            };
+            this.MediaClusterServiceV2.updatePropertySetById(this.mediaEncryptionPropertySetId, mediaEncryptionclusterPayload)
+              .catch((error) => {
+                this.Notification.errorWithTrackingId(error, 'mediaFusion.mediaEncryption.error');
+              });
+          });
+      });
+    }
+  }
+  private mediaEncryptionFeatureToggle = () => {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceMediaEncryption).then( (supported) => {
+      this.hasMfMediaEncryptionFeatureToggle = supported;
+    });
+  }
+
+  public mediaEncryptionOrgValue() {
+    const params = {
+      disableCache: true,
+    };
+    return this.Orgservice.getOrg(_.noop, null, params)
+      .then(response => {
+        return _.get(response.data, 'orgSettings.isMediaFusionEncrypted', false);
       });
   }
 }

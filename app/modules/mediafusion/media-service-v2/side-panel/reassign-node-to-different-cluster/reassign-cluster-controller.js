@@ -12,10 +12,16 @@
     vm.groupResponse = null;
     vm.clusterDetail = null;
     vm.hasMfQosFeatureToggle = false;
+    vm.hasMfMediaEncryptionFeatureToggle = false;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceQos).then(function (response) {
       vm.hasMfQosFeatureToggle = response;
     });
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceMediaEncryption).then(function (response) {
+      vm.hasMfMediaEncryptionFeatureToggle = response;
+    });
+
     vm.getClusters = function () {
       HybridServicesClusterService.getAll()
         .then(function (clusters) {
@@ -78,6 +84,18 @@
                     };
                     // Assign it the property set with cluster list
                     MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySet[0].id, clusterQosPayload);
+                  }
+                }
+                if (vm.hasMfMediaEncryptionFeatureToggle) {
+                  vm.mediaEncryptionPropertySet = _.filter(propertySets, {
+                    name: 'mediaEncryptionPropertySet',
+                  });
+                  if (vm.mediaEncryptionPropertySet.length > 0) {
+                    var clusterMediaEncryptionPayload = {
+                      assignedClusters: vm.clusterDetail.id,
+                    };
+                    // Assign it the property set with cluster list
+                    MediaClusterServiceV2.updatePropertySetById(vm.mediaEncryptionPropertySet[0].id, clusterMediaEncryptionPayload);
                   }
                 }
               }

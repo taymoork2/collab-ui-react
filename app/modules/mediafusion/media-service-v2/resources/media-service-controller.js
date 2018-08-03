@@ -4,7 +4,7 @@
   module.exports = MediaServiceControllerV2;
 
   /* @ngInject */
-  function MediaServiceControllerV2($modal, $state, $stateParams, $translate, Authinfo, ServiceDescriptorService, hasMfFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle) {
+  function MediaServiceControllerV2($modal, $state, $stateParams, $translate, Authinfo, ServiceDescriptorService, hasMfFeatureToggle, hasMfMediaEncryptionFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle) {
     var vm = this;
     vm.backState = $stateParams.backState || 'services-overview';
 
@@ -30,6 +30,7 @@
           hasMfCascadeBwConfigToggle: hasMfCascadeBwConfigToggle,
           hasMfClusterWizardFeatureToggle: hasMfClusterWizardFeatureToggle,
           hasMfFirstTimeCallingFeatureToggle: hasMfFirstTimeCallingFeatureToggle,
+          hasMfMediaEncryptionFeatureToggle: hasMfMediaEncryptionFeatureToggle,
           hasMfQosFeatureToggle: hasMfQosFeatureToggle,
         },
       };

@@ -47,6 +47,11 @@
     on-video-quality-update="clusterCreationWizard.videoQualityUpdated(response)"
     ng-show="clusterCreationWizard.currentStep === 5">
   </video-quality-section>
+  <media-encryption-section
+    is-wizard="clusterCreationWizard.isWizard"
+    on-media-encryption-update="clusterCreationWizard.mediaEncryptionUpdated(response)"
+    ng-show="clusterCreationWizard.currentStep === 5 && clusterCreationWizard.hasMfMediaEncryptionFeatureToggle">
+  </media-encryption-section>
   <qos-section 
     is-wizard="clusterCreationWizard.isWizard"
     on-qos-update="clusterCreationWizard.qosUpdated(response)"
