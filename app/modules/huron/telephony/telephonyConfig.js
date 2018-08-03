@@ -73,6 +73,10 @@
         return 'https://flexdev-rep.ums.broadsoft.net/enterpriseportalapi/v1.0';
       },
 
+      getMinervaUrl: function () {
+        return 'http://minerva.' + this.getBaseDomain() + '/api/v1';
+      },
+
       getUpgradeUrl: function () { //TBD-- add the devhost:port for local testing
         return 'http://hcs-upgrade/api/v1';
       },
