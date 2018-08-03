@@ -39,7 +39,7 @@ let cspDevConfig = mkCspConfig({
     'https://upgrade.int-ucmgmt.cisco.com', //HCS Upgrade
     'https://licensing.int-ucmgmt.cisco.com', //HCS License
     'https://controller.int-ucmgmt.cisco.com', //HCS Controller
-    'http://172.24.77.211:8000', //broadcloud dev and int
+    'https://flexdev-rep.ums.broadsoft.net', //broadcloud dev and int
   ],
   fontSrc: [
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev

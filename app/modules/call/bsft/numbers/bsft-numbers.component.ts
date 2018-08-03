@@ -4,7 +4,6 @@ class BsftNumbersCtrl implements ng.IComponentController {
   public ftsw: boolean;
   public uuid: string;
   public siteid: string;
-  public loading: boolean = false;
   public form: ng.IFormController;
   public prevNumbers: string[] = [];
   public bsftNumbers: string[] = [];
@@ -12,6 +11,7 @@ class BsftNumbersCtrl implements ng.IComponentController {
   public numbers: string[] = [];
   public site: Site;
   public bsftOrder: BsftOrder;
+  public modalInvalid: Function;
 
   public totalNumbers: string[];
   /* @ngInject */
@@ -21,27 +21,27 @@ class BsftNumbersCtrl implements ng.IComponentController {
     ) {}
 
   public $onInit(): void {
-    this.loading = true;
-
     const currentSite = this.FtswConfigService.getCurentSite();
     if (currentSite !== undefined) {
       this.site = currentSite;
     }
 
+    this.$scope.$watch(() => {
+      return _.get(this.totalNumbers, 'length');
+    }, numbers => {
+      if (this.ftsw) {
+        this.$scope.$emit('wizardNextButtonDisable', numbers < 2);
+      } else {
+        this.modalInvalid({
+          invalid: numbers < 2,
+        });
+      }
+    });
+
     if (this.ftsw) {
       this.$scope.$emit('wizardNextText', 'nextAssignNumbers');
-
-      this.$scope.$watch(() => {
-        return _.get(this.form, '$invalid');
-      }, invalid => {
-        this.$scope.$emit('wizardNextButtonDisable', !!invalid);
-      });
-
-      this.$scope.$watch(() => {
-        return this.loading;
-      }, loading => {
-        this.$scope.$emit('wizardNextButtonDisable', !!loading);
-      });
+    } else {
+      this.$scope.$on('bsftNumbersNext', () => this.setupNumberBsftNext());
     }
     this.initComponentData();
   }
@@ -76,11 +76,7 @@ class BsftNumbersCtrl implements ng.IComponentController {
   }
 
   public updateTotal(): void {
-    this.loading = false;
     this.totalNumbers = _.concat(this.prevNumbers, this.bsftNumbers);
-    if (this.totalNumbers.length < 2) {
-      this.loading = true;
-    }
   }
 
   public onChangeBsftPortedNumbers(numbers): void {
@@ -110,5 +106,6 @@ export class BsftNumbersComponent implements ng.IComponentOptions {
   public template = require('modules/call/bsft/numbers/bsft-numbers.component.html');
   public bindings = {
     ftsw: '<',
+    modalInvalid: '&?',
   };
 }

@@ -7,11 +7,11 @@ class BsftAssignNumberCtrl implements ng.IComponentController {
   public mainNumber: string;
   public vmNumber: string;
   public onChangeFn: Function;
+  public modalInvalid: Function;
   public site: Site;
   public messages: any = {};
   public numberOptions: string[] = [];
   public currentOptions: string[] = [];
-  public loading: boolean;
   public ftsw: boolean;
   public form: ng.IFormController;
   public bsftOrder: BsftOrder;
@@ -38,20 +38,22 @@ class BsftAssignNumberCtrl implements ng.IComponentController {
     }
 
     this.initComponentData();
-    this.loading = false;
+    this.$scope.$watch(() => {
+      return _.get(this.form, '$invalid');
+    }, invalid => {
+      if (this.ftsw) {
+        this.$scope.$emit('wizardNextButtonDisable', !!invalid);
+      } else {
+        this.modalInvalid({
+          invalid: !!invalid,
+        });
+      }
+    });
+
     if (this.ftsw) {
       this.$scope.$emit('wizardNextText', 'saveLocation');
-      this.$scope.$watch(() => {
-        return _.get(this.form, '$invalid');
-      }, invalid => {
-        this.$scope.$emit('wizardNextButtonDisable', !!invalid);
-      });
-
-      this.$scope.$watch(() => {
-        return this.loading;
-      }, loading => {
-        this.$scope.$emit('wizardNextButtonDisable', !!loading);
-      });
+    } else {
+      this.$scope.$on('bsftAssignNumberNext', () => this.assignNumberBsftNext());
     }
   }
 
@@ -104,6 +106,8 @@ class BsftAssignNumberCtrl implements ng.IComponentController {
           }
         })
         .catch((response) => this.Notification.error(response.status.message));
+    } else {
+      this.FtswConfigService.setCurrentSite(this.site);
     }
   }
 }
@@ -115,5 +119,6 @@ export class BsftAssignNumberComponent implements ng.IComponentOptions {
     ftsw: '<',
     mainNumber: '<',
     vmNumber: '<',
+    modalInvalid: '&?',
   };
 }
