@@ -105,19 +105,6 @@ describe('LaunchAdvancedSettingsController', () => {
           expect(state.controller.state).toEqual(state.controller.states.connect);
         });
       });
-
-      describe('+unsupported sw', () => {
-
-        beforeEach(() => {
-          state.device.software = 'Spark Unsupported OS 2016-11-30 a4d7137';
-          initController(state.device);
-          state.$timeout.flush();
-        });
-
-        it('should be in the unsupportedSoftwareVersion state.', () => {
-          expect(state.controller.state).toEqual(state.controller.states.unsupportedSoftwareVersion);
-        });
-      });
     });
 
     describe('with device offline', () => {
@@ -149,19 +136,6 @@ describe('LaunchAdvancedSettingsController', () => {
           expect(state.controller.state).toEqual(state.controller.states.offline);
         });
       });
-
-      describe('+unsupported sw', () => {
-
-        beforeEach(() => {
-          state.device.software = 'Spark Unsupported RoomOS 2012-11-30 a4d7137';
-          initController(state.device);
-          state.$timeout.flush();
-        });
-
-        it('should be in the unsupportedSoftwareVersion state.', () => {
-          expect(state.controller.state).toEqual(state.controller.states.unsupportedSoftwareVersion);
-        });
-      });
     });
   });
 
@@ -175,31 +149,6 @@ describe('LaunchAdvancedSettingsController', () => {
 
     it('should start in the offline state.', () => {
       expect(state.controller.state).toEqual(state.controller.states.offline);
-    });
-
-    it('should not have button1', () => {
-      expect(state.controller.state.button1text).toBeFalsy();
-    });
-
-    it('should have button2', () => {
-      expect(state.controller.state.button2text).toBeTruthy();
-    });
-
-    it('should close the modal on button2', () => {
-      expect(state.controller.state.button2Click).toEqual(state.$modalInstance.close);
-    });
-  });
-
-  describe('unsupportedSoftwareVersion state', () => {
-
-    beforeEach(() => {
-      state.device.software = 'Unsupported Spark Room OS 2012-11-30 a4d7137';
-      initController(state.device);
-      state.$timeout.flush();
-    });
-
-    it('should start in the unsupportedSoftwareVersion state.', () => {
-      expect(state.controller.state).toEqual(state.controller.states.unsupportedSoftwareVersion);
     });
 
     it('should not have button1', () => {

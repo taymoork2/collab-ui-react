@@ -248,7 +248,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     }
 
     if (item.isDevice()) {
-      return (item.isHuronDevice() ? this.csdmHuronOrgDeviceService.deleteItem(item) : this.CsdmDeviceService.deleteItem(item))
+      return (item.isHuronDevice() ? this.csdmHuronOrgDeviceService.deleteItem(item) : (item.isCloudberryDevice() && this.CsdmDeviceService.deleteItem(item)))
         .then(() => {
           _.unset(this.theDeviceMap, [item.url]);
           const placeUrl = this.getPlaceUrl(item);

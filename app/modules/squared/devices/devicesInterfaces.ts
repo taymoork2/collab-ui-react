@@ -11,9 +11,9 @@ declare namespace csdm {
     canReportProblem: boolean;
     supportsCustomTags: boolean;
     hasRemoteSupport: boolean;
-    state: { key: string, readableState: string };
+    state: { key: string, priority?: string, readableState: string };
     cssColorClass: string;
-    photos: string[];
+    photos: {url: string}[] | null;
     product: string;
     productFamily: string;
     diagnosticsEvents: IDeviceDiagnosticEvent[];
@@ -32,6 +32,9 @@ declare namespace csdm {
   }
 
   interface ICloudBerryDevice extends IDevice {
+    lastConnectionTime: string|null;
+    rsuKey: string;
+    hasAdvancedSettings: boolean;
   }
 
   interface IBasePlace {
