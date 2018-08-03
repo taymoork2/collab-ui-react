@@ -139,7 +139,7 @@ describe('Service: JabberToWebexTeamsService:', () => {
       this.$scope.$apply();
     });
 
-    it('should resolve with false if the response contains a "totalResults" property that is not "1"', function (this: Test, done) {
+    it('should resolve with false if the response contains a "totalResults" property that is less than "1"', function (this: Test, done) {
       const fakeResolvedResult = {};
 
       // "totalResults" is "0"
@@ -150,8 +150,9 @@ describe('Service: JabberToWebexTeamsService:', () => {
       }).catch(fail);
       this.$scope.$apply();
 
-      // "totalResults" is "2"
-      _.set(fakeResolvedResult, 'data.totalResults', '2');
+
+      // "totalResults" is "-1"
+      _.set(fakeResolvedResult, 'data.totalResults', '-1');
       this.JabberToWebexTeamsService.hasAllPrereqsSettingsDone().then((parsedResolvedResult) => {
         expect(parsedResolvedResult).toBe(false);
         _.defer(done);
