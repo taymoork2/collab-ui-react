@@ -21,7 +21,7 @@
     .name;
 
   /* @ngInject */
-  function Auth($http, $injector, $q, $sanitize, $window, AccountService, Authinfo, Config, HuronCompassService, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, WindowLocation) {
+  function Auth($http, $injector, $q, $sanitize, $window, AccountService, Authinfo, Config, HuronCompassService, Log, OAuthConfig, SessionStorage, StorageKeys, TokenService, UrlConfig, WindowLocation) {
     var service = {
       logout: logout,
       logoutAndRedirectTo: logoutAndRedirectTo,
@@ -228,12 +228,12 @@
         return url + 'organization/' + org + '/userauthinfo';
       }
 
-      var customerOrgId = SessionStorage.get('customerOrgId');
+      var customerOrgId = SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID);
       if (customerOrgId) {
         return url + 'organization/' + customerOrgId + '/userauthinfo';
       }
 
-      var partnerOrgId = SessionStorage.get('partnerOrgId');
+      var partnerOrgId = SessionStorage.get(StorageKeys.PARTNER_ORG_ID);
       if (partnerOrgId) {
         return url + 'organization/' + partnerOrgId + '/userauthinfo?launchpartnerorg=true';
       }

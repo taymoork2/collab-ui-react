@@ -42,7 +42,11 @@
     }
 
     function showMyCompany() {
-      return Utils.isAdminPage() && (Authinfo.isCustomerAdmin() || Authinfo.isReadOnlyAdmin() || Authinfo.isProvisionAdmin()) && Authinfo.isCustomerView();
+      return Utils.isAdminPage() && isMyCompanyAllowedState();
+    }
+
+    function isMyCompanyAllowedState() {
+      return Authinfo.isAllowedState('my-company.info');
     }
 
     function showProBadge() {

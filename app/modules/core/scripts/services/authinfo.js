@@ -34,11 +34,12 @@
         conferenceServicesWithoutSiteUrl: null,
         customerAccounts: [],
         customerType: null,
-        customerView: true,
         emails: null,
         entitleUserEnabled: null,
         hasAccount: false,
+        isCustomerLaunchedFromPartner: false,
         isInitialized: false,
+        isPartnerLaunchedFromPartner: false,
         licenses: [],
         managedOrgs: [],
         messageServices: null,
@@ -482,17 +483,23 @@
       isPending: function () {
         return _.eq(authData.customerType, 'Pending');
       },
-      isCustomerView: function () {
-        return authData.customerView;
-      },
-      setCustomerView: function (bool) {
-        authData.customerView = bool;
-      },
       isCSB: function () {
         return (_.eq(authData.customerType, 'CSB'));
       },
       isCustomerLaunchedFromPartner: function () {
-        return authData.orgId !== authData.userOrgId;
+        return authData.isCustomerLaunchedFromPartner;
+      },
+      setCustomerLaunchedFromPartner: function (isCustomerLaunchedFromPartner) {
+        authData.isCustomerLaunchedFromPartner = isCustomerLaunchedFromPartner;
+      },
+      isPartnerLaunchedFromPartner: function () {
+        return authData.isPartnerLaunchedFromPartner;
+      },
+      setPartnerLaunchedFromPartner: function (isPartnerLaunchedFromPartner) {
+        authData.isPartnerLaunchedFromPartner = isPartnerLaunchedFromPartner;
+      },
+      isLaunchedFromPartner: function () {
+        return this.isCustomerLaunchedFromPartner() || this.isPartnerLaunchedFromPartner();
       },
       isDirectCustomer: function () {
         return (_.eq(authData.commerceRelation, 'Direct'));

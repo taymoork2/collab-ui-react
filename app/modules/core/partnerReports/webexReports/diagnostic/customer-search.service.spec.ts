@@ -1,5 +1,5 @@
-import moduleName from './index';
 import { CustomerSearchService } from './customer-search.service';
+import moduleName from './index';
 
 type Test = atlas.test.IServiceTest<{
   $httpBackend;
@@ -170,7 +170,7 @@ describe('Service: customerSearchService', () => {
   });
 
   it('should get correct request url of meetings api in customer view', function (this: Test) {
-    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(true);
+    spyOn(this.Authinfo, 'isLaunchedFromPartner').and.returnValue(true);
     const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
     const requestUrl = this.CustomerSearchService.getRequestUrl('v3/meetings');
@@ -178,7 +178,7 @@ describe('Service: customerSearchService', () => {
   });
 
   it('should get correct request url of meetings api in partner view', function (this: Test) {
-    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(false);
+    spyOn(this.Authinfo, 'isLaunchedFromPartner').and.returnValue(false);
     const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
     const requestUrl = this.CustomerSearchService.getRequestUrl('v3/meetings');
@@ -186,7 +186,7 @@ describe('Service: customerSearchService', () => {
   });
 
   it('should get correct request url of UniqueParticipants api in customer view', function (this: Test) {
-    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(true);
+    spyOn(this.Authinfo, 'isLaunchedFromPartner').and.returnValue(true);
     const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
     const requestUrl = this.CustomerSearchService.getRequestUrl(`v3/meetings/${this.conferenceID}/unique-participants`);
@@ -194,7 +194,7 @@ describe('Service: customerSearchService', () => {
   });
 
   it('should get correct request url of UniqueParticipants api in partner view', function (this: Test) {
-    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(false);
+    spyOn(this.Authinfo, 'isLaunchedFromPartner').and.returnValue(false);
     const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
     const requestUrl = this.CustomerSearchService.getRequestUrl(`v3/meetings/${this.conferenceID}/unique-participants`);
@@ -202,7 +202,7 @@ describe('Service: customerSearchService', () => {
   });
 
   it('should get correct request url of VoipSessionDetail api in customer view', function (this: Test) {
-    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(true);
+    spyOn(this.Authinfo, 'isLaunchedFromPartner').and.returnValue(true);
     const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
     const requestUrl = this.CustomerSearchService.getRequestUrl(`v2/meetings/${this.conferenceID}/voip-session-detail`);
@@ -210,7 +210,7 @@ describe('Service: customerSearchService', () => {
   });
 
   it('should get correct request url of VoipSessionDetail api in partner view', function (this: Test) {
-    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(false);
+    spyOn(this.Authinfo, 'isLaunchedFromPartner').and.returnValue(false);
     const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
     const requestUrl = this.CustomerSearchService.getRequestUrl(`v2/meetings/${this.conferenceID}/voip-session-detail`);
@@ -218,7 +218,7 @@ describe('Service: customerSearchService', () => {
   });
 
   it('should get correct request url of RoleChange api in customer view', function (this: Test) {
-    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(true);
+    spyOn(this.Authinfo, 'isLaunchedFromPartner').and.returnValue(true);
     const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
     const requestUrl = this.CustomerSearchService.getRequestUrl(`v3/meetings/${this.conferenceID}/rolechange`);
@@ -226,7 +226,7 @@ describe('Service: customerSearchService', () => {
   });
 
   it('should get correct request url of RoleChange api in partner view', function (this: Test) {
-    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(false);
+    spyOn(this.Authinfo, 'isLaunchedFromPartner').and.returnValue(false);
     const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
     const requestUrl = this.CustomerSearchService.getRequestUrl(`v3/meetings/${this.conferenceID}/rolechange`);
@@ -234,7 +234,7 @@ describe('Service: customerSearchService', () => {
   });
 
   it('should get correct request url of SharingSessionDetail api in customer view', function (this: Test) {
-    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(true);
+    spyOn(this.Authinfo, 'isLaunchedFromPartner').and.returnValue(true);
     const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
     const requestUrl = this.CustomerSearchService.getRequestUrl(`v2/meetings/${this.conferenceID}/sharing-session-detail`);
@@ -242,7 +242,7 @@ describe('Service: customerSearchService', () => {
   });
 
   it('should get correct request url of SharingSessionDetail api in partner view', function (this: Test) {
-    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(false);
+    spyOn(this.Authinfo, 'isLaunchedFromPartner').and.returnValue(false);
     const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
     const requestUrl = this.CustomerSearchService.getRequestUrl(`v2/meetings/${this.conferenceID}/sharing-session-detail`);

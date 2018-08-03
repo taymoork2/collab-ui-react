@@ -70,38 +70,40 @@
           ApiCacheManagementService.warmUpOnInterval();
           $location.search({});
 
+          var isCustomerLaunchedFromPartner = !!SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID);
+          var isPartnerLaunchedFromPartner = !!SessionStorage.get(StorageKeys.PARTNER_ORG_ID);
+          Authinfo.setCustomerLaunchedFromPartner(isCustomerLaunchedFromPartner);
+          Authinfo.setPartnerLaunchedFromPartner(isPartnerLaunchedFromPartner);
+
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
             $rootScope.$emit('Core::loginCompleted');
             $state.go('firsttimewizard');
           } else {
             var state = 'overview';
-            Authinfo.setCustomerView(true);
             var params;
             if (PageParam.getRoute()) {
               state = PageParam.getRoute();
             } else if (SessionStorage.get(StorageKeys.REQUESTED_STATE_NAME)) {
               state = SessionStorage.pop(StorageKeys.REQUESTED_STATE_NAME);
               params = SessionStorage.popObject(StorageKeys.REQUESTED_STATE_PARAMS);
-            } else if ((Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) && !SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID) && !SessionStorage.get(StorageKeys.PARTNER_ORG_ID)) {
+            } else if ((Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) && !Authinfo.isLaunchedFromPartner()) {
               Log.debug('Sending "partner logged in" metrics');
               LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
               state = 'partneroverview';
-              Authinfo.setCustomerView(false);
             } else if (Authinfo.isSupportUser()) {
               state = 'support.status';
             } else if (Authinfo.isUserAdminUser()) {
               state = 'users.list';
             } else if (Authinfo.isDeviceAdminUser()) {
               state = 'devices';
-            } else if (!SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID) && Authinfo.isHelpDeskUserOnly()) {
+            } else if (!Authinfo.isCustomerLaunchedFromPartner() && Authinfo.isHelpDeskUserOnly()) {
               state = 'helpdesk.search';
-            } else if (!SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID) && Authinfo.isComplianceUserOnly()) {
+            } else if (!Authinfo.isCustomerLaunchedFromPartner() && Authinfo.isComplianceUserOnly()) {
               state = 'ediscovery.search';
-            } else if (!SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID) && Authinfo.isHelpDeskAndComplianceUserOnly()) {
+            } else if (!Authinfo.isCustomerLaunchedFromPartner() && Authinfo.isHelpDeskAndComplianceUserOnly()) {
               state = 'support.status';
             } else if (Authinfo.isPartnerUser()) {
               state = 'partnercustomers.list';
-              Authinfo.setCustomerView(false);
             } else if (Authinfo.isTechSupport()) {
               state = 'gss';
             }

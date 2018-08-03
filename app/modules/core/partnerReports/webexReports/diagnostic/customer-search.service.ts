@@ -90,10 +90,10 @@ export class CustomerSearchService {
   }
 
   private getAppropriateOrgId(): string {
-    // current portal is not launched by partner admin (it is a partner portal view)
-    if (!this.Authinfo.isCustomerView()) {
-      return '';
+    // specify orgId if cross-launched from partner
+    if (this.Authinfo.isLaunchedFromPartner()) {
+      return this.Authinfo.getOrgId();
     }
-    return this.Authinfo.getOrgId();
+    return '';
   }
 }
