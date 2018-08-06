@@ -76,7 +76,14 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
         routerState: 'huronsettings',
         buttonClass: 'btn-link',
       });
+    } else {
+      this._buttons.push({
+        name: 'servicesOverview.cards.call.buttons.locations',
+        routerState: 'call-locations', //to-do replace with bc location
+        buttonClass: 'btn-link',
+      });
     }
+
     this.loading = false;
   }
 }

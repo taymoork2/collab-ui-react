@@ -2,7 +2,6 @@ import { FtswConfig } from './ftsw-config';
 import { BsftOrder } from './bsft-order';
 import { Site, ILicenseInfo } from './bsft-site';
 import { Authinfo } from 'modules/core/scripts/services/authinfo';
-// import { IBsftOrder } from '../settings/shared';
 
 export class FtswConfigService {
 
@@ -93,11 +92,19 @@ export class FtswConfigService {
     return bsftOrder;
   }
 
+  public addNumbersToOrder(siteId: string, numbers: string[]): void {
+    const bsftOrder = this.getOrder(siteId);
+    _.set(bsftOrder, 'portedNumbers', numbers);
+    // _.forEach(numbers, (number) => {
+    //   bsftOrder.portedNumbers.push({ portingNumber: { telephoneNumber: { e164: number }}, provisionAsActive: !isBsftPorted });
+    // });
+  }
+
   public assignNumbers(siteId: string, mainNumber: string, vmNumber: string): void {
     const bsftOrder: BsftOrder = _.find(this.ftswConfig.bsftOrders, order => order.siteId === siteId );
     if (!_.isUndefined(bsftOrder)) {
-      bsftOrder.mainNumber = { telephoneNumber: { e164Number: mainNumber } };
-      bsftOrder.vmNumber = { telephoneNumber: { e164Number: vmNumber } };
+      bsftOrder.mainNumber = mainNumber; //{ telephoneNumber: { e164: mainNumber } };
+      bsftOrder.vmNumber = vmNumber;
     }
   }
 

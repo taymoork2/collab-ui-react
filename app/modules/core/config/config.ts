@@ -600,6 +600,7 @@ export class Config {
       'places',
       'huronsettings',
       'huronlines',
+      'bsft-numbers',
       'customerPstnOrdersOverview',
       'taasSuites',
       'taasTaskView',

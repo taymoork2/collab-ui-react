@@ -4,17 +4,17 @@ export enum EnumCountryCode {
 export interface IPhoneNumber {
   number?: string;
   countryCode?: string;
-  e164Number: string;
+  e164: string;
 }
 
 export class PhoneNumber implements IPhoneNumber {
   public number: string | undefined;
   public countryCode: string | undefined;
-  public e164Number: string;
+  public e164: string;
 
   constructor(phoneNumber: IPhoneNumber = {
-    e164Number: '',
+    e164: '',
   }) {
-    this.e164Number = phoneNumber.e164Number;
+    this.e164 = phoneNumber.e164;
   }
 }

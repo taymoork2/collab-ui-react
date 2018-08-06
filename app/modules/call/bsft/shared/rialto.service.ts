@@ -1,12 +1,16 @@
 import { RialtoSite, RialtoCustomer, RialtoCustomerResponse } from './bsft-rialto';
+import { RialtoOrder } from './bsft-rialto-order';
 
 interface IRialtoServiceProviderCustomerResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {}
 
 interface IRialtoServiceProviderSiteResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {}
 
+interface IRialtoServiceProviderOrderResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {}
+
 export class RialtoService {
   private rialtoServiceProviderCustomerResource: IRialtoServiceProviderCustomerResource;
   private rialtoServiceProviderSiteResource: IRialtoServiceProviderSiteResource;
+  private rialtoServiceProviderOrderResource: IRialtoServiceProviderOrderResource;
 
   /* @ngInject */
   constructor(
@@ -26,6 +30,10 @@ export class RialtoService {
       });
 
     this.rialtoServiceProviderSiteResource = <IRialtoServiceProviderSiteResource>this.$resource(`${this.HuronConfig.getRialtoUrl()}/sp/customer/:customerId/site`, {},
+      {
+        save: saveAction,
+      });
+    this.rialtoServiceProviderOrderResource = <IRialtoServiceProviderOrderResource>this.$resource(`${this.HuronConfig.getRialtoUrl()}/sp/customer/:rialtoCustomerId/site/:rialtoSiteId/order`, {},
       {
         save: saveAction,
       });
@@ -53,5 +61,12 @@ export class RialtoService {
     return this.rialtoServiceProviderSiteResource.get({
       customerId: customerId,
     }).$promise;
+  }
+
+  public saveOrder(rialtoCustomerId: string, rialtoSiteId: string, order: RialtoOrder): ng.IPromise<any> {
+    return this.rialtoServiceProviderOrderResource.save({
+      rialtoCustomerId: rialtoCustomerId,
+      rialtoSiteId: rialtoSiteId,
+    }, order).$promise;
   }
 }

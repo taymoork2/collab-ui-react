@@ -1,4 +1,4 @@
-import { FtswConfigService, Site, BsftOrder, IPortingNumber } from 'modules/call/bsft/shared';
+import { FtswConfigService, Site, BsftOrder, IPortedNumber } from 'modules/call/bsft/shared';
 
 class BsftNumbersCtrl implements ng.IComponentController {
   public ftsw: boolean;
@@ -49,11 +49,11 @@ class BsftNumbersCtrl implements ng.IComponentController {
   private initComponentData() {
     if (!_.isUndefined(this.site)) {
       this.bsftOrder = this.FtswConfigService.getOrder(this.site.uuid);
-      const nums: IPortingNumber[] = _.get(this.bsftOrder, 'portedNumbers');
+      const nums: IPortedNumber[] = _.get(this.bsftOrder, 'portedNumbers');
       if (!_.isEmpty(nums)) {
         //existing order
-        this.bsftNumbers = _.map(_.filter(nums, num => !num.provisionAsActive), num => _.get(num.telephoneNumber, 'e164Number'));
-        this.prevNumbers = _.map(_.filter(nums, num => num.provisionAsActive), num => _.get(num.telephoneNumber, 'e164Number'));
+        this.bsftNumbers = _.map(_.filter(nums, num => !num.provisionAsActive), num => _.get(num.portingNumber, 'telephoneNumber.e164'));
+        this.prevNumbers = _.map(_.filter(nums, num => num.provisionAsActive), num => _.get(num.portingNumber, 'telephoneNumber.e164'));
       }
       this.updateTotal();
     }
@@ -92,10 +92,10 @@ class BsftNumbersCtrl implements ng.IComponentController {
     this.FtswConfigService.setCurrentSite(this.site);
     this.bsftOrder.portedNumbers = [];
     _.forEach(this.bsftNumbers, (number) => {
-      this.bsftOrder.portedNumbers.push({ telephoneNumber: { e164Number: number }, provisionAsActive: false });
+      this.bsftOrder.portedNumbers.push({ portingNumber: { telephoneNumber: { e164: number } }, provisionAsActive: false });
     });
     _.forEach(this.prevNumbers, (number) => {
-      this.bsftOrder.portedNumbers.push({ telephoneNumber: { e164Number: number }, provisionAsActive: true });
+      this.bsftOrder.portedNumbers.push({ portingNumber: { telephoneNumber: { e164: number } }, provisionAsActive: true });
     });
     this.FtswConfigService.setOrder(this.bsftOrder);
   }
