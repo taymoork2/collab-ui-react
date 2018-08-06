@@ -85,6 +85,28 @@ describe('Service: JabberToWebexTeamsService:', () => {
     });
   });
 
+  describe('updateUcManagerProfile', () => {
+    it('should update the profile', function (this: Test, done) {
+      const options = {
+        profileName: 'profileName',
+        voiceServerDomainName: 'voiceServerDomainName',
+        udsServerAddress: 'udsServerAddress',
+        udsBackupServerAddress: 'udsBackupServerAddress',
+      };
+      spyOn(this.JabberToWebexTeamsService, 'getConfigTemplatesUrl').and.returnValue('fake-url');
+      const patchSpy = spyOn(this.$http, 'patch').and.returnValue(this.$q.resolve({ data: 'fake-data' }));
+      this.JabberToWebexTeamsService.updateUcManagerProfile('12345', options).then(() => {
+        const patchArgs = patchSpy.calls.mostRecent().args;
+        expect(patchArgs[0]).toBe('fake-url/12345');
+        const requestData = patchArgs[1];
+        expect(requestData.profileName).toBeUndefined();
+        expect(requestData.VoiceMailServer).toBe('voiceServerDomainName');
+        _.defer(done);
+      }).catch(fail);
+      this.$scope.$apply();
+    });
+  });
+
   describe('savePrereqsSettings():', () => {
     beforeEach(function () {
       spyOn(this.JabberToWebexTeamsService, 'getConfigTemplatesUrl').and.returnValue('fake-url');

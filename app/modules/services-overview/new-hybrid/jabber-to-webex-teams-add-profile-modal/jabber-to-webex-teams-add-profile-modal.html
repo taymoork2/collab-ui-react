@@ -17,6 +17,7 @@
         type="text"
         name="profileName"
         required
+        ng-readonly="!$ctrl.isCreate"
         ng-model="$ctrl.profileData.profileName"
         ng-minlength="$ctrl.MIN_LENGTH"
         ng-maxlength="$ctrl.MAX_LENGTH"
@@ -31,7 +32,7 @@
           ng-model="$ctrl.backendType"
           cs-input-label="{{::'jabberToWebexTeams.addProfileModal.voiceServiceDomain' | translate}}">
       </div>
-      <div class="cs-input-subgroup" ng-if="$ctrl.backendType === $ctrl.BackendTypes.VOICE" > 
+      <div class="cs-input-subgroup" ng-if="$ctrl.backendType === $ctrl.BackendTypes.VOICE">
         <input
           cs-input
           class="medium-6"
@@ -84,6 +85,6 @@
         id="allowUserEdit"
         name="allowUserEdit"
         cs-input-label="{{:: 'jabberToWebexTeams.addProfileModal.allowUserEdit' | translate}}">
-    </div>  
+    </div>
   </div>
 </multi-step-modal>

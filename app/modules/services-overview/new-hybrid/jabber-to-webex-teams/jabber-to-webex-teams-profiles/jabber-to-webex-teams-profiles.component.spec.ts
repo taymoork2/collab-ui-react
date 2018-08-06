@@ -62,7 +62,7 @@ describe('Component: jabberToWebexTeamsProfiles:', () => {
     it('should go to edit state with correct profile information when "edit" is clicked', function (this: Test) {
       getCardMenuItem.apply(this, [1, 0]).click();
       this.$scope.$digest();
-      expect(this.$state.go).toHaveBeenCalledWith('jabber-to-webex-teams.modal.edit-profile', { profileData: profiles[0] });
+      expect(this.$state.go).toHaveBeenCalledWith('jabber-to-webex-teams.modal.edit-profile', jasmine.objectContaining({ profileId: profiles[0].id }));
     });
 
     it('should call delete service with correct profile id when  "delete" is clicked', function (this: Test) {
