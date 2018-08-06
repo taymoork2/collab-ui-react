@@ -125,7 +125,7 @@ class CloudberryDevice implements ICloudBerryDevice {
   public hasIssues: boolean;
   public software: string;
   public lastConnectionTime: string | null;
-  public photos: string[];
+  public photos: { url: string }[] | null;
   public cssColorClass: string;
   public upgradeChannel: { label: string; value: string };
   public readableActiveInterface: string;
@@ -167,7 +167,7 @@ class CloudberryDevice implements ICloudBerryDevice {
     this.canDelete = true;
     this.canReportProblem = true;
     this.hasRemoteSupport = obj.productFamily === 'Cloudberry' || obj.productFamily === 'Darling';
-    this.hasAdvancedSettings = obj.productFamily === 'Cloudberry';
+    this.hasAdvancedSettings = Helper.hasAdvancedSettings(obj.productFamily, this.software);
     this.supportsCustomTags = true;
     this.update = (updated) => {
       this.displayName = updated.displayName;
@@ -201,7 +201,7 @@ class HuronDevice implements IHuronDevice {
   public software: string;
   public readableActiveInterface: string;
   public cssColorClass: string;
-  public photos: string[];
+  public photos: { url: string }[] | null;
   public product: string;
   public productFamily: string;
   public serial: string;
@@ -342,6 +342,11 @@ export class Helper {
     return this.$translate.instant(key) !== key;
   }
 
+  public static hasAdvancedSettings(productFamily: string, software: string): boolean {
+    return (productFamily === 'Cloudberry' || productFamily === 'Darling')
+      && (_.startsWith(software, 'Spark Room OS') || _.startsWith(software, 'RoomOS'));
+  }
+
   public static getNotOkEvents(obj) {
     const events = _.reject(this.getEvents(obj.status), (e) => {
       return e.level === 'INFO' && (e.type === 'ip' || e.type === 'software' || e.type === 'upgradeChannel');
@@ -349,7 +354,7 @@ export class Helper {
     return events;
   }
 
-  public static getEvents(status: { events: { type: string, level: string, description: string }[]}): { type: string, level: string, description: string }[] {
+  public static getEvents(status: { events: { type: string, level: string, description: string }[] }): { type: string, level: string, description: string }[] {
     return (status && status.events) || [];
   }
 

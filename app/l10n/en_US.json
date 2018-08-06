@@ -2467,7 +2467,6 @@
       "connectingTitle": "{name}'s {product}",
       "offlineHeader": "This device is offline",
       "offlineMessage": "To access Advanced Settings, check that the device is turned on and connected to the network, then try again.",
-      "oldSoftwareMessage": "Advanced Settings are not currently available on the software version your device is running.",
       "unavailableHeader": "Advanced Settings Unavailable",
       "unavailableMessage": "Connecting to the device was unsuccessful.<br><br>Access to Advanced Settings requires that you are connected to the same network as the device.",
       "availableMessage": "This will open Advanced Settings in a new tab.<br><br>Access to Advanced Settings requires that you are on the same network as the device."
