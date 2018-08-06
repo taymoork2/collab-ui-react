@@ -1,6 +1,4 @@
 import { ICluster } from 'modules/hercules/hybrid-services.types';
-import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
-import { Notification } from 'modules/core/notifications';
 import { MediaEncryptionSectionService } from './media-encryption-section.service';
 
 class MediaEncryptionSectionCtrl implements ng.IComponentController {
@@ -19,9 +17,7 @@ class MediaEncryptionSectionCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private Authinfo,
-    private HybridServicesClusterService: HybridServicesClusterService,
     private MediaClusterServiceV2,
-    private Notification: Notification,
     private Orgservice,
     private MediaEncryptionSectionService: MediaEncryptionSectionService,
   ) {
@@ -54,38 +50,13 @@ class MediaEncryptionSectionCtrl implements ng.IComponentController {
                 name: 'mediaEncryptionPropertySet',
               });
               if (this.mediaEncryptionPropertySet.length === 0) {
-                this.createPropertySetAndAssignClusters();
+                this.MediaEncryptionSectionService.createPropertySetAndAssignClusters(this.enableMediaEncryption);
+                this.mediaEncryptionPropertySetId = this.MediaEncryptionSectionService.getPropertySetId();
               }
             } else if (propertySets.length === 0) {
-              this.createPropertySetAndAssignClusters();
+              this.MediaEncryptionSectionService.createPropertySetAndAssignClusters(this.enableMediaEncryption);
+              this.mediaEncryptionPropertySetId = this.MediaEncryptionSectionService.getPropertySetId();
             }
-          });
-      });
-  }
-
-  private createPropertySetAndAssignClusters(): void {
-    this.HybridServicesClusterService.getAll()
-      .then((clusters) => {
-        this.clusters = _.filter(clusters, {
-          targetType: 'mf_mgmt',
-        });
-        const payLoad = {
-          type: 'mf.group',
-          name: 'mediaEncryptionPropertySet',
-          properties: {
-            'mf.mediaEncrypted': 'false',
-          },
-        };
-        this.MediaClusterServiceV2.createPropertySet(payLoad)
-          .then((response) => {
-            this.mediaEncryptionPropertySetId = response.data.id;
-            const clusterPayload = {
-              assignedClusters: _.map(this.clusters, 'id'),
-            };
-            this.MediaClusterServiceV2.updatePropertySetById(this.mediaEncryptionPropertySetId, clusterPayload)
-              .catch((error) => {
-                this.Notification.errorWithTrackingId(error, 'mediaFusion.mediaEncryption.error');
-              });
           });
       });
   }

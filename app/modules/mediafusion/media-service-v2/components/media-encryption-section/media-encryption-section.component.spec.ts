@@ -94,29 +94,4 @@ describe('MediaEncryptionSectionCtrl', () => {
     expect(MediaClusterServiceV2.getPropertySets).toHaveBeenCalled();
   });
 
-  it('should check if createPropertySetAndAssignClusters creates propertysets and assigns clusters', function () {
-    spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.resolve({}));
-    const controller = initController();
-    controller.createPropertySetAndAssignClusters();
-    $httpBackend.verifyNoOutstandingExpectation();
-    expect(HybridServicesClusterService.getAll).toHaveBeenCalled();
-    expect(MediaClusterServiceV2.createPropertySet).toHaveBeenCalled();
-    expect(MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
-    expect(controller.clusters.length).toBe(0);
-    expect(controller.mediaEncryptionPropertySetId).toBe('1234');
-  });
-
-  it('should check if createPropertySetAndAssignClusters creates propertysets and assigns clusters has errors we get notification', function () {
-    spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.reject());
-    const controller = initController();
-    controller.createPropertySetAndAssignClusters();
-    $httpBackend.verifyNoOutstandingExpectation();
-    expect(HybridServicesClusterService.getAll).toHaveBeenCalled();
-    expect(MediaClusterServiceV2.createPropertySet).toHaveBeenCalled();
-    expect(MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
-    expect(controller.clusters.length).toBe(0);
-    expect(controller.mediaEncryptionPropertySetId).toBe('1234');
-    expect(Notification.errorWithTrackingId).toHaveBeenCalled();
-  });
-
 });

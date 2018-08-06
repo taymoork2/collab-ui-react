@@ -2,6 +2,7 @@ import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IExtendedClusterFusion, HybridServiceId, ICluster } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
+import { MediaEncryptionSectionService }  from 'modules/mediafusion/media-service-v2/components/media-encryption-section/media-encryption-section.service';
 import { Notification } from 'modules/core/notifications/notification.service';
 
 export class AddResourceSectionService {
@@ -14,6 +15,7 @@ export class AddResourceSectionService {
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesExtrasService: HybridServicesExtrasService,
     private MediaClusterServiceV2,
+    private MediaEncryptionSectionService: MediaEncryptionSectionService,
     private MediaServiceActivationV2,
     private Notification: Notification,
     private Orgservice,
@@ -256,24 +258,7 @@ export class AddResourceSectionService {
     if (this.hasMfMediaEncryptionFeatureToggle) {
       this.mediaEncryptionOrgValue().then((response) => {
         this.mediaEncryptionOrgState = response;
-        const mediaEncryptionpayLoad = {
-          type: 'mf.group',
-          name: 'mediaEncryptionPropertySet',
-          properties: {
-            'mf.mediaEncrypted': this.mediaEncryptionOrgState,
-          },
-        };
-        return this.MediaClusterServiceV2.createPropertySet(mediaEncryptionpayLoad)
-          .then((response) => {
-            this.mediaEncryptionPropertySetId = response.data.id;
-            const mediaEncryptionclusterPayload = {
-              assignedClusters: _.map(this.clusters, 'id'),
-            };
-            this.MediaClusterServiceV2.updatePropertySetById(this.mediaEncryptionPropertySetId, mediaEncryptionclusterPayload)
-              .catch((error) => {
-                this.Notification.errorWithTrackingId(error, 'mediaFusion.mediaEncryption.error');
-              });
-          });
+        this.MediaEncryptionSectionService.createPropertySetAndAssignClusters(this.mediaEncryptionOrgState);
       });
     }
   }

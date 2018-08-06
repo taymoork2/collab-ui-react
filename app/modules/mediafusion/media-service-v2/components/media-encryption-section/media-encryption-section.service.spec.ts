@@ -1,17 +1,17 @@
 import ModuleName from './index';
 
-describe('Service: AddResourceSectionService', function () {
+describe('Service: MediaEncryptionSectionService', function () {
   beforeEach(function () {
     this.initModules(ModuleName);
     this.initModules('Mediafusion');
     this.injectDependencies(
       '$httpBackend',
       '$q',
-      'AddResourceSectionService',
       'HybridServicesClusterService',
-      'HybridServicesExtrasService',
       'MediaClusterServiceV2',
       'MediaEncryptionSectionService',
+      'Notification',
+      'Orgservice',
     );
     spyOn(this.HybridServicesClusterService, 'setProperties').and.returnValue(this.$q.resolve({}));
     spyOn(this.MediaClusterServiceV2, 'createPropertySet').and.returnValue(this.$q.resolve({
@@ -19,14 +19,18 @@ describe('Service: AddResourceSectionService', function () {
         id: '1234',
       },
     }));
+    spyOn(this.Notification, 'errorWithTrackingId');
+    spyOn(this.Notification, 'success');
   });
   afterEach(function () {
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('check functionality of addResourceSection', function () {
-    it('HybridServicesClusterService getAll should be called for getClusterList', function () {
+  describe('check functionality of mediaEncryptionSection', function () {
+
+    it('should check if createPropertySetAndAssignClusters creates propertysets and assigns clusters', function () {
+      spyOn(this.MediaClusterServiceV2, 'updatePropertySetById').and.returnValue(this.$q.resolve({}));
       const clusters = [{
         id: 'a050fcc7-9ade-4790-a06d-cca596910421',
         name: 'MFA_TEST2',
@@ -37,12 +41,15 @@ describe('Service: AddResourceSectionService', function () {
         }],
       }];
       spyOn(this.HybridServicesClusterService, 'getAll').and.returnValue(this.$q.resolve(clusters));
-
-      this.AddResourceSectionService.getClusterList();
+      this.MediaEncryptionSectionService.createPropertySetAndAssignClusters();
+      this.$httpBackend.verifyNoOutstandingExpectation();
       expect(this.HybridServicesClusterService.getAll).toHaveBeenCalled();
+      expect(this.MediaClusterServiceV2.createPropertySet).toHaveBeenCalled();
+      expect(this.MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
     });
 
-    it('HybridServicesClusterService getAll should be called for updateClusterLists', function () {
+    it('should check if createPropertySetAndAssignClusters creates propertysets and assigns clusters has errors we get notification', function () {
+      spyOn(this.MediaClusterServiceV2, 'updatePropertySetById').and.returnValue(this.$q.reject());
       const clusters = [{
         id: 'a050fcc7-9ade-4790-a06d-cca596910421',
         name: 'MFA_TEST2',
@@ -53,22 +60,13 @@ describe('Service: AddResourceSectionService', function () {
         }],
       }];
       spyOn(this.HybridServicesClusterService, 'getAll').and.returnValue(this.$q.resolve(clusters));
+      this.MediaEncryptionSectionService.createPropertySetAndAssignClusters();
 
-      this.AddResourceSectionService.updateClusterLists();
+      this.$httpBackend.verifyNoOutstandingExpectation();
       expect(this.HybridServicesClusterService.getAll).toHaveBeenCalled();
-    });
-
-    it('HybridServicesClusterService preregisterCluster should be called for addRedirectTargetClicked', function () {
-      spyOn(this.HybridServicesClusterService, 'preregisterCluster').and.returnValue(this.$q.resolve({ id: '12345' }));
-      this.$httpBackend.when('POST', 'https: hercules-intb.ciscospark.com/hercules/api/v2/organizations/orgId/clusters/12345/allowedRegistrationHosts').respond({});
-      this.AddResourceSectionService.addRedirectTargetClicked('hostName', 'enteredCluster', 'true');
-      expect(this.HybridServicesClusterService.preregisterCluster).toHaveBeenCalled();
-    });
-
-    it('should notify error when the preregisterCluster call fails for addRedirectTargetClicked', function () {
-      spyOn(this.HybridServicesClusterService, 'preregisterCluster').and.returnValue(this.$q.reject());
-      this.AddResourceSectionService.addRedirectTargetClicked('hostName', 'enteredCluster', 'false');
-      expect(this.HybridServicesClusterService.preregisterCluster).toHaveBeenCalled();
+      expect(this.MediaClusterServiceV2.createPropertySet).toHaveBeenCalled();
+      expect(this.MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
     });
 
   });
