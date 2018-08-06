@@ -6899,7 +6899,7 @@
       "createMessage": "Create a new or select an existing Video Mesh Cluster where you want to add the Video Mesh Node.",
       "enterCluster": "Create a new cluster",
       "noCluster": "No eligible clusters found",
-      "clusterHelpText": "We reccomend using the geografical location of the cluster as a name",
+      "clusterHelpText": "We recommend using the geographical location of the cluster as a name",
       "clusterExistError": "Cluster already exists, try a different Cluster Name",
       "existingCluster": "Select an existing cluster",
       "invalidip": "Invalid FQDN or IP address",
