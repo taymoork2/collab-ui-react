@@ -72,6 +72,36 @@ describe('User List Service', function () {
         }, '');
     });
 
+    it('should return an array of 3 users+admins from calling listUsers with getAdmin flag enabled', function () {
+      var listUsersUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) +
+        '?' + '&' + testData.listUsers.attributes +
+        '&filter=' + '(roles%20eq%20%22id_full_admin%22%20or%20roles%20eq%20%22id_readonly_admin%22%20or%20roles%20eq%20%22id_device_admin%22%20or%20roles%20eq%20%22id_user_admin%22)%20and%20(active%20eq%20%22true%22)' +
+        '&count=' + testData.listUsers.count +
+        '&sortBy=' + testData.listUsers.sortBy +
+        '&sortOrder=' + testData.listUsers.sortOrder;
+
+      this.$httpBackend.expectGET(listUsersUrl).respond(200, {
+        TotalResults: '3',
+        itemsPerPage: '3',
+        startIndex: '1',
+        schemas: testData.listUsers.schemas,
+        Resources: testData.listUsers.users,
+        success: true,
+      });
+
+      this.UserListService.listUsers(testData.listUsers.startIndex, testData.listUsers.count,
+        testData.listUsers.sortBy, testData.listUsers.sortOrder,
+        function (data, status) {
+          expect(status).toBe(200);
+          expect(data.TotalResults).toBe('3');
+          expect(data.itemsPerPage).toBe('3');
+          expect(data.startIndex).toBe('1');
+          expect(data.schemas).toEqual(testData.listUsers.schemas);
+          expect(data.Resources).toEqual(testData.listUsers.users);
+          expect(data.success).toBe(true);
+        }, '', true);
+    });
+
     it('should include entitlements in query when specified', function () {
       var listUsersUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '?filter=active%20eq%20true%20and%20entitlements%20eq%20%22everything%22%20and%20(userName%20sw%20%22test%22%20or%20name.givenName%20sw%20%22test%22%20or%20name.familyName%20sw%20%22test%22%20or%20displayName%20sw%20%22test%22)&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences&count=10';
 

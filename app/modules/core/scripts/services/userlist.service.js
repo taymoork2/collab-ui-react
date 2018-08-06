@@ -266,8 +266,10 @@
       var encodedSearchStr = '';
       // Create the CI query filter to get the org's admins
       var filterList = [];
+      // Hide support admins until filtering is in place, as documented in SPARK-28636.
+      // TODO in SPARK-28636: Refactor userList.controller to use listUsersAsPromise.
       var rolesFilter = service._helpers.mkAttrEqValsExpr('roles',
-        ['id_full_admin', 'id_readonly_admin', 'id_device_admin', 'id_user_admin', 'atlas-portal.support'], 'or');
+        ['id_full_admin', 'id_readonly_admin', 'id_device_admin', 'id_user_admin'], 'or');
       filterList.push(rolesFilter);
       var activeFilter = service._helpers.mkAttrEqValsExpr('active', 'true');
       filterList.push(activeFilter);
