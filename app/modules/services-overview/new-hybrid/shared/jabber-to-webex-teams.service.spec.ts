@@ -98,9 +98,9 @@ describe('Service: JabberToWebexTeamsService:', () => {
       this.JabberToWebexTeamsService.updateUcManagerProfile('12345', options).then(() => {
         const patchArgs = patchSpy.calls.mostRecent().args;
         expect(patchArgs[0]).toBe('fake-url/12345');
-        const requestData = JSON.parse(patchArgs[1]);
-        expect(requestData.profileName).toBe('profileName');
-        expect(requestData.voiceServerDomainName).toBe('voiceServerDomainName');
+        const requestData = patchArgs[1];
+        expect(requestData.profileName).toBeUndefined();
+        expect(requestData.VoiceMailServer).toBe('voiceServerDomainName');
         _.defer(done);
       }).catch(fail);
       this.$scope.$apply();
