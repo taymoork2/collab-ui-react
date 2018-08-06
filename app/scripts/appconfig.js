@@ -4317,6 +4317,24 @@
               }),
             },
           })
+          .state('bsft-settings-modal', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<bsft-settings-modal editing="$resolve.editing" dismiss="$dismiss()"></bsft-settings-modal>',
+              },
+            },
+            resolve: {
+              editing: /* @ngInject */ function ($stateParams) {
+                return $stateParams.editing;
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/call/bsft/modal'));
+                });
+              }),
+            },
+          })
           .state('externalNumberDelete', {
             parent: 'modalDialog',
             params: {

@@ -8,7 +8,7 @@
     .factory('OverviewBroadsoftCard', OverviewBroadsoftCard);
 
   /* @ngInject */
-  function OverviewBroadsoftCard($interval, $window, Authinfo, BsftCustomerService) {
+  function OverviewBroadsoftCard($window, Authinfo, BsftCustomerService, RialtoService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -17,12 +17,23 @@
         card.trial = false;
         card.settingsUrl = 'https://www.broadsoft.com/';
         card.enabled = true;
-        card.name = 'overview.cards.broadsoft.title';
+        card.name = 'overview.cards.call.title';
         card.template = broadsoftCardTemplatePath;
         card.cardClass = 'user-card';
         card.icon = 'icon-circle-call';
         card.isUpdating = true;
         card.disableCrossLaunch = true;
+        card.showHealth = true;
+        card.healthStatus = 'success';
+        card.licenses = [{
+          id: 'standardLicense',
+          name: 'Standard',
+          count: 150,
+        }, {
+          id: 'placesLicense',
+          name: 'Places',
+          count: 125,
+        }];
 
         card.openBroadsoftPortal = function () {
           card.loading = true;
@@ -32,14 +43,12 @@
           });
         };
 
-        var getStatus = $interval(function () {
-          BsftCustomerService.getBsftCustomerStatus(Authinfo.getOrgId()).then(function (response) {
-            if (response.completed && !response.failed) {
+        RialtoService.getCustomer(Authinfo.getOrgId())
+          .then(function (response) {
+            if (response.rialtoId) {
               card.disableCrossLaunch = false;
-              $interval.cancel(getStatus);
             }
           });
-        }, 1000);
 
         return card;
       },

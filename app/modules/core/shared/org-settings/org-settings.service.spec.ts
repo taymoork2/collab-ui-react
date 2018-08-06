@@ -70,6 +70,13 @@ describe('Component: orgSettings:', () => {
         status: 500,
       }));
     });
+
+    it('should resolve an empty object if org settings do not exist', function (this: Test) {
+      this.$httpBackend.expectGET(this.url).respond('');
+
+      const promise = this.OrgSettingsService.getSettings(this.orgId);
+      expect(promise).toBeResolvedWith({});
+    });
   });
 
   describe('updateLatestSettings():', () => {

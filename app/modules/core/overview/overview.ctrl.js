@@ -116,6 +116,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
       enabledNotPurchased: ProPackService.hasProPackEnabledAndNotPurchased(),
       purchased: ProPackService.hasProPackPurchased(),
       broadsoft: FeatureToggleService.supports(FeatureToggleService.features.hI1776),
+      gsxDemo: FeatureToggleService.supports(FeatureToggleService.features.bsftGsxDemo),
     }).then(function (response) {
       proPackPurchased = response.purchased;
 
@@ -127,7 +128,9 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
         });
       }
 
-      if (response.broadsoft) {
+      if (response.gsxDemo) {
+        vm.cards.splice(2, 1, OverviewCardFactory.createBroadsoftCard());
+      } else if (response.broadsoft) {
         vm.cards.splice(2, 0, OverviewCardFactory.createBroadsoftCard());
       }
 

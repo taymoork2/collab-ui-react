@@ -15,7 +15,11 @@ export class JabberToWebexTeamsService {
   }
 
   public listUcManagerProfiles(): ng.IPromise<IUcManagerProfile[]> {
-    return this.$http.get(this.getConfigTemplatesUrl())
+    return this.$http.get(this.getConfigTemplatesUrl(), {
+      params: {
+        filter: `templateType eq "${JABBER_CONFIG_TEMPLATE_TYPE}"`,
+      },
+    })
       .then((response) => {
         return _.get(response.data, 'Resources') as IUcManagerProfile[];
       });
@@ -71,7 +75,7 @@ export class JabberToWebexTeamsService {
       // - as of 2018-07-23, because CI endpoint stores config property values as strings only, we
       //   convert string to number
       const { totalResults } = response.data;
-      return _.parseInt(totalResults) === 1;
+      return _.parseInt(totalResults) >= 1;
     }).catch(() => {
       return false;
     });

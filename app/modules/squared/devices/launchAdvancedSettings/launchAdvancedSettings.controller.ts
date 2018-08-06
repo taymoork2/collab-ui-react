@@ -16,7 +16,7 @@ interface IDialogState {
 
 class LaunchAdvancedSettingsController {
 
-  public states: { connect: IDialogState, offline: IDialogState, unsupportedSoftwareVersion: IDialogState, unavailable: IDialogState };
+  public states: { connect: IDialogState, offline: IDialogState, unavailable: IDialogState };
   public state: IDialogState;
   private endpointWindow?: Window;
   private timeoutPromise: ng.IPromise<void>;
@@ -53,11 +53,6 @@ class LaunchAdvancedSettingsController {
   }
 
   private getInitialState(device) {
-
-    if (!_.startsWith(device.software, 'Spark Room OS') && !_.startsWith(device.software, 'RoomOS')) {
-      return this.states.unsupportedSoftwareVersion;
-    }
-
     return device.isOnline ? this.states.connect : this.states.offline;
   }
 
@@ -78,14 +73,6 @@ class LaunchAdvancedSettingsController {
       offline: {
         title: 'spacesPage.advancedSettings.offlineHeader',
         message: 'spacesPage.advancedSettings.offlineMessage',
-        button1Click: () => {
-        },
-        button2text: 'common.ok',
-        button2Click: this.$modalInstance.close,
-      },
-      unsupportedSoftwareVersion: {
-        title: 'spacesPage.advancedSettings.unavailableHeader',
-        message: 'spacesPage.advancedSettings.oldSoftwareMessage',
         button1Click: () => {
         },
         button2text: 'common.ok',

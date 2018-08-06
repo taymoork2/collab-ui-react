@@ -4,13 +4,13 @@ import { BsftSettingsOptionsService } from 'modules/call/bsft/settings/shared';
 
 class BsftSettingsCtrl implements ng.IComponentController {
   public ftsw: boolean;
-  public uuid: string;
   public loading: boolean = false;
   public form: ng.IFormController;
   public site = new Site();
   public editing = false;
   public timeZoneOptions;
   public makeDefault: boolean;
+  public modalInvalid: Function;
 
   /* @ngInject */
   constructor(
@@ -24,24 +24,33 @@ class BsftSettingsCtrl implements ng.IComponentController {
   public $onInit(): void {
     this.loading = true;
     this.$q.resolve(this.initComponentData()).finally( () => this.loading = false);
-    this.$scope.$emit('wizardNextText', 'nextAssignLicenses');
 
     if (this.FtswConfigService.getSites().length === 0) {
       this.site.defaultLocation = true;
     }
 
-    if (this.ftsw) {
-      this.$scope.$watch(() => {
-        return _.get(this.form, '$invalid');
-      }, invalid => {
+    this.$scope.$watch(() => {
+      return _.get(this.form, '$invalid');
+    }, invalid => {
+      if (this.ftsw) {
         this.$scope.$emit('wizardNextButtonDisable', !!invalid);
-      });
+      } else {
+        this.modalInvalid({
+          invalid: !!invalid,
+        });
+      }
+    });
+
+    if (this.ftsw) {
+      this.$scope.$emit('wizardNextText', 'nextAssignLicenses');
 
       this.$scope.$watch(() => {
         return this.loading;
       }, loading => {
         this.$scope.$emit('wizardNextButtonDisable', !!loading);
       });
+    } else {
+      this.$scope.$on('bsftSettingsNext', () => this.setupBsftNext());
     }
   }
 
@@ -108,7 +117,6 @@ class BsftSettingsCtrl implements ng.IComponentController {
   public setupBsftNext(): void {
     if (this.makeDefault) {
       this.site.defaultLocation = true;
-      this.FtswConfigService.removeDefault();
     }
 
     if (!this.site.uuid) {
@@ -124,6 +132,6 @@ export class BsftSettingsComponent implements ng.IComponentOptions {
   public template = require('modules/call/bsft/settings/bsft-settings.component.html');
   public bindings = {
     ftsw: '<',
-    uuid: '<',
+    modalInvalid: '&?',
   };
 }

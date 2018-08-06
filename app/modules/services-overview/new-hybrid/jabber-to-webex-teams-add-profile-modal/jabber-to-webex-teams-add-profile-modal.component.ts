@@ -67,10 +67,13 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
   public finishDisable: boolean = true;
   public BackendTypes = BackendTypes;
   public addProfileForm: ng.IFormController;
+  public savingProfile = false;
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $rootScope: ng.IRootScopeService,
+    private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private $window: ng.IWindowService,
     private Analytics,
@@ -91,16 +94,28 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
   }
 
   public finish(): void {
-    this.JabberToWebexTeamsService.create(this.profileData).then(() => {
-      // TODO : 'spark14176.ucManagerProfiles' logic should be removed after the CI service is fullly coded
-      const ucManagerProfiles = _.toArray(JSON.parse(this.$window.sessionStorage.getItem('spark14176.ucManagerProfiles') || '[]'));
-      ucManagerProfiles.push(this.profileData);
-      this.$window.sessionStorage.setItem('spark14176.ucManagerProfiles', JSON.stringify(ucManagerProfiles));
-      this.$rootScope.$emit(EventNames.PROFILES_UPDATED);
-      this.dismissModal();
-      this.Notification.success('common.OK');
-    }).catch(( reason: any ) => {
-      this.Notification.errorResponse(reason);
+    this.savingProfile = true;
+    this.JabberToWebexTeamsService.hasAllPrereqsSettingsDone().then((isDone) => {
+      if (_.isNil(isDone)) {
+        return this.$q.reject();
+      } else if (!isDone) {
+        return this.JabberToWebexTeamsService.savePrereqsSettings({ allPrereqsDone: false });
+      }
+    }).then(() => {
+      return this.JabberToWebexTeamsService.create(this.profileData).then(() => {
+        // TODO : 'spark14176.ucManagerProfiles' logic should be removed after the CI service is fullly coded
+        const ucManagerProfiles = _.toArray(JSON.parse(this.$window.sessionStorage.getItem('spark14176.ucManagerProfiles') || '[]'));
+        ucManagerProfiles.push(this.profileData);
+        this.$window.sessionStorage.setItem('spark14176.ucManagerProfiles', JSON.stringify(ucManagerProfiles));
+        this.$rootScope.$emit(EventNames.PROFILES_UPDATED);
+        this.Notification.success('common.OK');
+        this.$state.go('services-overview', {}, { reload: true });
+        return this;
+      });
+    }).catch((response) => {
+      this.Notification.errorResponse(response);
+    }).finally(() => {
+      this.savingProfile = false;
     });
   }
 }

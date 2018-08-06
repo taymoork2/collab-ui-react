@@ -34,7 +34,7 @@ export class BsftCustomerService {
         update: updateAction,
         save: saveAction,
       });
-    this.bsftCustomerLoginResource = <IBsftCustomerLoginResource>this.$resource(`${this.HuronConfig.getRialtoUrl()}/customers/:customerId/login`, {}, {});
+    this.bsftCustomerLoginResource = <IBsftCustomerLoginResource>this.$resource(`${this.HuronConfig.getMinervaUrl()}/demo/rialto/customers/:customerId/login`, {}, {});
     this.bsftNumberResource = <IBsftNumberResource>this.$resource(`${this.HuronConfig.getRialtoUrl()}/numbers`, {}, {});
   }
 

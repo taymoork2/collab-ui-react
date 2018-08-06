@@ -125,3 +125,7 @@ export enum RoleType {
   HOST = 'Host',
   PRESENTER = 'Presenter',
 }
+
+export enum SERVICE_TYPE {
+  PARTNER = 'PARTNER',
+}

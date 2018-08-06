@@ -9,6 +9,8 @@ import { DgcPartnerWebexReportsSearchComponent } from './dgc-partner-webex-repor
 import { DgcPartnerMeetingDetailsComponent } from './dgc-partner-meeting-details.component';
 import { DgcPartnerTabParticipantsComponent } from './dgc-partner-tab-participants.component';
 import { PartnerSearchService } from './partner-search.service';
+import { MeetingExportComponent } from './meeting-export.component';
+import { MeetingExportService } from './meeting-export.service';
 import { TrackUsageService } from './track-usage.service';
 
 export default angular
@@ -21,6 +23,7 @@ export default angular
   ])
   .service('WebexReportsUtilService', WebexReportsUtilService)
   .service('CustomerSearchService', CustomerSearchService)
+  .service('MeetingExportService', MeetingExportService)
   .service('PartnerSearchService', PartnerSearchService)
   .service('ProPackService', ProPackService)
   .service('TrackUsageService', TrackUsageService)
@@ -30,4 +33,5 @@ export default angular
   .component('dgcPartnerWebexReportsSearch', new DgcPartnerWebexReportsSearchComponent())
   .component('dgcPartnerTabMeetingDetail', new DgcPartnerMeetingDetailsComponent())
   .component('dgcPartnerTabParticipants', new DgcPartnerTabParticipantsComponent())
+  .component('meetingExport', new MeetingExportComponent())
   .name;

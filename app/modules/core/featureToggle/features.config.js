@@ -108,6 +108,7 @@ module.exports = {
   avrilVmMailboxEnable: 'avril-vm-mailbox-enable',
   avrilVoicemaill1249: 'avril-voicemail-l1249',
   bridgeMaxConvParticipants: 'bridge-max-conv-participants',
+  bsftGsxDemo: 'bsft-gsx-demo',
   calliopeDiscovery: 'calliope-discovery',
   callMultiDevice: 'call-multi-device',
   calsvcDetectCmrLoc: 'calsvc_detect_cmr_loc',

@@ -1,8 +1,8 @@
-import { IDataRecord, IFeaturesInReport, IJoinMeetingRecord, IMediaInfoInReport, IMediaInReport, IMeetingSummaryInReport, IParticipantInReport, IParticipantsInName, IQualityInReport, IRoleChangeRecord, IRoleChangeSessionInReport, ISessionInReport, ISharingRecord, ISharingSessionInReport, ITeleSessionInReport } from './meeting-export.interface';
-import { IDataStorage, IJoinTime, IWebexOneMeeting, ISessionDetail, IUniqueParticipant, Platforms } from './searchService';
-import { SearchStorage } from 'modules/core/partnerReports/webexReports/diagnostic/partner-meeting.enum';
-import { ISharingDetail, IRoleData } from 'modules/core/partnerReports/webexReports/diagnostic/partner-search.interfaces';
-import { WebexReportsUtilService } from 'modules/core/partnerReports/webexReports/diagnostic/webex-reports-util.service';
+import { IDataRecord, IFeaturesInReport, IJoinMeetingRecord, IMediaInfoInReport, IMediaInReport, IMeetingSummaryInReport, IParticipantInReport, IParticipantsInName, IQualityInReport, IRoleChangeRecord, IRoleChangeSessionInReport, ISessionInReport, ISharingRecord, ISharingSessionInReport, ITeleSessionInReport  } from './meeting-export.interface';
+import { IDataStorage, IJoinTime, ISessionDetail, IUniqueParticipant, IWebexOneMeeting } from './partner-search.interfaces';
+import { IRoleData, ISharingDetail } from './partner-search.interfaces';
+import { Platforms, SearchStorage } from './partner-meeting.enum';
+import { WebexReportsUtilService } from './webex-reports-util.service';
 
 export enum MediaType {
   PSTN = 'PSTN',

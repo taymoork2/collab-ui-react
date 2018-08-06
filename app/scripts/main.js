@@ -100,6 +100,7 @@
     require('modules/call/bsft/settings').default,
     require('modules/call/bsft/licenses').default,
     require('modules/call/bsft/numbers').default,
+    require('modules/call/bsft/modal').default,
     require('modules/call/bsft/locations/site-list-component').default,
     require('modules/call/bsft/locations/ftsw-site-list').default,
     require('modules/call/bsft/shared').default,

@@ -6,12 +6,9 @@ import { DgcTabComponent } from './dgcTab.component';
 import { DgcTimeLineComponent } from './timeLine.component';
 import { DgcTimeZoneComponent } from './timeZone.component';
 import { DgcWebexReportsSearchComponent } from './webexReportsSearch.component';
-import { MeetingExportComponent } from './meeting-export.component';
-import { MeetingExportService } from './meeting-export.service';
 import { CrCsvDownloadComponent } from 'modules/core/shared/cr-csv-download/cr-csv-download.component';
 import { ParticipantsComponent } from './tabParticipants.component';
 import { SearchService } from './searchService';
-import { WebexReportsUtilService } from 'modules/core/partnerReports/webexReports/diagnostic/webex-reports-util.service';
 
 export default angular
   .module('reports.webex.search', [
@@ -24,14 +21,11 @@ export default angular
   ])
   .service('SearchService', SearchService)
   .service('ProPackService', ProPackService)
-  .service('MeetingExportService', MeetingExportService)
-  .service('WebexReportsUtilService', WebexReportsUtilService)
   .component('dgcTab', new DgcTabComponent())
   .component('dgcTimeLine', new DgcTimeLineComponent())
   .component('dgcTimeZone', new DgcTimeZoneComponent())
   .component('dgcTabParticipants', new ParticipantsComponent())
   .component('dgcTabMeetingdetail', new MeetingdetailsComponent())
   .component('dgcWebexReportsSearch', new DgcWebexReportsSearchComponent())
-  .component('meetingExport', new MeetingExportComponent())
   .component('dgcMeetingDownload', new CrCsvDownloadComponent())
   .name;

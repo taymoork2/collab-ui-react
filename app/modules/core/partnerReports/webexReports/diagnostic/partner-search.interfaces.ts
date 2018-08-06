@@ -168,3 +168,16 @@ export interface ISharingDetail {
   nodeId: string;
   userName: string;
 }
+
+export interface IWebexOneMeeting {
+  overview: IMeetingDetail;
+}
+
+export interface IDataStorage {
+  webexOneMeeting: IWebexOneMeeting;
+  videoSessionDetail: ISessionDetail;
+  voipSessionDetail: ISessionDetail;
+  uniqueParticipants: ISessionDetail;
+  pstnSessionDetail: ISessionDetail;
+  joinMeetingTimes: IJoinTime[];
+}
