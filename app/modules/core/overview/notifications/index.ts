@@ -1,7 +1,6 @@
 import { OverviewAutoAssignNotificationFactory } from './autoAssign.factory';
 import { SubscriptionWithUnsyncedLicensesNotificationService } from './subscriptionWithUnsyncedLicensesNotification.service';
 import { SsoCertificateExpirationNotificationService } from './ssoCertificateExpirationNotification.service';
-import { PrivacyDataSheetsNotificationService } from './privacyDataSheetsNotification.service';
 import { OverviewCareNotSetupPartnerNotification } from './care-setup-partner-notification.service';
 import { DirConnectorUpgradeNotificationService } from './dir-connector-upgrade-notification.service';
 import { SipAddressMigrationNotificationService } from './sip-address-migration-notification.service';
@@ -19,7 +18,6 @@ export default angular.module('core.overview.notifications', [
   .service('OverviewWifiProximityNotification', OverviewWifiProximityNotification)
   .service('SubscriptionWithUnsyncedLicensesNotificationService', SubscriptionWithUnsyncedLicensesNotificationService)
   .service('SsoCertificateExpirationNotificationService', SsoCertificateExpirationNotificationService)
-  .service('PrivacyDataSheetsNotificationService', PrivacyDataSheetsNotificationService)
   .service('OverviewCareNotSetupPartnerNotification', OverviewCareNotSetupPartnerNotification)
   .service('DirConnectorUpgradeNotificationService', DirConnectorUpgradeNotificationService)
   .service('SipAddressMigrationNotificationService', SipAddressMigrationNotificationService)

@@ -39,7 +39,6 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
     OverviewCardFactory,
     OverviewNotificationFactory,
     OverviewCareNotSetupPartnerNotification,
-    PrivacyDataSheetsNotificationService,
     PrivateTrunkService,
     ProPackService,
     PstnService,
@@ -356,9 +355,6 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
           });
         }
       });
-
-      // $TODO - remove notification (and all related code) after 8/25/2018
-      pushNotification(PrivacyDataSheetsNotificationService.createNotification(), 100);
     }
 
     // Show Warning if there is an EVA that's missing default expert space
