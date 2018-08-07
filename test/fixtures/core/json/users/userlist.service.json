@@ -68,6 +68,62 @@
       "roles": ["id_full_admin"],
       "active": true,
       "avatarSyncEnabled": false
+    }, {
+      "userName": "readonlyadmin@atlas.test.com",
+      "name": {
+        "givenName": "ReadOnly",
+        "familyName": "Admin"
+      },
+      "entitlements": [
+        "squared-room-moderation",
+        "squared-call-initiation",
+        "webex-squared",
+        "squared-syncup"
+      ],
+      "id": "e068f40b-c6e2-4051-af50-95bef3f0ea67",
+      "meta": {
+        "created": "2015-04-13T22:00:56.496Z",
+        "lastModified": "2015-10-24T16:10:06.672Z",
+        "version": "23882928410",
+        "lastServiceAccessTime": [{
+          "type": "webexsquare",
+          "value": "2015-10-19T20:40:04.079Z"
+        }],
+        "location": "https://identity.webex.com/identity/scim/c054027f-c5bd-4598-8cd8-07c08163e8cd/v1/Users/e068f40b-c6e2-4051-af50-95bef3f0ea67",
+        "organizationID": "c054027f-c5bd-4598-8cd8-07c08163e8cd"
+      },
+      "displayName": "Readonly Admin",
+      "roles": ["id_readonly_admin"],
+      "active": true,
+      "avatarSyncEnabled": false
+    }, {
+      "userName": "supportadmin@atlas.test.com",
+      "name": {
+        "givenName": "Support",
+        "familyName": "Admin"
+      },
+      "entitlements": [
+        "squared-room-moderation",
+        "squared-call-initiation",
+        "webex-squared",
+        "squared-syncup"
+      ],
+      "id": "e068f40b-c6e2-4051-af50-95bef3f0ea67",
+      "meta": {
+        "created": "2015-04-13T22:00:56.496Z",
+        "lastModified": "2015-10-24T16:10:06.672Z",
+        "version": "23882928410",
+        "lastServiceAccessTime": [{
+          "type": "webexsquare",
+          "value": "2015-10-19T20:40:04.079Z"
+        }],
+        "location": "https://identity.webex.com/identity/scim/c054027f-c5bd-4598-8cd8-07c08163e8cd/v1/Users/e068f40b-c6e2-4051-af50-95bef3f0ea67",
+        "organizationID": "c054027f-c5bd-4598-8cd8-07c08163e8cd"
+      },
+      "displayName": "Support Admin",
+      "roles": ["atlas-portal.support"],
+      "active": true,
+      "avatarSyncEnabled": false
     }],
     "schemas": [
       "urn:scim:schemas:core:1.0",
