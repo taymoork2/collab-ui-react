@@ -1,4 +1,4 @@
-import { startCase, toLower} from 'lodash';
+import { startCase, toLower} from 'lodash-es';
 
 export const mkTitleCase = str => startCase(toLower(str));
 

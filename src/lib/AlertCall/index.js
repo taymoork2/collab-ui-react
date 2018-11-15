@@ -177,7 +177,7 @@ import {
 import {
   uniqueId,
   reject
-} from 'lodash';
+} from 'lodash-es';
 
 export default class Default extends React.PureComponent {
   state = {

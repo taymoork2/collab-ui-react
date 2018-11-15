@@ -5,7 +5,7 @@ import {
   bind,
   reject,
   uniqueId
-} from 'lodash';
+} from 'lodash-es';
 
 class AlertContainer extends React.Component {
   static displayName = 'AlertContainer';

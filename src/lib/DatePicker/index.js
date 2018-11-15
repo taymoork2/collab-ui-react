@@ -17,7 +17,7 @@ import {
   subtractWeeks,
 } from '@collab-ui/react/utils/dateUtils';
 import moment from 'moment';
-import { omit } from 'lodash';
+import { omit } from 'lodash-es';
 
 class DatePicker extends React.Component {
 

@@ -18,7 +18,7 @@ import {
   filter,
   find,
   uniqueId,
-} from 'lodash';
+} from 'lodash-es';
 
 class Select extends React.Component {
 

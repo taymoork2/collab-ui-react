@@ -8,7 +8,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { uniqueId } from 'lodash';
+import { uniqueId } from 'lodash-es';
 import TimepickerDropdown from '@collab-ui/react/TimePicker/TimepickerDropdown';
 import TimeSelector from '@collab-ui/react/TimePicker/TimeSelector';
 import {

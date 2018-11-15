@@ -12,7 +12,7 @@ import {
   ListItem,
   SearchInput,
 } from '@collab-ui/react';
-import { omit, uniqueId } from 'lodash';
+import { omit, uniqueId } from 'lodash-es';
 
 class ComboBox extends React.Component {
   static displayName = 'ComboBox';
@@ -90,8 +90,8 @@ class ComboBox extends React.Component {
     const { searchProp } = this.props;
     const isSubString = string => value && string.toLowerCase().includes(value.toLowerCase());
 
-    return this.options.filter(option => 
-      (option.props[searchProp] && isSubString(option.props[searchProp])) 
+    return this.options.filter(option =>
+      (option.props[searchProp] && isSubString(option.props[searchProp]))
         || ['ListItemHeader'].includes(option.type.displayName)
     );
   };
@@ -256,11 +256,11 @@ class ComboBox extends React.Component {
           className='cui-combo-box__options'
           id={id}
           role='listbox'
-          {...this.anchorNode && 
-            { 
+          {...this.anchorNode &&
+            {
               style: {
                 width: this.anchorNode.getBoundingClientRect().width
-              } 
+              }
             }
           }
         >
@@ -393,7 +393,7 @@ export default class DarkComboBox extends React.PureComponent {
 * @section combo-box-nodes
 *
 * @js
-import { 
+import {
   ComboBox,
   ListItem,
   ListItemHeader,

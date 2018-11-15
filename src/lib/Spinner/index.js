@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { isNumber, round } from 'lodash';
+import { isNumber, round } from 'lodash-es';
 
 /**
  * @category communication

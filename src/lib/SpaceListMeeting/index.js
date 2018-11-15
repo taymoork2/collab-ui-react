@@ -9,7 +9,7 @@ import {
   Button,
   Popover,
 } from '@collab-ui/react';
-import { omit, uniqueId } from 'lodash';
+import { omit, uniqueId } from 'lodash-es';
 
 /**
  * @category containers
@@ -75,7 +75,7 @@ class SpaceListMeeting extends React.PureComponent {
                   ele.node
                     ? ele.node
                     : (
-                      <Avatar 
+                      <Avatar
                         size='small'
                         title={ele.title}
                         alt={ele.alt || ele.title}
@@ -110,14 +110,14 @@ class SpaceListMeeting extends React.PureComponent {
           </div>
         </ListItemSection>,
         <ListItemSection key='child-2' position='right'>
-          {childrenRight || attendees.length > 0 && 
-            <Popover 
+          {childrenRight || attendees.length > 0 &&
+            <Popover
               content={getPopoverContent}
               direction='bottom-center'
               targetOffset={{vertical: 3}}
               isDynamic
             >
-              <span 
+              <span
                 role='button'
                 tabIndex={0}
                 className='cui-list-item--space-meeting--attendees'
@@ -128,7 +128,7 @@ class SpaceListMeeting extends React.PureComponent {
             </Popover>
           }
           {
-            buttonLabel 
+            buttonLabel
             &&
             <Button
               color='green'
@@ -235,7 +235,7 @@ export default class SpaceListExamples extends React.PureComponent {
     return(
       <div className="medium-5 columns">
         <List style={{backgroundColor: 'rgba(40,40,40,0.72)'}}>
-          <SpaceListMeeting 
+          <SpaceListMeeting
             buttonLabel='Now'
             attendees={[
               {title: 'Joe Bojangles'},
@@ -254,7 +254,7 @@ export default class SpaceListExamples extends React.PureComponent {
               {title: 'Toe Toe'}
             ]}
             header='Attendees Prop'
-            subheader='must be very long long long long long message message' 
+            subheader='must be very long long long long long message message'
           />
           <SpaceListMeeting
             header='isBold(true)'

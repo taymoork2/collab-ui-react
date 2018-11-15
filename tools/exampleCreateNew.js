@@ -1,5 +1,5 @@
 const fs = require('fs-extra');
-const { startCase, toLower } = require('lodash');
+const { startCase, toLower } = require('lodash-es');
 // JSON file including Navigation
 const docs = require('../src/docs/data/docs');
 // Chalk Colors the Text

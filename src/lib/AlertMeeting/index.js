@@ -136,7 +136,7 @@ const AlertMeeting = props => {
 AlertMeeting.defaultProps = {
   attendees: [],
   avatar: null,
-  closeAriaLabel: 'close', 
+  closeAriaLabel: 'close',
   message: '',
   onClick: null,
   onHide: null,
@@ -199,7 +199,7 @@ import {
 import {
   uniqueId,
   reject
-} from 'lodash';
+} from 'lodash-es';
 
 export default class Default extends React.PureComponent {
   state = {

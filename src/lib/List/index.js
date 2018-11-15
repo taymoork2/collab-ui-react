@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { omit, uniqueId } from 'lodash';
+import { omit, uniqueId } from 'lodash-es';
 /**
  * List is container component used to help group list items.
  * @category containers

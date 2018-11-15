@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { omit } from 'lodash';
+import { omit } from 'lodash-es';
 import { Input } from '@collab-ui/react';
 
 /**
@@ -16,7 +16,7 @@ class EditableTextfield extends React.Component {
     isEditing: false,
     inputText: this.props.inputText,
   };
-  
+
   componentDidUpdate = () => {
     if (this.state.isEditing && this.editText) {
       this.editText.focus();
@@ -41,7 +41,7 @@ class EditableTextfield extends React.Component {
   handleBlur = (e, value) => {
     const { handleDoneEditing } = this.props;
     e.persist();
-    
+
     this.setState(
       {
         isEditing: false,
@@ -89,7 +89,7 @@ class EditableTextfield extends React.Component {
       this.handleEsc(e);
     } else if (e.keyCode === 13){
       this.handleEnter(e, e.target.value);
-    } 
+    }
   }
 
   render() {

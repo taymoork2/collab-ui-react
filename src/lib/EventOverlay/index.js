@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import { omit } from 'lodash';
+import { omit } from 'lodash-es';
 
 export default class EventOverlay extends React.Component {
   static displayName = 'EventOverlay';
@@ -76,7 +76,7 @@ export default class EventOverlay extends React.Component {
   findScrollParent = (elementParents, searchProps) => {
     let overflowElement = null;
     let idx = 0;
-    
+
     while (!overflowElement && elementParents[idx]) {
       let currentOverflowElement = this.findOverflow(elementParents[idx], searchProps);
 
@@ -95,7 +95,7 @@ export default class EventOverlay extends React.Component {
       checkOverflow,
       targetOffset,
     } = this.props;
-    
+
     const windowRight = window.pageYOffset + window.innerWidth;
     const elementWidth = elementBoundingRect.width;
     const anchorRight = anchor.right;
@@ -108,9 +108,9 @@ export default class EventOverlay extends React.Component {
     const elementParents = this.findParents(elementParent);
     const scrollParent = this.findScrollParent(elementParents, ['overflow', 'overflow-x']);
 
-    const parentRight = (checkOverflow 
-      && !!scrollParent.getBoundingClientRect 
-      && scrollParent.getBoundingClientRect().right) 
+    const parentRight = (checkOverflow
+      && !!scrollParent.getBoundingClientRect
+      && scrollParent.getBoundingClientRect().right)
       || windowRight;
 
       return totalWidth < parentRight && totalWidth < windowRight
@@ -137,9 +137,9 @@ export default class EventOverlay extends React.Component {
     const elementParents = this.findParents(elementParent);
     const scrollParent = this.findScrollParent(elementParents, ['overflow', 'overflow-y']);
 
-    const parentBottom =(checkOverflow 
-      && !!scrollParent.getBoundingClientRect 
-      && scrollParent.getBoundingClientRect().bottom) 
+    const parentBottom =(checkOverflow
+      && !!scrollParent.getBoundingClientRect
+      && scrollParent.getBoundingClientRect().bottom)
       || windowBottom;
 
     return totalHeight < parentBottom && totalHeight < windowBottom
@@ -358,8 +358,8 @@ export default class EventOverlay extends React.Component {
     const elementVerticalWidth = elementDims.width + offsetWidth;
     const getAvailableTopSpace = top => (top + anchorPosition.top) - (this.elementHeight + arrowHeight);
 
-    const parentDims = checkOverflow 
-      && !!scrollParent.getBoundingClientRect 
+    const parentDims = checkOverflow
+      && !!scrollParent.getBoundingClientRect
       && scrollParent.getBoundingClientRect();
 
     if(targetNode && targetNode.style && !targetNode.style.bottom && elementVerticalHeight) {
@@ -542,7 +542,7 @@ export default class EventOverlay extends React.Component {
     targetNode.style.left = `${targetNodePosition.left}px`;
 
     showArrow && this.setArrowPlacement(anchorPosition, targetPosition);
-    
+
     isContained && this.setBoundingBox(side, targetNode, anchorPosition);
   };
 

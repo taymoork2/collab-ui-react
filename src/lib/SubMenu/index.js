@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { omit } from 'lodash';
+import { omit } from 'lodash-es';
 import {
   EventOverlay,
-  Icon, 
+  Icon,
   ListItem,
 } from '@collab-ui/react/';
 
@@ -102,7 +102,7 @@ class SubMenu extends React.Component {
           {...otherProps}
         >
           {
-            customNode 
+            customNode
               ? customNode
               : ([
                 <div className='cui-menu-item__content' key='content-0'>

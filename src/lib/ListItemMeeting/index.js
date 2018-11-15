@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { omit, uniqueId } from 'lodash';
+import { omit, uniqueId } from 'lodash-es';
 import {
   EventOverlay,
   Icon,

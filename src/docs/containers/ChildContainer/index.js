@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { findIndex } from 'lodash';
+import { findIndex } from 'lodash-es';
 import * as utils from '../../utils';
 import DocComponent from '../DocComponent';
 import ExampleComponents from '../ExampleComponents';

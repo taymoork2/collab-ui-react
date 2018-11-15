@@ -11,7 +11,7 @@ import {
   find,
   trimEnd,
   uniqueId
-} from 'lodash';
+} from 'lodash-es';
 import iconPaths from '@collab-ui/icons/data/iconsData.json';
 import colors from '@collab-ui/core/data/colors.json';
 import { Button } from '@collab-ui/react';
